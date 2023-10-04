@@ -1,0 +1,27 @@
+---
+
+- name: "1.1.9 | PATCH | Disable Automounting"
+  block:
+      - name: "1.1.9 | PATCH | Disable Automounting | remove package"
+        ansible.builtin.package:
+            name: autofs
+            state: absent
+        when: debian11cis_autofs == "remove"
+
+      - name: "1.1.9 | PATCH | Disable Automounting | mask service"
+        ansible.builtin.service:
+            name: autofs
+            state: stopped
+            enabled: false
+            masked: true
+        when: debian11cis_autofs == "mask"
+  when:
+      - "'autofs' in ansible_facts.packages"
+      - debian11cis_rule_1_1_9
+  tags:
+      - level1-server
+      - level2-workstation
+      - automated
+      - patch
+      - rule_1.1.9
+      - automounting
