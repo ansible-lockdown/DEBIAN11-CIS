@@ -6,7 +6,7 @@
 
 This playbook role is currently undergoing development.
 
-This will be released to subscribers of [Lockdown Enterprise] and [Automation Counselor] and clients prior to public release.
+This will be released to clients as well as subscribers of [Lockdown Enterprise] and [Automation Counselor] prior to public release.
 
 For more information about releases and how we aim to release them.
 
@@ -16,6 +16,6 @@ For more information about releases and how we aim to release them.
 | :---: |
 |<a href="https://mindpointgroup.com#GH_LockdownReadMe" target="_blank"><img src="https://assets-global.website-files.com/601959b76833363126385b0d/60195aa15ed9274f67255f9b_MPG-logo-mono-blue.svg" width="200" height="75" alt="MindPoint Group"/></a>|
 
-[Lockdown Enterprise]: hhttps://www.lockdownenterprise.com#GH_AL_DEB11_cis
+[Lockdown Enterprise]: https://www.lockdownenterprise.com#GH_AL_DEB11_cis
 [Automation Counselor]: https://www.mindpointgroup.com/cybersecurity-products/ansible-counselor#GH_AL_DEB11_cis
 [Read the Docs Release]: https://ansible-lockdown.readthedocs.io/en/release_sched/combined/release_sched.html
