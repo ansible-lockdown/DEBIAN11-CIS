@@ -74,9 +74,9 @@
   block:
       - name: "5.5.1.3 | PATCH | Ensure password expiration warning days is 7 or more | Set /etc/login.defs PASS_WARN_AGE"
         ansible.builtin.lineinfile:
-           path: /etc/login.defs
-           regexp: '^PASS_WARN_AGE|^#PASS_WARN_AGE'
-           line: 'PASS_WARN_AGE {{ debian11cis_pass.warn_age }}'
+            path: /etc/login.defs
+            regexp: '^PASS_WARN_AGE|^#PASS_WARN_AGE'
+            line: 'PASS_WARN_AGE {{ debian11cis_pass.warn_age }}'
 
       - name: "5.5.1.3 | PATCH | Ensure password expiration warning days is 7 or more | Get existing users PASS_WARN_AGE"
         ansible.builtin.shell: "awk -F: '(/^[^:]+:[^!*]/ && $6<{{ debian11cis_pass.warn_age }}){print $1}' /etc/shadow"
