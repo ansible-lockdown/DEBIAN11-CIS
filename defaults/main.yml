@@ -625,8 +625,8 @@ debian11cis_sshd:
     login_grace_time: 60
     max_sessions: 8
     # WARNING: make sure you understand the precedence when working with these values!!
-    allow_users: "vagrant debian"
-    allow_groups: "vagrant debian"
+    allow_users: ""
+    allow_groups: ""
     deny_users: ""
     deny_groups: ""
 
