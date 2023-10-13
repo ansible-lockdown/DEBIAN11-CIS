@@ -2,9 +2,9 @@
 # information about usuable directives.
 
 # This will use (up to):
-# - 4 sources from ntp.ubuntu.com which some are ipv6 enabled
-# - 2 sources from 2.ubuntu.pool.ntp.org which is ipv6 enabled as well
-# - 1 source from [01].ubuntu.pool.ntp.org each (ipv4 only atm)
+# - 4 sources from ntp.debian.com which some are ipv6 enabled
+# - 2 sources from 2.debian.pool.ntp.org which is ipv6 enabled as well
+# - 1 source from [01].debian.pool.ntp.org each (ipv4 only atm)
 # This means by default, up to 6 dual-stack and up to 2 additional IPv4-only
 # sources will be used.
 # At the same time it retains some protection against one of the entries being
@@ -12,7 +12,7 @@
 # discussion.
 #
 # About using servers from the NTP Pool Project in general see (LP: #104525).
-# Approved by Ubuntu Technical Board on 2011-02-08.
+# Approved by debian Technical Board on 2011-02-08.
 # See http://www.pool.ntp.org/join.html for more information.
 
 {% for server in debian11cis_time_synchronization_servers -%}

@@ -7,9 +7,9 @@ ci:
 
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v3.2.0
-  hooks:
+  rev: v4.4.0
   # Safety
+  hooks:
   - id: detect-aws-credentials
   - id: detect-private-key
 
@@ -44,7 +44,7 @@ repos:
     exclude: .config/.secrets.baseline
 
 - repo: https://github.com/ansible-community/ansible-lint
-  rev: v6.17.2
+  rev: v6.20.3
   hooks:
   - id: ansible-lint
     name: Ansible-lint

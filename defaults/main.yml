@@ -28,6 +28,12 @@ debian11cis_ask_passwd_to_boot: false
 # tweak role to run in a non-privileged container (default value)- dynamically discovered in tasks/main.yml
 system_is_container: false
 
+## Root user used
+# Root by default is not used unless setup by user
+# The role will only run certain commands if set to true
+# This allows the ability to skip tasks that may cause an issue
+debian11cis_uses_root: false
+
 ### Audit Binary is required on the remote host
 setup_audit: false
 # How to retrieve audit binary
@@ -452,7 +458,7 @@ debian11cis_apparmor_enforce_only: false
 debian11cis_disable_dynamic_motd: true
 
 # Control 1.7.2
-# This will be the motd banner must not contain the below items in order to be compliant with Ubuntu 20 CIS
+# This will be the motd banner must not contain the below items in order to be compliant
 # \m, \r, \s, \v or references to the OS platform
 debian11cis_warning_banner: |
         Authorized uses only. All activity may be monitored and reported.
@@ -521,7 +527,7 @@ debian11cis_is_mail_server: false
 # Section 3 Control Variables
 # Control 3.1.1
 # How to disable ipv6 either via grub or sysctl settings options: grub or sysctl
-ubuntu22cis_ipv6_disable: grub
+debian11cis_ipv6_disable: grub
 
 # Control 3.1.2
 # debian11cis_install_network_manager determines if this role can install network manager
@@ -619,8 +625,8 @@ debian11cis_sshd:
     login_grace_time: 60
     max_sessions: 8
     # WARNING: make sure you understand the precedence when working with these values!!
-    allow_users: "vagrant ubuntu"
-    allow_groups: "vagrant ubuntu"
+    allow_users: "vagrant debian"
+    allow_groups: "vagrant debian"
     deny_users: ""
     deny_groups: ""
 
@@ -751,11 +757,11 @@ audit_out_dir: '/opt'
 audit_conf_dir: "{{ audit_out_dir }}/{{ benchmark }}-Audit"
 
 # If changed these can affect other products
-pre_audit_outfile: "{{ audit_out_dir }}/{{ ansible_hostname }}-{{ benchmark }}-{{ benchmark_version }}_pre_scan_{{ ansible_date_time.epoch }}.{{ audit_format }}"
-post_audit_outfile: "{{ audit_out_dir }}/{{ ansible_hostname }}-{{ benchmark }}-{{ benchmark_version }}_post_scan_{{ ansible_date_time.epoch }}.{{ audit_format }}"
+pre_audit_outfile: "{{ audit_out_dir }}/{{ ansible_facts.hostname }}-{{ benchmark }}-{{ benchmark_version }}_pre_scan_{{ ansible_facts.date_time.epoch }}.{{ audit_format }}"
+post_audit_outfile: "{{ audit_out_dir }}/{{ ansible_facts.hostname }}-{{ benchmark }}-{{ benchmark_version }}_post_scan_{{ ansible_facts.date_time.epoch }}.{{ audit_format }}"
 
 ## The following should not need changing
-audit_vars_path: "{{ audit_conf_dir }}/vars/{{ ansible_hostname }}.yml"
+audit_vars_path: "{{ audit_conf_dir }}/vars/{{ ansible_facts.hostname }}.yml"
 audit_results: |
       The pre remediation results are: {{ pre_audit_summary }}.
       The post remediation results are: {{ post_audit_summary }}.
