@@ -120,3 +120,43 @@ uses:
 ```sh
 pre-commit run
 ```
+
+## Known Issues
+
+During rule 1.9 this may fail with the following
+
+```bash
+You must correct your GRUB install devices before proceeding:
+
+      DEBIAN_FRONTEND=dialog dpkg --configure grub-pc
+      dpkg --configure -a
+```
+
+Check your current settings
+
+```bash
+debconf-show grub-pc | grep install_devices:
+```
+
+If this returns the following with no value
+
+```bash
+* grub-pc/install_devices:
+```
+
+You need to set the device onto with grub-pc will configured
+
+**USE AT YOUR OWN RISK**
+
+Example only (be aware of disk):
+
+Run the following with sudo:
+
+```bash
+disk=$(find /dev -type l -lname '*/sda' -path '*/by-id/*')
+debconf-set-selections << EOF
+grub-pc    grub-pc/install_devices    multiselect    $disk
+EOF
+apt update
+apt install grub-pc -y
+```
