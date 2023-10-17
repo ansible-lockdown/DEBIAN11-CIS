@@ -204,6 +204,10 @@
       path: /etc/default/ufw
       regexp: ^IPT_SYSCTL=.*
       line: IPT_SYSCTL=/etc/sysctl.conf
+      create: true
+      mode: '0640'
+      owner: root
+      group: root
   when:
       - debian11cis_firewall_package == "ufw"
       - debian11cis_ufw_use_sysctl

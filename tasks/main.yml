@@ -45,46 +45,46 @@
             fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} has no password set - It can break access"
             success_msg: "You have a password set for sudo user {{ ansible_env.SUDO_USER }}"
         vars:
-            sudo_password_rule: debian11ciscis_rule_5_3_4  # pragma: allowlist secret
+            sudo_password_rule: debian11cis_rule_5_3_4  # pragma: allowlist secret
   when:
-      - debian11ciscis_rule_5_3_4
+      - debian11cis_rule_5_3_4
       - ansible_env.SUDO_USER is defined
   tags:
       - always
 
-- name: Check debian11ciscis_bootloader_password_hash variable has been changed
+- name: Check debian11cis_bootloader_password_hash variable has been changed
   ansible.builtin.assert:
-      that: debian11ciscis_bootloader_password_hash.find('grub.pbkdf2.sha512') != -1 and debian11ciscis_bootloader_password_hash != 'grub.pbkdf2.sha512.changethispassword'  # pragma: allowlist secret
-      msg: "This role will not be able to run single user password commands as debian11ciscis_bootloader_password_hash variable has not been set correctly"
+      that: debian11cis_bootloader_password_hash.find('grub.pbkdf2.sha512') != -1 and debian11cis_bootloader_password_hash != 'grub.pbkdf2.sha512.changethispassword'  # pragma: allowlist secret
+      msg: "This role will not be able to run single user password commands as debian11cis_bootloader_password_hash variable has not been set correctly"
   when:
-      - debian11ciscis_set_boot_pass
-      - debian11ciscis_rule_1_4_1
+      - debian11cis_set_boot_pass
+      - debian11cis_rule_1_4_1
   tags:
       - always
 
-- name: Check debian11ciscis_grub_user password variable has been changed
+- name: Check debian11cis_grub_user password variable has been changed
   block:
-      - name: Check debian11ciscis_grub_user password variable has been changed | check password is set
-        ansible.builtin.shell: "grep ^{{ debian11ciscis_grub_user }} /etc/shadow | awk -F : '{print $2}'"
+      - name: Check debian11cis_grub_user password variable has been changed | check password is set
+        ansible.builtin.shell: "grep ^{{ debian11cis_grub_user }} /etc/shadow | awk -F : '{print $2}'"
         changed_when: false
-        register: debian11ciscis_password_set_grub_user
+        register: debian11cis_password_set_grub_user
 
-      - name: Check debian11ciscis_grub_user password variable has been changed | check password is set
+      - name: Check debian11cis_grub_user password variable has been changed | check password is set
         ansible.builtin.assert:
-            that: debian11ciscis_password_set_grub_user.stdout.find('$y$') != -1 or debian11ciscis_grub_user_passwd.find('$y$') != -1 and debian11ciscis_grub_user_passwd != '$y$j9T$MBA5l/tQyWifM869nQjsi.$cTy0ConcNjIYOn6Cppo5NAky20osrkRxz4fEWA8xac6'
-            msg: "This role will not set the {{ debian11ciscis_grub_user }} user password is not set or debian11ciscis_grub_user_passwd variable has not been set correctly"
+            that: debian11cis_password_set_grub_user.stdout.find('$y$') != -1 or debian11cis_grub_user_passwd.find('$y$') != -1 and debian11cis_grub_user_passwd != '$y$j9T$MBA5l/tQyWifM869nQjsi.$cTy0ConcNjIYOn6Cppo5NAky20osrkRxz4fEWA8xac6'
+            msg: "This role will not set the {{ debian11cis_grub_user }} user password is not set or debian11cis_grub_user_passwd variable has not been set correctly"
         when:
-            - "'$y$' in debian11ciscis_password_set_grub_user.stdout"
-            - debian11ciscis_set_grub_user_pass
-            - debian11ciscis_rule_1_4_3
+            - "'$y$' in debian11cis_password_set_grub_user.stdout"
+            - debian11cis_set_grub_user_pass
+            - debian11cis_rule_1_4_3
 
-      - name: Check debian11ciscis_grub_user password variable has been changed | if password blank or incorrect type and not being set
+      - name: Check debian11cis_grub_user password variable has been changed | if password blank or incorrect type and not being set
         ansible.builtin.assert:
-            that: ( debian11ciscis_password_set_grub_user.stdout | length > 10 ) and '$y$' in debian11ciscis_password_set_grub_user.stdout
-            fail_msg: "Grub User {{ debian11ciscis_grub_user }} has no password set or incorrect encryption"
-            success_msg: "Grub User {{ debian11ciscis_grub_user }} has a valid password set to be used in single user mode"
+            that: ( debian11cis_password_set_grub_user.stdout | length > 10 ) and '$y$' in debian11cis_password_set_grub_user.stdout
+            fail_msg: "Grub User {{ debian11cis_grub_user }} has no password set or incorrect encryption"
+            success_msg: "Grub User {{ debian11cis_grub_user }} has a valid password set to be used in single user mode"
         when:
-            - not debian11ciscis_set_grub_user_pass
+            - not debian11cis_set_grub_user_pass
   tags:
       - always
 
@@ -143,8 +143,8 @@
   ansible.builtin.import_tasks:
       file: parse_etc_password.yml
   when:
-      - debian11ciscis_section5 or
-        debian11ciscis_section6
+      - debian11cis_section5 or
+        debian11cis_section6
   tags:
       - always
 
@@ -157,42 +157,42 @@
 - name: Include section 1 patches
   ansible.builtin.import_tasks:
       file: section_1/main.yml
-  when: debian11ciscis_section1
+  when: debian11cis_section1
   tags:
       - section1
 
 - name: Include section 2 patches
   ansible.builtin.import_tasks:
       file: section_2/main.yml
-  when: debian11ciscis_section2
+  when: debian11cis_section2
   tags:
       - section2
 
 - name: Include section 3 patches
   ansible.builtin.import_tasks:
       file: section_3/main.yml
-  when: debian11ciscis_section3
+  when: debian11cis_section3
   tags:
       - section3
 
 - name: Include section 4 patches
   ansible.builtin.import_tasks:
       file: section_4/main.yml
-  when: debian11ciscis_section4
+  when: debian11cis_section4
   tags:
       - section4
 
 - name: Include section 5 patches
   ansible.builtin.import_tasks:
       file: section_5/main.yml
-  when: debian11ciscis_section5
+  when: debian11cis_section5
   tags:
       - section5
 
 - name: Include section 6 patches
   ansible.builtin.import_tasks:
       file: section_6/main.yml
-  when: debian11ciscis_section6
+  when: debian11cis_section6
   tags:
       - section6
 
