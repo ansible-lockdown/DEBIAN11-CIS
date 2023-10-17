@@ -44,7 +44,7 @@
   notify: Restart auditd
   with_items:
       - { regexp: '^space_left_action', line: "space_left_action = {{ debian11cis_auditd['space_left_action'] }}" }
-      - { regexp: '^action_mail_acct', line: "action_mail_acct {{ debian11cis_auditd['action_mail_acct'] }}" }
+      - { regexp: '^action_mail_acct', line: "action_mail_acct = {{ debian11cis_auditd['action_mail_acct'] }}" }
       - { regexp: '^admin_space_left_action', line: "admin_space_left_action = {{ debian11cis_auditd['admin_space_left_action'] }}" }
   when:
       - debian11cis_rule_4_1_2_3
