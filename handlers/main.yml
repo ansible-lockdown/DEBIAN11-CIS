@@ -39,7 +39,7 @@
 - name: Purge_packages
   ansible.builtin.apt:
       purge: true
-  when: debian22cis_purge_apt
+  when: debian11cis_purge_apt
 
 - name: Grub update
   ansible.builtin.shell: update-grub
