@@ -47,7 +47,7 @@
             ignoreerrors: true
         notify:
             - Flush ipv6 route table
-        when: debian11cis_ipv6_required
+
   when:
       - debian11cis_rule_3_2_2
       - not debian11cis_is_router
