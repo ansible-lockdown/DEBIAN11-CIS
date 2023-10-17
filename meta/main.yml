@@ -1,13 +1,13 @@
 ---
 
 galaxy_info:
-    author: "George Nalen, Mark Bolwell"
+    author: "Mark Bolwell, George Nalen"
     description: "Apply the Debian 11 CIS benchmarks"
     company: "MindPoint Group"
     license: MIT
-    namespace: mindpointgroup
+    namespace: ansible_lockdown
     role_name: debian11_cis
-    min_ansible_version: 2.10.1
+    min_ansible_version: 2.15.1
     platforms:
         - name: Debian
           versions:
