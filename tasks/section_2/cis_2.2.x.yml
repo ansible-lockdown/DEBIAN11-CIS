@@ -284,6 +284,7 @@
       - name: "2.2.15 | PATCH | Ensure mail transfer agent is configured for local-only mode | check 25 listening"
         ansible.builtin.shell: "ss -lntuH state listening sport = :25"
         register: debian11cis_rule_2_2_15_port_25_listen
+        changed_when: false
 
       - name: "2.2.15 | PATCH | Ensure mail transfer agent is configured for local-only mode | Make changes if exim4 installed"
         ansible.builtin.lineinfile:
@@ -355,12 +356,12 @@
             - debian11cis_rule_2_2_16
             - debian11cis_rsync_server == 'remove'
 
-      - name: "2.2.16 | PATCH | Ensure rsync service is either not installed or masked | remove pkg"
+      - name: "2.2.16 | PATCH | Ensure rsync service is either not installed or masked | mask service"
         ansible.builtin.systemd:
-            name: rsyncd
-            state: stopped
-            enabled: false
+            name: rsync
             masked: true
+            enabled: false
+            state: stopped
             daemon_reload: true
         when:
             - debian11cis_rule_2_2_16
