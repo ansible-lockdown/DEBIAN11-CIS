@@ -15,7 +15,7 @@
         ansible.builtin.stat:
             path: "{{ audit_discovered_logfile.stdout }}"
         changed_when: false
-        register: auditd_logfile
+        register: audit_logfile
 
       - name: |
             "4.1.4.1 | PATCH | Ensure audit log files are mode 0640 or less permissive"
@@ -23,7 +23,7 @@
             "4.1.4.3 | PATCH | Ensure only authorized groups are assigned ownership of audit log files"
         ansible.builtin.file:
             path: "{{ audit_discovered_logfile.stdout }}"
-            mode: "{% if auditd_logfile.stat.mode != '0600' %}0640{% endif %}"
+            mode: "{% if audit_logfile.stat.mode > '0640' %}0640{% endif %}"
             owner: root
             group: root
   when:
@@ -64,12 +64,12 @@
 - name: "4.1.4.5 | PATCH | Ensure audit configuration files are 640 or more restrictive"
   ansible.builtin.file:
       path: "{{ item.path }}"
-      mode: 0640
+      mode: '0640'
   loop: "{{ auditd_conf_files.files }}"
   loop_control:
       label: "{{ item.path }}"
   when:
-      - item.mode != '06(0|4)0'
+      - item.mode > '0640'
       - debian11cis_rule_4_1_4_5
   tags:
       - level2-server
