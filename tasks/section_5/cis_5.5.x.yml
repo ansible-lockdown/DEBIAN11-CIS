@@ -198,7 +198,7 @@
             name: "{{ item }}"
             shell: /sbin/nologin
         with_items:
-            - "{{ debian11cis_passwd | map(attribute='id') | list }}"
+            - "{{ debian11cis_passwd | selectattr('uid', '<', 1000 ) | map(attribute='id') | list }}"
         when:
             - item != "root"
             - item != "sync"
