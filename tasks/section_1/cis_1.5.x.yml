@@ -30,6 +30,7 @@
         ansible.builtin.package:
             name: prelink
             state: absent
+        notify: Purge_packages
   when:
       - debian11cis_rule_1_5_2
       - "'prelink' in ansible_facts.packages"
@@ -57,6 +58,7 @@
         ansible.builtin.package:
             name: apport
             state: absent
+        notify: Purge_packages
         when:
             - "'apport' in ansible_facts.packages"
   when:

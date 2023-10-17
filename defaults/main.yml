@@ -492,6 +492,12 @@ debian11cis_time_servers:
 # Service configuration variables, set to true to keep service
 # Some packages are a dependency so in this case masking is preferred
 # Options are true, false,remove or mask
+
+## Purge apt packages
+# This will allow the purging of any packages that are marked to be removed
+# This will also purge any packages not removed via this playbook
+debian11cis_purge_apt: false
+
 debian11cis_avahi_server: false
 debian11cis_cups_server: false
 debian11cis_dhcp_server: false
