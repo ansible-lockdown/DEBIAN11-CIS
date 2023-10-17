@@ -29,7 +29,6 @@
             - net.ipv6.conf.all.accept_source_route
             - net.ipv6.conf.default.accept_source_route
         notify: Flush ipv6 route table
-        when: debian11cis_ipv6_required
   when:
       - debian11cis_rule_3_3_1
       - not debian11cis_is_router
@@ -71,7 +70,6 @@
             - net.ipv6.conf.all.accept_redirects
             - net.ipv6.conf.default.accept_redirects
         notify: Flush ipv6 route table
-        when: debian11cis_ipv6_required
   when:
       - debian11cis_rule_3_3_2
   tags:
@@ -232,7 +230,6 @@
   notify: Flush ipv6 route table
   when:
       - debian11cis_rule_3_3_9
-      - debian11cis_ipv6_required
   tags:
       - level1-server
       - level1-workstation
