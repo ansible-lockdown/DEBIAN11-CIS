@@ -556,7 +556,7 @@ debian11cis_sysctl_network_conf: /etc/sysctl.conf
 debian11cis_firewall_package: "ufw"
 
 # If UFW force to use syctl settings now UFW
-debian11cis_ufw_use_sysctl: true
+debian11cis_ufw_use_sysctl: false
 
 # Control 3.5.1.5
 # debian11cis_ufw_allow_out_ports are the ports for the firewall to allow
@@ -654,6 +654,17 @@ debian11cis_sudo_logfile: "/var/log/sudo.log"
 debian11cis_sudo_timestamp_timeout: 15
 # Control 5.3.7
 debian11cis_sugroup: nosugroup
+
+# Control 5.4.2
+# This can seriously break access to a system
+## The end state the file /etc/pam.d/common-auth need to be understood
+## If using external auth providers this will be very different
+debian11cis_allow_common_auth_rewrite: false
+debian11cis_rule_5_4_2_faillock_config: |
+    auth       required pam_faillock.so preauth
+    auth       [success=1 default=ignore] pam_unix.so nullok
+    auth       [default=die] pam_faillock.so authfail
+    auth       sufficient pam_faillock.so authsucc
 
 # Control 5.4.3
 # debian11cis_pamd_pwhistory_remember is number of password chnage cycles a user can re-use a password
