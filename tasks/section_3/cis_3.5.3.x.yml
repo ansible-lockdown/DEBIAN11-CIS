@@ -19,6 +19,7 @@
   ansible.builtin.package:
       name: nftables
       state: absent
+  notify: Purge_packages
   when:
       - debian11cis_rule_3_5_3_1_2
       - debian11cis_firewall_package == "iptables"
