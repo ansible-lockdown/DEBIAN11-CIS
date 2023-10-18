@@ -454,6 +454,9 @@ debian11cis_set_boot_pass: true
 
 debian11cis_grub_file: /boot/grub/grub.cfg
 
+## 1.5.1
+debian11cis_sysctl_kernel_file: /etc/sysctl.d/98_cis_kernel.conf
+
 ## 1.6.1.x apparmor
 
 debian11cis_apparmor_disable: false
@@ -747,8 +750,8 @@ debian11cis_dotperm_ansiblemanaged: true
 
 ### Audit binary settings ###
 audit_bin_version:
-    release: v0.3.21
-    checksum: 'sha256:9a9200779603acf0353d2c0e85ae46e083596c10838eaf4ee050c924678e4fe3'
+    release: v0.4.2
+    checksum: 'sha256:e50e43d75c47c731f5fdff176f5abeb8aca35f17aea60f85ebc28f6110cb6945'
 audit_bin_path: /usr/local/bin/
 audit_bin: "{{ audit_bin_path }}goss"
 audit_format: json

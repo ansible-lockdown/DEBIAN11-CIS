@@ -1,14 +1,14 @@
 ---
 
 - name: "1.5.1 | PATCH | Ensure address space layout randomization (ASLR) is enabled | Set active kernel parameter"
-  block:
-      - name: "1.5.1 | PATCH | Ensure address space layout randomization (ASLR) is enabled"
-        ansible.builtin.set_fact:
-            debian11cis_sysctl_update: true
-
-      - name: "1.5.1 | PATCH | Ensure address space layout randomization (ASLR) is enabled"
-        ansible.builtin.debug:
-            msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-kernel_sysctl.conf"
+  ansible.posix.sysctl:
+      name: kernel.randomize_va_space
+      value: '2'
+      state: present
+      reload: true
+      sysctl_set: true
+      sysctl_file: "{{ debian11cis_sysctl_kernel_file }}"
+      ignoreerrors: true
   when:
       - debian11cis_rule_1_5_1
   tags:
@@ -80,6 +80,7 @@
             state: present
             reload: true
             sysctl_set: true
+            sysctl_file: "{{ debian11cis_sysctl_kernel_file }}"
             ignoreerrors: true
 
       - name: "1.5.4 | PATCH | Ensure core dumps are restricted | security limits"
