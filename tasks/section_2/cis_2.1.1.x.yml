@@ -22,7 +22,8 @@
             state: stopped
             enabled: false
             masked: true
-        when: debian11cis_time_sync_tool != "systemd-timesyncd"
+            daemon_reload: true
+        when: "'systemd-timesyncd' not in debian11cis_time_sync_tool"
   when:
       - debian11cis_rule_2_1_1_1
   tags:

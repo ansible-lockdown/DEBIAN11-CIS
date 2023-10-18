@@ -425,6 +425,8 @@ debian11cis_samba_server: {{ debian11cis_smb_server }}
 debian11cis_squid_server: {{ debian11cis_squid_server }}
 debian11cis_snmp_server: {{ debian11cis_snmp_server }}
 
+debian11cis_rsync_server: {{ debian11cis_rsync_server }}
+
 #  Mail Server config
 {% if debian11cis_cis_mail_transfer_agent is defined %}
 debian11cis_mailserver: {{ debian11cis_cis_mail_transfer_agent }}
