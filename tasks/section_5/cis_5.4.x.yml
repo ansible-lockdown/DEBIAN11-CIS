@@ -108,12 +108,12 @@
 
 - name: 5.4.3 | PATCH | Ensure password reuse is limited"
   community.general.pamd:
-    name: common-password
-    type: password
-    control: '[success=1 default=ignore]'
-    module_path: pam_unix.so
-    module_arguments: "remember={{ debian11cis_pamd_pwhistory_remember }}"
-    state: args_present
+      name: common-password
+      type: password
+      control: '[success=1 default=ignore]'
+      module_path: pam_unix.so
+      module_arguments: "remember={{ debian11cis_pamd_pwhistory_remember }}"
+      state: args_present
   when:
       - debian11cis_rule_5_4_3
   tags:
