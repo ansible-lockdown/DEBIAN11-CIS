@@ -30,7 +30,7 @@
         ansible.builtin.package:
             name: prelink
             state: absent
-        notify: Purge_packages
+            purge: "{{ debian11cis_purge_apt }}"
   when:
       - debian11cis_rule_1_5_2
       - "'prelink' in ansible_facts.packages"

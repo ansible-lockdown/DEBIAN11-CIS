@@ -84,6 +84,7 @@
             rule: deny
             direction: in
             from_ip: '::1'
+        when: debian11cis_ipv6_required
         notify: Reload ufw
   when:
       - debian11cis_rule_3_5_1_4

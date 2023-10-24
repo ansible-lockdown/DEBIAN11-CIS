@@ -4,7 +4,7 @@
   ansible.builtin.package:
       name: xserver-xorg*
       state: absent
-  notify: Purge_packages
+      purge: "{{ debian11cis_purge_apt }}"
   when:
       - debian11cis_rule_2_2_1
       - not debian11cis_desktop_required
@@ -35,7 +35,7 @@
         ansible.builtin.package:
             name: avahi-daemon
             state: absent
-        notify: Purge_packages
+            purge: "{{ debian11cis_purge_apt }}"
   when:
       - debian11cis_rule_2_2_2
       - not debian11cis_avahi_server
@@ -54,7 +54,7 @@
   ansible.builtin.package:
       name: cups
       state: absent
-  notify: Purge_packages
+      purge: "{{ debian11cis_purge_apt }}"
   when:
       - debian11cis_rule_2_2_3
       - not debian11cis_cups_server
@@ -72,7 +72,7 @@
   ansible.builtin.package:
       name: isc-dhcp-server
       state: absent
-  notify: Purge_packages
+      purge: "{{ debian11cis_purge_apt }}"
   when:
       - debian11cis_rule_2_2_4
       - not debian11cis_dhcp_server
@@ -90,7 +90,7 @@
   ansible.builtin.package:
       name: slapd
       state: absent
-  notify: Purge_packages
+      purge: "{{ debian11cis_purge_apt }}"
   when:
       - debian11cis_rule_2_2_5
       - not debian11cis_ldap_server
@@ -108,7 +108,7 @@
   ansible.builtin.package:
       name: nfs-kernel-server
       state: absent
-  notify: Purge_packages
+      purge: "{{ debian11cis_purge_apt }}"
   when:
       - debian11cis_rule_2_2_6
       - not debian11cis_nfs_server
@@ -127,7 +127,7 @@
   ansible.builtin.package:
       name: bind9
       state: absent
-  notify: Purge_packages
+      purge: "{{ debian11cis_purge_apt }}"
   when:
       - debian11cis_rule_2_2_7
       - not debian11cis_dns_server
@@ -145,7 +145,7 @@
   ansible.builtin.package:
       name: vsftpd
       state: absent
-  notify: Purge_packages
+      purge: "{{ debian11cis_purge_apt }}"
   when:
       - debian11cis_rule_2_2_8
       - not debian11cis_vsftpd_server
@@ -172,7 +172,7 @@
         ansible.builtin.package:
             name: nginx
             state: absent
-        notify: Purge_packages
+            purge: "{{ debian11cis_purge_apt }}"
         when:
             - "'nginx' in ansible_facts.packages"
   when:
@@ -192,7 +192,7 @@
   ansible.builtin.package:
       name: ['dovecot-imapd', 'dovecot-pop3d']
       state: absent
-  notify: Purge_packages
+      purge: "{{ debian11cis_purge_apt }}"
   when:
       - debian11cis_rule_2_2_10
       - not debian11cis_dovecot_server
@@ -211,7 +211,7 @@
   ansible.builtin.package:
       name: samba
       state: absent
-  notify: Purge_packages
+      purge: "{{ debian11cis_purge_apt }}"
   when:
       - debian11cis_rule_2_2_11
       - not debian11cis_smb_server
@@ -229,7 +229,7 @@
   ansible.builtin.package:
       name: squid
       state: absent
-  notify: Purge_packages
+      purge: "{{ debian11cis_purge_apt }}"
   when:
       - debian11cis_rule_2_2_12
       - not debian11cis_squid_server
@@ -247,7 +247,7 @@
   ansible.builtin.package:
       name: snmpd
       state: absent
-  notify: Purge_packages
+      purge: "{{ debian11cis_purge_apt }}"
   when:
       - debian11cis_rule_2_2_13
       - not debian11cis_snmp_server
@@ -265,7 +265,7 @@
   ansible.builtin.package:
       name: nis
       state: absent
-  notify: Purge_packages
+      purge: "{{ debian11cis_purge_apt }}"
   when:
       - debian11cis_rule_2_2_14
       - not debian11cis_nis_server
@@ -351,7 +351,7 @@
         ansible.builtin.package:
             name: rsync
             state: absent
-        notify: Purge_packages
+            purge: "{{ debian11cis_purge_apt }}"
         when:
             - debian11cis_rule_2_2_16
             - debian11cis_rsync_server == 'remove'
