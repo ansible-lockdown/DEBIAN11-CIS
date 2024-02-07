@@ -21,6 +21,7 @@
             regexp: '^blacklist cramfs'
             line: blacklist cramfs
             create: true
+  notify: Update_Initramfs
   when:
       - debian11cis_rule_1_1_1_1
   tags:
@@ -52,6 +53,7 @@
             regexp: '^blacklist squashfs'
             line: blacklist squashfs
             create: true
+  notify: Update_Initramfs
   when:
       - debian11cis_rule_1_1_1_2
       - snap_pkg_mgr.stdout == '0'
@@ -85,6 +87,7 @@
             regexp: '^blacklist udf'
             line: blacklist udf
             create: true
+  notify: Update_Initramfs
   when:
       - debian11cis_rule_1_1_1_3
   tags:
