@@ -16,8 +16,17 @@
       - name: "5.4.1 | PATCH | Ensure password creation requirements are configured | Add minclass"
         ansible.builtin.lineinfile:
             path: /etc/security/pwquality.conf
-            regexp: '^minclass|^# minclass'
-            line: 'minclass = 4'
+            regexp: ^minclass
+            line: "minclass = {{ debian11cis_pwquality_minclass_value }}"
+        when: debian11cis_pwquality_minclass
+
+      - name: "5.4.1 | PATCH | Ensure password creation requirements are configured | Add extended keys"
+        ansible.builtin.lineinfile:
+            path: /etc/security/pwquality.conf
+            regexp: ^{{ item.key }}
+            line: "{{ item.key }} = {{ item.value }}"
+        loop: "{{ debian11cis_pwquality }}"
+        when: not debian11cis_pwquality_minclass
 
       - name: "5.4.1 | AUDIT | Ensure password creation requirements are configured | Confirm pwquality module in common-password"
         ansible.builtin.shell: grep 'password.*requisite.*pam_pwquality.so' /etc/pam.d/common-password

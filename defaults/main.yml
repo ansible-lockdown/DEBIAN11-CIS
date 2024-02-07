@@ -677,6 +677,26 @@ debian11cis_sudo_timestamp_timeout: 15
 # Control 5.3.7
 debian11cis_sugroup: nosugroup
 
+## Control 5.4.1
+# This variable allows us to use either
+#
+# If true will only run minclass else will set extended options when false
+debian11cis_pwquality_minclass: true
+debian11cis_pwquality_minclass_value: '4'
+debian11cis_pwquality:
+    - key: '#minclass'
+      value: "{{ debian11cis_pwquality_minclass_value }}"
+    - key: 'minlen'
+      value: '14'
+    - key: 'dcredit'
+      value: '-1'
+    - key: 'ucredit'
+      value: '-1'
+    - key: 'ocredit'
+      value: '-1'
+    - key: 'lcredit'
+      value: '-1'
+
 # Control 5.4.2
 # This can seriously break access to a system
 ## The end state the file /etc/pam.d/common-auth need to be understood
