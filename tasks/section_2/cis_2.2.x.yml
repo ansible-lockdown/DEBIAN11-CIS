@@ -353,7 +353,6 @@
             state: absent
             purge: "{{ debian11cis_purge_apt }}"
         when:
-            - debian11cis_rule_2_2_16
             - debian11cis_rsync_server == 'remove'
 
       - name: "2.2.16 | PATCH | Ensure rsync service is either not installed or masked | mask service"
@@ -364,10 +363,10 @@
             state: stopped
             daemon_reload: true
         when:
-            - debian11cis_rule_2_2_16
             - debian11cis_rsync_server == 'mask'
   when:
       - "'rsync' in ansible_facts.packages"
+      - debian11cis_rule_2_2_16
   tags:
       - level1-server
       - level1-workstation
