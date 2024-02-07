@@ -2,13 +2,33 @@
 
 - name: "3.1.1 | PATCH | Ensure system is checked to determine if IPv6 is enabled"
   block:
-      - name: "3.1.1 | PATCH | Ensure system is checked to determine if IPv6 is enabled | Add ipv6.disable if does not exist"
+      - name: "3.1.1 | PATCH | Ensure system is checked to determine if IPv6 is enabled | Replace ipv6.disable if it exists"
+        ansible.builtin.replace:
+            path: /etc/default/grub
+            regexp: '^(GRUB_CMDLINE_LINUX=.*)\bipv6\.disable=\d\b(.*$)'
+            replace: '\1ipv6.disable=1\2'
+        when: debian11cis_ipv6_disable == 'grub'
+        register: ipv6disable_replaced
+        notify: Grub update
+
+      - name: "3.1.1 | PATCH | Ensure system is checked to determine if IPv6 is enabled | Check grub cmdline linux"
+        ansible.builtin.shell: grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | cut -f2 -d'"'
+        changed_when: false
+        failed_when: false
+        check_mode: false
+        register: debian11cis_3_1_1_cmdline_settings
+        when: debian11cis_ipv6_disable == 'grub'
+
+      - name: "3.1.1 | PATCH | Ensure system is checked to determine if IPv6 is enabled | Insert ipv6.disable if it doesn't exist"
         ansible.builtin.lineinfile:
             path: /etc/default/grub
-            regexp: '^(GRUB_CMDLINE_LINUX=.*)ipv6.disable=(0|1)(.*$)'
-            line: '\g<1>\g<3> ipv6.disable=1'
+            regexp: '^(GRUB_CMDLINE_LINUX=".*)"$'
+            line: '\1 ipv6.disable=1"'
             backrefs: true
-        when: debian11cis_ipv6_disable == 'grub'
+        when:
+            - debian11cis_ipv6_disable == 'grub'
+            - ipv6disable_replaced is not changed
+            - "'ipv6.disable' not in debian11cis_3_1_1_cmdline_settings.stdout"
         notify: Grub update
 
       - name: "3.1.1 | PATCH | Ensure system is checked to determine if IPv6 is enabled | Remove net.ipv6.conf.all.disable_ipv6"
@@ -17,7 +37,7 @@
             dest: "/{{ item }}"
             owner: root
             group: root
-            mode: 0640
+            mode: '0640'
         notify: Flush ipv6 route table
         loop:
             - etc/sysctl.d/60-disable_ipv6.conf
