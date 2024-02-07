@@ -137,7 +137,7 @@
       - always
 
 
-- name: "PRELIM | 5.3.4 | Find all sudoers files."
+- name: "PRELIM | 5.3.4 | 5.3.5 | Find all sudoers files."
   ansible.builtin.shell: "find /etc/sudoers /etc/sudoers.d/ -type f ! -name '*~' ! -name '*.*'"
   changed_when: false
   failed_when: false
@@ -180,6 +180,12 @@
   ansible.builtin.shell: 'cat /etc/passwd | grep -Ev "nologin|/sbin|/bin" | cut -d: -f6'
   changed_when: false
   register: interactive_users_home
+  when:
+      - debian11cis_rule_6_2_11 or
+        debian11cis_rule_6_2_13 or
+        debian11cis_rule_6_2_14 or
+        debian11cis_rule_6_2_15 or
+        debian11cis_rule_6_2_16
   tags:
       - always
 
