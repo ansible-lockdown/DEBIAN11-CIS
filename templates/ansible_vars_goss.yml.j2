@@ -20,7 +20,7 @@ debian11cis_level_2: {{ debian11cis_level_2 }}
 
 
 #  to enable rules that may have IO impact on a system e.g. full filesystem scans or CPU heavy
-run_heavy_tests: true
+run_heavy_tests: {{ audit_run_heavy_tests }}
 
 #  True is BIOS based system else set to false
 debian11cis_legacy_boot: true
