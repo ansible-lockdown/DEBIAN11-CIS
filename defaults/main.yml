@@ -25,9 +25,6 @@ debian11cis_disruption_high: true
 ## this will allow a system boot when set to false without needing a password
 debian11cis_ask_passwd_to_boot: false
 
-# tweak role to run in a non-privileged container (default value)- dynamically discovered in tasks/main.yml
-system_is_container: false
-
 ## Root user used
 # Root by default is not used unless setup by user
 # The role will only run certain commands if set to true
@@ -191,7 +188,7 @@ debian11cis_rule_2_2_13: true
 debian11cis_rule_2_2_14: true
 debian11cis_rule_2_2_15: true
 debian11cis_rule_2_2_16: true
-debian11cis_rule_2_2_17: true
+
 # Service Client
 debian11cis_rule_2_3_1: true
 debian11cis_rule_2_3_2: true
@@ -208,8 +205,6 @@ debian11cis_rule_3_1_1: true
 debian11cis_rule_3_1_2: true
 debian11cis_rule_3_1_3: true
 debian11cis_rule_3_1_4: true
-debian11cis_rule_3_1_5: true
-debian11cis_rule_3_1_6: true
 # Network Parameters (Host Only)
 debian11cis_rule_3_2_1: true
 debian11cis_rule_3_2_2: true
@@ -223,11 +218,7 @@ debian11cis_rule_3_3_6: true
 debian11cis_rule_3_3_7: true
 debian11cis_rule_3_3_8: true
 debian11cis_rule_3_3_9: true
-# Uncommon Network Protocols
-debian11cis_rule_3_4_1: true
-debian11cis_rule_3_4_2: true
-debian11cis_rule_3_4_3: true
-debian11cis_rule_3_4_4: true
+
 # Firewall Configuration
 # UFW
 debian11cis_rule_3_5_1_1: true
