@@ -155,9 +155,7 @@ debian11cis_rule_1_9: true
 # Section 2 Fixes
 # Section 2 is Services (Special Purpose Services, and service clients)
 debian11cis_rule_2_1_1_1: true
-debian11cis_rule_2_1_1_2: true
-debian11cis_rule_2_1_1_3: true
-debian11cis_rule_2_1_1_4: true
+
 # Chrony
 debian11cis_rule_2_1_2_1: true
 debian11cis_rule_2_1_2_2: true
