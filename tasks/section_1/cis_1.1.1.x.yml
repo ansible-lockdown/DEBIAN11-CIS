@@ -81,7 +81,7 @@
             state: absent
         when: ansible_connection != 'docker'
 
-      - name: "1.1.1.13 | PATCH | Ensure mounting of udf filesystems is disabled | blacklist udf"
+      - name: "1.1.1.3 | PATCH | Ensure mounting of udf filesystems is disabled | blacklist udf"
         ansible.builtin.lineinfile:
             dest: /etc/modprobe.d/blacklist.conf
             regexp: '^blacklist udf'
