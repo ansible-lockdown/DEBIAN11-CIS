@@ -113,7 +113,7 @@
 - name: Auditd rules reload
   ansible.builtin.shell: augenrules --load
   when:
-      - '"No change" not in debian11cis_rule_4_1_3_21_augen_check.stdout'
+      - debian11cis_rule_4_1_3_21_augen_check is not defined
 
 - name: Audit_immutable_fact
   ansible.builtin.debug:
