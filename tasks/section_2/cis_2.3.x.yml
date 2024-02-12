@@ -86,6 +86,8 @@
   when:
       - debian11cis_rule_2_3_6
       - not debian11cis_rpc_required
+      - not debian11cis_nfs_server  # dependancy breaks
+      - not debian11cis_nfs_client  # dependancy breaks
   tags:
       - level1-server
       - level1-workstation

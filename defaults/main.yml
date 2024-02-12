@@ -203,6 +203,8 @@ debian11cis_rule_3_1_1: true
 debian11cis_rule_3_1_2: true
 debian11cis_rule_3_1_3: true
 debian11cis_rule_3_1_4: true
+debian11cis_rule_3_1_5: true
+debian11cis_rule_3_1_6: true
 # Network Parameters (Host Only)
 debian11cis_rule_3_2_1: true
 debian11cis_rule_3_2_2: true
@@ -535,7 +537,7 @@ debian11cis_rsync_server: mask  # Can be set to true, mask or remove depending o
 debian11cis_nis_server: false
 debian11cis_nfs_client: false
 # rpcbind is required by nfs-common which is required on client and server
-debian11cis_rpc_required: "{{ debian11cis_nfs_server or debian11cis_nfs_client }}"
+debian11cis_rpc_required: false
 
 # Clients in use variables
 debian11cis_nis_required: false
