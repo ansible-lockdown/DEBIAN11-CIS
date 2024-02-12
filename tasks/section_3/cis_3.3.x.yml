@@ -25,7 +25,9 @@
             state: present
             reload: true
             ignoreerrors: true
-        when: debian11cis_ipv6_disable == 'sysctl'
+        when:
+            - debian11cis_ipv6_required
+            - debian11cis_ipv6_disable == 'sysctl'
         with_items:
             - net.ipv6.conf.all.accept_source_route
             - net.ipv6.conf.default.accept_source_route
@@ -67,7 +69,9 @@
             state: present
             reload: true
             ignoreerrors: true
-        when: debian11cis_ipv6_disable == 'sysctl'
+        when:
+            - debian11cis_ipv6_required
+            - debian11cis_ipv6_disable == 'sysctl'
         with_items:
             - net.ipv6.conf.all.accept_redirects
             - net.ipv6.conf.default.accept_redirects
@@ -232,6 +236,7 @@
       - net.ipv6.conf.default.accept_ra
   notify: Flush ipv6 route table
   when:
+      - debian11cis_ipv6_required
       - debian11cis_rule_3_3_9
   tags:
       - level1-server
