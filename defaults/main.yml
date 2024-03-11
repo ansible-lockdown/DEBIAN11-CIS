@@ -13,7 +13,7 @@ skip_reboot: true
 ## Benchmark name used by auditing control role
 # The audit variable found at the base
 benchmark: DEBIAN11-CIS
-benchmark_version: v1.0.0
+benchmark_version: 1.0.0
 # Used for audit
 debian11cis_level_1: true
 debian11cis_level_2: true
