@@ -165,7 +165,7 @@
         changed_when: false
         register: gid_min_id
 
-      - name: "PRELIM | set_facts for interactive uid/gid"
+      - name: "PRELIM | Set facts for interactive uid/gid"
         ansible.builtin.set_fact:
             min_int_uid: "{{ uid_min_id.stdout }}"
             max_int_uid: "{{ uid_max_id.stdout }}"
