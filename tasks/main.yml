@@ -59,7 +59,7 @@
 
       - name: Check debian11cis_grub_user password variable has been changed | check password is set
         ansible.builtin.assert:
-            that: debian11cis_password_set_grub_user.stdout.find('$y$') != -1 or debian11cis_grub_user_passwd.find('$y$') != -1 and debian11cis_grub_user_passwd != '$y$j9T$MBA5l/tQyWifM869nQjsi.$cTy0ConcNjIYOn6Cppo5NAky20osrkRxz4fEWA8xac6'
+            that: debian11cis_set_grub_user_pass and {{'true' if debian11cis_grub_user_passwd | regex_search('^\$y\$|^\$6\$') else 'false' }} and debian11cis_grub_user_passwd != '$y$j9T$MBA5l/tQyWifM869nQjsi.$cTy0ConcNjIYOn6Cppo5NAky20osrkRxz4fEWA8xac6'
             msg: "This role will not set the {{ debian11cis_grub_user }} user password is not set or debian11cis_grub_user_passwd variable has not been set correctly"
         when:
             - "'$y$' in debian11cis_password_set_grub_user.stdout"
