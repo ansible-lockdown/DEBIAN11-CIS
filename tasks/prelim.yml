@@ -103,8 +103,8 @@
 
       - name: "PRELIM | PATCH | Unload UAS kernel module"
         community.general.modprobe:
-          name: uas
-          state: absent
+            name: uas
+            state: absent
         when: discovered_uas_status.rc == 0
 
       - name: "PRELIM | AUDIT | Verify UAS module is unloaded"
@@ -116,7 +116,7 @@
 
       - name: "PRELIM | AUDIT | Output UAS unload status"
         ansible.builtin.debug:
-          msg: "The UAS module has been successfully unloaded."
+            msg: "The UAS module has been successfully unloaded."
         when: discovered_uas_check.rc != 0
   when:
       - debian11cis_rule_1_1_10
