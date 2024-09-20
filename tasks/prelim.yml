@@ -75,57 +75,6 @@
       - section1
       - always
 
-- name: "PRELIM | Check for UAS running for usb-storage"
-  block:
-      - name: "PRELIM | AUDIT | Check if UAS kernel module is running"
-        ansible.builtin.shell: "lsmod | grep uas"
-        register: discovered_uas_status
-        changed_when: false
-        failed_when: false
-        ignore_errors: true
-
-      - name: "PRELIM | AUDIT | Find mounted devices"
-        ansible.builtin.command: lsblk -o NAME,MOUNTPOINT | grep -v '^$'
-        register: discovered_mounted_devices
-        changed_when: false
-        failed_when: false
-        ignore_errors: true
-        when: discovered_uas_status.rc == 0
-
-      - name: "PRELIM | PATCH | Unmount devices"
-        ansible.builtin.command:
-            cmd: "umount /dev/{{ item }}"
-        loop: "{{ discovered_mounted_devices.stdout_lines | map('split', ' ') | map('first') | list }}"
-        changed_when: false
-        failed_when: false
-        ignore_errors: true
-        when: discovered_uas_status.rc == 0
-
-      - name: "PRELIM | PATCH | Unload UAS kernel module"
-        community.general.modprobe:
-            name: uas
-            state: absent
-        when: discovered_uas_status.rc == 0
-
-      - name: "PRELIM | AUDIT | Verify UAS module is unloaded"
-        ansible.builtin.shell: "lsmod | grep uas"
-        changed_when: false
-        failed_when: false
-        ignore_errors: true
-        register: discovered_uas_check
-
-      - name: "PRELIM | AUDIT | Output UAS unload status"
-        ansible.builtin.debug:
-            msg: "The UAS module has been successfully unloaded."
-        when: discovered_uas_check.rc != 0
-  when:
-      - debian11cis_rule_1_1_10
-  tags:
-      - level1-server
-      - level2-workstation
-      - patch
-      - always
-
 - name: "PRELIM | Check for avahi-daemon service"
   ansible.builtin.shell: "systemctl show avahi-daemon | grep LoadState | cut -d = -f 2"
   register: avahi_service_status
@@ -286,4 +235,45 @@
       - debian11cis_firewall_package == "ufw"
       - debian11cis_ufw_use_sysctl
   tags:
+      - always
+
+- name: "Optional | PATCH | Check for UAS running for usb-storage"
+  block:
+      - name: "PRELIM | AUDIT | Check if UAS kernel module is running"
+        ansible.builtin.shell: "lsmod | grep uas"
+        register: discovered_uas_status
+        changed_when: false
+        failed_when: false
+        ignore_errors: true
+        block:
+            - name: "1.1.10 | PATCH | Disable UAS Storage | Set UAS config"
+              ansible.builtin.lineinfile:
+                  path: /etc/modprobe.d/uas.conf
+                  regexp: '^install uas'
+                  line: 'install uas /bin/true'
+                  create: true
+
+            - name: "1.1.10 | PATCH | Disable USB Storage | Blacklist usb-storage"
+              ansible.builtin.lineinfile:
+                  path: /etc/modprobe.d/blacklist.conf
+                  line: 'blacklist uas'
+                  insertafter: EOF
+
+            - name: "1.1.10 | PATCH | Disable USB Storage | Remove usb-storage module"
+              community.general.modprobe:
+                  name: uas
+                  state: absent
+              when:
+                  - ansible_connection != 'docker'
+        notify: Update_Initramfs
+        when:
+            - discovered_uas_status.rc == 0
+            - not debian11cis_allow_usb_storage
+            - debian11cis_uas_remove
+  when:
+      - debian11cis_rule_1_1_10
+  tags:
+      - level1-server
+      - level2-workstation
+      - patch
       - always
