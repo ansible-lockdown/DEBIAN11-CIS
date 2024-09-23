@@ -246,25 +246,25 @@
         failed_when: false
         ignore_errors: true
       - block:
-          - name: "Optional | PATCH | Set UAS config"
-            ansible.builtin.lineinfile:
-                path: /etc/modprobe.d/uas.conf
-                regexp: '^install uas'
-                line: 'install uas /bin/true'
-                create: true
+            - name: "Optional | PATCH | Set UAS config"
+              ansible.builtin.lineinfile:
+                  path: /etc/modprobe.d/uas.conf
+                  regexp: '^install uas'
+                  line: 'install uas /bin/true'
+                  create: true
 
-          - name: "Optional | PATCH | Blacklist usb-storage"
-            ansible.builtin.lineinfile:
-                path: /etc/modprobe.d/blacklist.conf
-                line: 'blacklist uas'
-                insertafter: EOF
+            - name: "Optional | PATCH | Blacklist usb-storage"
+              ansible.builtin.lineinfile:
+                  path: /etc/modprobe.d/blacklist.conf
+                  line: 'blacklist uas'
+                  insertafter: EOF
 
-          - name: "Optional | PATCH | Remove usb-storage module"
-            community.general.modprobe:
-                name: uas
-                state: absent
-            when:
-                - ansible_connection != 'docker'
+            - name: "Optional | PATCH | Remove usb-storage module"
+              community.general.modprobe:
+                  name: uas
+                  state: absent
+              when:
+                  - ansible_connection != 'docker'
         notify: Update_Initramfs
         when:
             - discovered_uas_status.rc == 0
