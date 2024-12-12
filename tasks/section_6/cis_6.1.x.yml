@@ -65,7 +65,7 @@
       path: /etc/shadow
       owner: root
       group: root
-      mode: 0000
+      mode: 0640
   when:
       - debian11cis_rule_6_1_5
   tags:
@@ -80,7 +80,7 @@
       path: /etc/shadow-
       owner: root
       group: root
-      mode: 0000
+      mode: 0640
   when:
       - debian11cis_rule_6_1_6
   tags:
@@ -95,7 +95,7 @@
       path: /etc/gshadow
       owner: root
       group: root
-      mode: 0000
+      mode: 0640
   when:
       - debian11cis_rule_6_1_7
   tags:
@@ -110,7 +110,7 @@
       path: /etc/gshadow-
       owner: root
       group: root
-      mode: 0000
+      mode: 0640
   when:
       - debian11cis_rule_6_1_8
   tags:

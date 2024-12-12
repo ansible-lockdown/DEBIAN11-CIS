@@ -236,3 +236,44 @@
       - debian11cis_ufw_use_sysctl
   tags:
       - always
+
+- name: "Optional | PATCH | Check for UAS running for usb-storage"
+  block:
+      - name: "Optional | AUDIT | Check if UAS kernel module is running"
+        ansible.builtin.shell: "lsmod | grep uas"
+        register: discovered_uas_status
+        changed_when: false
+        failed_when: false
+        ignore_errors: true
+      - block:
+            - name: "Optional | PATCH | Set UAS config"
+              ansible.builtin.lineinfile:
+                  path: /etc/modprobe.d/uas.conf
+                  regexp: '^install uas'
+                  line: 'install uas /bin/true'
+                  create: true
+
+            - name: "Optional | PATCH | Blacklist usb-storage"
+              ansible.builtin.lineinfile:
+                  path: /etc/modprobe.d/blacklist.conf
+                  line: 'blacklist uas'
+                  insertafter: EOF
+
+            - name: "Optional | PATCH | Remove usb-storage module"
+              community.general.modprobe:
+                  name: uas
+                  state: absent
+              when:
+                  - ansible_connection != 'docker'
+        notify: Update_Initramfs
+        when:
+            - discovered_uas_status.rc == 0
+            - not debian11cis_allow_usb_storage
+            - debian11cis_uas_remove
+  when:
+      - debian11cis_rule_1_1_10
+  tags:
+      - level1-server
+      - level2-workstation
+      - patch
+      - always
