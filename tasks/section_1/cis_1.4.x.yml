@@ -8,7 +8,7 @@
             dest: "{{ debian11cis_grub_user_file }}"
             owner: root
             group: root
-            mode: 0755
+            mode: 'u+x,go-w'
         notify: Grub update
 
       - name: "1.4.1 | PATCH | Ensure bootloader password is set | allow unrestricted boot"
@@ -36,16 +36,16 @@
         ansible.builtin.stat:
             path: "{{ debian11cis_grub_file }}"
         check_mode: false
-        register: debian11cis_1_4_2_grub_cfg_status
+        register: discovered_grub_cfg_status
 
       - name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured | Set permissions"
         ansible.builtin.file:
             path: "{{ debian11cis_grub_file }}"
             owner: root
             group: root
-            mode: '0400'
+            mode: 'go-wx'
         when:
-            - debian11cis_1_4_2_grub_cfg_status.stat.exists
+            - discovered_grub_cfg_status.stat.exists
   when:
       - debian11cis_rule_1_4_2
   tags:

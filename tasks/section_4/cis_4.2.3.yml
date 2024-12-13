@@ -8,13 +8,13 @@
             file_type: file
             recurse: true
             hidden: true
-        register: logfiles
+        register: discovered_logfiles
 
       - name: "4.2.3 | PATCH | Ensure permissions on all logfiles are configured | change permissions"
         ansible.builtin.file:
             path: "{{ item.path }}"
-            mode: 0640
-        loop: "{{ logfiles.files }}"
+            mode: 'u-x,g-wx,o-rwx'
+        loop: "{{ discovered_logfiles.files }}"
         loop_control:
             label: "{{ item.path }}"
         when:

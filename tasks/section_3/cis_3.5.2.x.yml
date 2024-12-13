@@ -82,10 +82,10 @@
         ansible.builtin.debug:
             msg: "Warning!! NFTables is not supported in this role. Please use UFW, iptables, or manually manage nftables | Message out warning"
             # ansible.builtin.shell: "nft create table {{ debian11cis_nftables_table_name }}"
-            # changed_when: debian11cis_3_5_2_4_new_table.rc == 0
+            # changed_when: discovered_new_nftables_table.rc == 0
             # failed_when: false
             # check_mode: false
-            # register: debian11cis_3_5_2_4_new_table
+            # register: discovered_new_nftables_table
 
       - name: "3.5.2.4 | AUDIT | Ensure a nftables table exists | Set warning count"
         ansible.builtin.import_tasks:

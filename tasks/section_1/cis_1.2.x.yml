@@ -7,14 +7,14 @@
         changed_when: false
         failed_when: false
         check_mode: false
-        register: debian11cis_1_2_1_apt_policy
+        register: discovered_apt_policy
 
       - name: "1.2.1 | AUDIT | Ensure package manager repositories are configured | Message out repository configs"
         ansible.builtin.debug:
             msg:
                 - "Warning!! Below are the apt package repositories"
                 - "Please review to make sure they conform to your sites policies"
-                - "{{ debian11cis_1_2_1_apt_policy.stdout_lines }}"
+                - "{{ discovered_apt_policy.stdout_lines }}"
 
       - name: "1.2.1 | WARN | Ensure package manager repositories are configured | warn_count"
         ansible.builtin.import_tasks:
@@ -38,7 +38,7 @@
         changed_when: false
         failed_when: false
         check_mode: false
-        register: debian11cis_1_2_2_apt_gpgkeys
+        register: discovered_apt_gpgkeys
 
       - name: "1.2.2 | AUDIT | Ensure GPG keys are configured | Message out apt gpg keys"
         ansible.builtin.debug:
@@ -46,7 +46,7 @@
                 - "Warning!! Below are the apt gpg keys configured"
                 - "Please review to make sure they are configured"
                 - "in accordance with site policy"
-                - "{{ debian11cis_1_2_2_apt_gpgkeys.stdout_lines }}"
+                - "{{ discovered_apt_gpgkeys.stdout_lines }}"
 
       - name: "1.2.2 | WARN | Ensure GPG keys are configured | warn_count"
         ansible.builtin.import_tasks:

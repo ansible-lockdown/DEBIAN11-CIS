@@ -1,7 +1,7 @@
 
 ## Ansible controlled file
 # Added as part of ansible-lockdown CIS baseline
-# provided by MindPointGroup LLC YOUR CHANGED WILL BE LOST!
+# provided by Mindpoint Group - A Tyto Athene Company YOUR CHANGED WILL BE LOST!
 
 # This template will set all of the auditd configurations via a handler in the role in one task instead of individually
 
@@ -31,8 +31,8 @@
 -w /etc/network/ -p wa -k system-locale
 {% endif %}
 {% if debian11cis_rule_4_1_3_6 %}
-{% if priv_procs is defined %}
-{% for proc in priv_procs.stdout_lines -%}
+{% if discovered_privilege_process is defined %}
+{% for proc in discovered_privilege_process.stdout_lines -%}
 -a always,exit -F path={{ proc }} -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged
 {% endfor %}
 {% endif %}

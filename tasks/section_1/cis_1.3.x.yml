@@ -7,7 +7,7 @@
             name: ['aide', 'aide-common']
             state: present
             update_cache: true
-        register: debian11cis_rule_1_3_1_aide_added
+        register: discovered_aide_installed
         when:
             - "'aide' not in ansible_facts.packages or
               'aide-common' not in ansible_facts.packages"
@@ -15,7 +15,7 @@
       - name: "1.3.1 | PATCH | Ensure AIDE is installed | Recapture packages"
         ansible.builtin.package_facts:
             manager: auto
-        when: debian11cis_rule_1_3_1_aide_added.skipped is not defined
+        when: discovered_aide_installed.skipped is not defined
 
       - name: "1.3.1 | PATCH | Ensure AIDE is installed | Configure AIDE"
         ansible.builtin.shell: aideinit && mv /var/lib/aide/aide.db.new /var/lib/aide/aide.db

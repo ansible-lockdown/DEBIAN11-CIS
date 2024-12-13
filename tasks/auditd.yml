@@ -7,7 +7,7 @@
       owner: root
       group: root
       mode: '0640'
-  register: audit_rules_updated
+  register: discovered_audit_rules_updated
   notify:
       - Auditd rules reload
       - Audit_immutable_fact
@@ -25,19 +25,3 @@
   when:
       - allow_auditd_uid_user_exclusions
       - debian11ciscis_auditd_uid_exclude | length > 0
-
-# - name: "POST | AUDITD | Discover if auditd immutable - Set reboot required if auditd immutable"
-#   block:
-#       - name: "POST | AUDITD | Discover if auditd immutable - Set reboot required if auditd immutable | Get status"
-#         ansible.builtin.shell: grep -c "^-e 2" /etc/audit/rules.d/99_auditd.rules
-#         changed_when: false
-#         failed_when: false
-#         register: debian11ciscis_auditd_immutable_check
-
-#       - name: "POST | AUDITD | Discover if auditd immutable - Set reboot required if auditd immutable | Set reboot required"
-#         ansible.builtin.debug:
-#             msg: "Reboot required for auditd to apply new rules as immutable set"
-#         notify: change_requires_reboot
-#         when: debian11ciscis_auditd_immutable_check.stdout == '1'
-#   when:
-#       - debian11ciscis_audit_rules_update.changed

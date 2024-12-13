@@ -5,7 +5,7 @@
       path: /etc/passwd
       owner: root
       group: root
-      mode: 0644
+      mode: 'u-x,go-wx'
   when:
       - debian11cis_rule_6_1_1
   tags:
@@ -20,7 +20,7 @@
       path: /etc/passwd-
       owner: root
       group: root
-      mode: 0644
+      mode: 'u-x,go-wx'
   when:
       - debian11cis_rule_6_1_2
   tags:
@@ -35,7 +35,7 @@
       path: /etc/group-
       owner: root
       group: root
-      mode: 0644
+      mode: 'u-x,go-wx'
   when:
       - debian11cis_rule_6_1_3
   tags:
@@ -50,7 +50,7 @@
       path: /etc/group-
       owner: root
       group: root
-      mode: 0644
+      mode: 'u-x,go-wx'
   when:
       - debian11cis_rule_6_1_4
   tags:
@@ -65,7 +65,7 @@
       path: /etc/shadow
       owner: root
       group: root
-      mode: 0000
+      mode: 'ugo-rwx'
   when:
       - debian11cis_rule_6_1_5
   tags:
@@ -80,7 +80,7 @@
       path: /etc/shadow-
       owner: root
       group: root
-      mode: 0000
+      mode: 'ugo-rwx'
   when:
       - debian11cis_rule_6_1_6
   tags:
@@ -95,7 +95,7 @@
       path: /etc/gshadow
       owner: root
       group: root
-      mode: 0000
+      mode: 'ugo-rwx'
   when:
       - debian11cis_rule_6_1_7
   tags:
@@ -110,7 +110,7 @@
       path: /etc/gshadow-
       owner: root
       group: root
-      mode: 0000
+      mode: 'ugo-rwx'
   when:
       - debian11cis_rule_6_1_8
   tags:
@@ -126,16 +126,16 @@
         ansible.builtin.shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -0002
         failed_when: false
         changed_when: false
-        register: rhel_09_6_1_9_perms_results
+        register: discovered_files_worldwrite
 
       - name: "6.1.9 | PATCH | Ensure no world writable files exist | Adjust world-writable files if they exist (Configurable)"
         ansible.builtin.file:
             path: '{{ item }}'
-            mode: o-w
+            mode: 'o-w'
             state: touch
-        loop: "{{ rhel_09_6_1_9_perms_results.stdout_lines }}"
+        loop: "{{ discovered_files_worldwrite.stdout_lines }}"
         when:
-            - rhel_09_6_1_9_perms_results.stdout_lines is defined
+            - discovered_files_worldwrite.stdout_lines is defined
             - debian11cis_no_world_write_adjust
   when:
       - debian11cis_rule_6_1_9
@@ -154,7 +154,7 @@
         changed_when: false
         failed_when: false
         check_mode: false
-        register: debian11cis_6_1_10_no_user_items
+        register: discovered_unowned_files
         with_items:
             - "{{ ansible_facts.mounts }}"
         loop_control:
@@ -162,34 +162,34 @@
 
       - name: "6.1.10 | AUDIT | Ensure no unowned files or directories exist | Flatten no_user_items results for easier use"
         ansible.builtin.set_fact:
-            debian11cis_6_1_10_no_user_items_flatten: "{{ debian11cis_6_1_10_no_user_items.results | map(attribute='stdout_lines') | flatten }}"
+            discovered_unowned_files_flatten: "{{ discovered_unowned_files.results | map(attribute='stdout_lines') | flatten }}"
 
       - name: "6.1.10 | AUDIT | Ensure no unowned files or directories exist | Alert on unowned files and directories"
         ansible.builtin.debug:
             msg:
                 - "Warning!! You have unowned files and are configured to not auto-remediate for this task"
                 - "Please review the files/directories below and assign an owner"
-                - "{{ debian11cis_6_1_10_no_user_items_flatten }}"
+                - "{{ discovered_unowned_files_flatten }}"
         when:
             - not debian11cis_no_owner_adjust
-            - debian11cis_6_1_10_no_user_items_flatten | length > 0
+            - discovered_unowned_files_flatten | length > 0
 
       - name: "6.1.10 | PATCH | Ensure no unowned files or directories exist | Set unowned files/directories to configured owner"
         ansible.builtin.file:
             path: "{{ item }}"
             owner: "{{ debian11cis_unowned_owner }}"
         with_items:
-            - "{{ debian11cis_6_1_10_no_user_items_flatten }}"
+            - "{{ discovered_unowned_files_flatten }}"
         when:
             - debian11cis_no_owner_adjust
-            - debian11cis_6_1_10_no_user_items_flatten | length > 0
+            - discovered_unowned_files_flatten | length > 0
 
       - name: "6.1.10 | AUDIT | Ensure no unowned files or directories exist | Warn Count"
         ansible.builtin.import_tasks:
             file: warning_facts.yml
         when:
             - not debian11cis_no_owner_adjust
-            - debian11cis_6_1_10_no_user_items_flatten | length > 0
+            - discovered_unowned_files_flatten | length > 0
         vars:
             warn_control_id: '6.1.10'
   when:
@@ -209,7 +209,7 @@
         changed_when: false
         failed_when: false
         check_mode: false
-        register: debian11cis_6_1_11_ungrouped_items
+        register: discovered_ungrouped_files
         with_items:
             - "{{ ansible_facts.mounts }}"
         loop_control:
@@ -217,34 +217,34 @@
 
       - name: "6.1.11 | AUDIT | Ensure no ungrouped files or directories exist | Flatten ungrouped_items results for easier use"
         ansible.builtin.set_fact:
-            debian11cis_6_1_11_ungrouped_items_flatten: "{{ debian11cis_6_1_11_ungrouped_items.results | map(attribute='stdout_lines') | flatten }}"
+            discovered_ungrouped_files_flatten: "{{ discovered_ungrouped_files.results | map(attribute='stdout_lines') | flatten }}"
 
       - name: "6.1.11 | AUDIT | Ensure no ungrouped files or directories exist | Alert on ungrouped files and directories"
         ansible.builtin.debug:
             msg:
                 - "Warning!! You have ungrouped files/directories and are configured to not auto-remediate for this task"
                 - "Please review the files/directories below and assign a group"
-                - "{{ debian11cis_6_1_11_ungrouped_items_flatten }}"
+                - "{{ discovered_ungrouped_files_flatten }}"
         when:
             - not debian11cis_no_group_adjust
-            - debian11cis_6_1_11_ungrouped_items_flatten | length > 0
+            - discovered_ungrouped_files_flatten | length > 0
 
       - name: "6.1.11 | PATCH | Ensure no ungrouped files or directories exist | Set ungrouped files/directories to configured group"
         ansible.builtin.file:
             path: "{{ item }}"
             group: "{{ debian11cis_ungrouped_group }}"
         with_items:
-            - "{{ debian11cis_6_1_11_ungrouped_items_flatten }}"
+            - "{{ discovered_ungrouped_files_flatten }}"
         when:
             - debian11cis_no_group_adjust
-            - debian11cis_6_1_11_ungrouped_items_flatten | length > 0
+            - discovered_ungrouped_files_flatten | length > 0
 
       - name: "6.1.11 | AUDIT | Ensure no ungrouped files or directories exist | Warn Count"
         ansible.builtin.import_tasks:
             file: warning_facts.yml
         when:
             - not debian11cis_no_group_adjust
-            - debian11cis_6_1_11_ungrouped_items_flatten | length > 0
+            - discovered_ungrouped_files_flatten | length > 0
         vars:
             warn_control_id: '6.1.11'
   when:
@@ -264,7 +264,7 @@
         changed_when: false
         failed_when: false
         check_mode: false
-        register: debian11cis_6_1_12_suid_executables
+        register: discovered_suid_executables
         with_items:
             - "{{ ansible_facts.mounts }}"
         loop_control:
@@ -272,16 +272,16 @@
 
       - name: "6.1.12 | AUDIT | Audit SUID executables | Flatten suid_executables results for easier use"
         ansible.builtin.set_fact:
-            debian11cis_6_1_12_suid_executables_flatten: "{{ debian11cis_6_1_12_suid_executables.results | map(attribute='stdout_lines') | flatten }}"
+            discovered_suid_executables_flatten: "{{ discovered_suid_executables.results | map(attribute='stdout_lines') | flatten }}"
 
       - name: "6.1.12 | AUDIT | Audit SUID executables | Alert SUID executables exist"
         ansible.builtin.debug:
             msg:
                 - "Warning!! You have SUID executables"
                 - "The files are listed below, please confirm the integrity of these binaries"
-                - "{{ debian11cis_6_1_12_suid_executables_flatten }}"
+                - "{{ discovered_suid_executables_flatten }}"
         when:
-            - debian11cis_6_1_12_suid_executables_flatten | length > 0
+            - discovered_suid_executables_flatten | length > 0
             - not debian11cis_suid_adjust
 
       - name: "6.1.12 | PATCH | Audit SUID executables | Remove SUID bit"
@@ -289,16 +289,16 @@
             path: "{{ item }}"
             mode: 'u-s'
         with_items:
-            - "{{ debian11cis_6_1_12_suid_executables_flatten }}"
+            - "{{ discovered_suid_executables_flatten }}"
         when:
             - debian11cis_suid_adjust
-            - debian11cis_6_1_12_suid_executables_flatten | length > 0
+            - discovered_suid_executables_flatten | length > 0
 
       - name: "6.1.12 | AUDIT | Audit SUID executables | Warn Count"
         ansible.builtin.import_tasks:
             file: warning_facts.yml
         when:
-            - debian11cis_6_1_12_suid_executables_flatten | length > 0
+            - discovered_suid_executables_flatten | length > 0
             - not debian11cis_suid_adjust
         vars:
             warn_control_id: '6.1.12'
@@ -319,7 +319,7 @@
         changed_when: false
         failed_when: false
         check_mode: false
-        register: debian11cis_6_1_13_sgid_executables
+        register: discovered_sgid_executables
         with_items:
             - "{{ ansible_facts.mounts }}"
         loop_control:
@@ -327,23 +327,23 @@
 
       - name: "6.1.13 | AUDIT | Audit SGID executables | Flatten sgid_executables results for easier use"
         ansible.builtin.set_fact:
-            debian11cis_6_1_13_sgid_executables_flatten: "{{ debian11cis_6_1_13_sgid_executables.results | map(attribute='stdout_lines') | flatten }}"
+            discovered_sgid_executables_flatten: "{{ discovered_sgid_executables.results | map(attribute='stdout_lines') | flatten }}"
 
       - name: "6.1.13 | AUDIT | Audit SGID executables | Alert SGID executables exist"
         ansible.builtin.debug:
             msg:
                 - "Warning!! You have SGID executables"
                 - "The files are listed below, please review the integrity of these binaries"
-                - "{{ debian11cis_6_1_13_sgid_executables_flatten }}"
+                - "{{ discovered_sgid_executables_flatten }}"
         when:
-            - debian11cis_6_1_13_sgid_executables_flatten | length > 0
+            - discovered_sgid_executables_flatten | length > 0
             - not debian11cis_sgid_adjust
 
       - name: "6.1.13 | AUDIT | Audit SGID executables | Warn Count"
         ansible.builtin.import_tasks:
             file: warning_facts.yml
         when:
-            - debian11cis_6_1_13_sgid_executables_flatten | length > 0
+            - discovered_sgid_executables_flatten | length > 0
             - not debian11cis_sgid_adjust
 
       - name: "6.1.13 | PATCH | Audit SGID executables | Remove SGID bit"
@@ -351,10 +351,10 @@
             path: "{{ item }}"
             mode: 'g-s'
         with_items:
-            - "{{ debian11cis_6_1_13_sgid_executables_flatten }}"
+            - "{{ discovered_sgid_executables_flatten }}"
         when:
             - debian11cis_sgid_adjust
-            - debian11cis_6_1_13_sgid_executables_flatten | length > 0
+            - discovered_sgid_executables_flatten | length > 0
   vars:
       warn_control_id: '6.1.13'
   when:
