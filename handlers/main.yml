@@ -100,33 +100,33 @@
 
 - name: Iptables persistent
   ansible.builtin.shell: bash -c "iptables-save > /etc/iptables/rules.v4"
-  changed_when: debian11cis_iptables_save.rc == 0
-  failed_when: debian11cis_iptables_save.rc > 0
-  register: debian11cis_iptables_save
+  changed_when: discovered_ip4tables_save.rc == 0
+  failed_when: discovered_ip4tables_save.rc > 0
+  register: discovered_ip4tables_save
 
 - name: Ip6tables persistent
   ansible.builtin.shell: bash -c "ip6tables-save > /etc/iptables/rules.v6"
-  changed_when: debian11cis_ip6tables_save.rc == 0
-  failed_when: debian11cis_ip6tables_save.rc > 0
-  register: debian11cis_ip6tables_save
+  changed_when: discovered_ip6tables_save.rc == 0
+  failed_when: discovered_ip6tables_save.rc > 0
+  register: discovered_ip6tables_save
 
 - name: Auditd rules reload
   ansible.builtin.shell: augenrules --load
   when:
-      - debian11cis_rule_4_1_3_21_augen_check is not defined
+      - discovered_auditd_diff_check is not defined
 
 - name: Audit_immutable_fact
   ansible.builtin.debug:
       msg: "Reboot required for auditd to apply new rules as immutable set"
   notify: change_requires_reboot
   when:
-      - audit_rules_updated.changed
+      - discovered_audit_rules_updated.changed
       - auditd_immutable_check is defined
 
 - name: Restart auditd
   ansible.builtin.shell: service auditd restart
   when:
-      - audit_rules_updated is defined
+      - discovered_audit_rules_updated is defined
   tags:
       - skip_ansible_lint
 

@@ -551,9 +551,9 @@ debian11cis_passwd_remember: {{ debian11cis_pamd_pwhistory_remember }}
 
 # logins.def password settings
 debian11cis_pass:
-  max_days: {{ debian11cis_pass.max_days }}
-  min_days: {{ debian11cis_pass.min_days }}
-  warn_age: {{ debian11cis_pass.warn_age }}
+  max_days: {{ debian11cis_pass_max_days }}
+  min_days: {{ debian11cis_pass_min_days }}
+  warn_age: {{ debian11cis_pass_warn_age }}
 
 # set sugroup if differs from wheel
 debian11cis_sugroup: {{ debian11cis_sugroup }}

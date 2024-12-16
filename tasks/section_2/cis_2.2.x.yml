@@ -283,7 +283,7 @@
 
       - name: "2.2.15 | PATCH | Ensure mail transfer agent is configured for local-only mode | check 25 listening"
         ansible.builtin.shell: "ss -lntuH state listening sport = :25"
-        register: debian11cis_rule_2_2_15_port_25_listen
+        register: discovered_port_25_listen
         changed_when: false
 
       - name: "2.2.15 | PATCH | Ensure mail transfer agent is configured for local-only mode | Make changes if exim4 installed"
@@ -320,8 +320,8 @@
                 - "Warning!! You are not using either exim4 or postfix"
                 - "Please review your vendors documentation to configure local-only mode"
         when:
-            - debian11cis_rule_2_2_15_port_25_listen is defined
-            - debian11cis_rule_2_2_15_port_25_listen | length > 0
+            - discovered_port_25_listen is defined
+            - discovered_port_25_listen | length > 0
             - "'exim4' not in ansible_facts.packages"
             - "'postfix' not in ansible_facts.packages"
 

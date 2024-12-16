@@ -6,18 +6,18 @@
         ansible.builtin.shell: systemctl is-enabled systemd-journald.service
         changed_when: false
         failed_when: false
-        register: debian11cis_4_2_1_2_status
+        register: discovered_journald_status
 
       - name: "4.2.1.2 | AUDIT | Ensure journald service is enabled | Alert on bad status"
         ansible.builtin.debug:
             msg:
                 - "Warning!! The status of systemd-journald should be static and it is not. Please investigate"
-        when: "'static' not in debian11cis_4_2_1_2_status.stdout"
+        when: "'static' not in discovered_journald_status.stdout"
 
       - name: "4.2.1.2 | AUDIT | Ensure journald service is enabled | Warn Count"
         ansible.builtin.import_tasks:
             file: warning_facts.yml
-        when: "'static' not in debian11cis_4_2_1_2_status.stdout"
+        when: "'static' not in discovered_journald_status.stdout"
   vars:
       warn_control_id: '4.2.1.2'
   when:
@@ -102,12 +102,12 @@
       - name: "4.2.1.7 | AUDIT | Ensure journald default file permissions configured | Check for override file"
         ansible.builtin.stat:
             path: /etc/tmpfiles.d/systemd.conf
-        register: debian11cis_4_2_1_7_override
+        register: discovered_journald_override_status
 
       - name: "4.2.1.7 | AUDIT | Ensure journald default file permissions configured | Set live file"
         ansible.builtin.set_fact:
             systemd_conf_file: /etc/tmpfiles.d/systemd.conf
-        when: debian11cis_4_2_1_7_override.stat.exists
+        when: discovered_journald_override_status.stat.exists
 
       - name: "4.2.1.7 | PATCH | Ensure journald default file permissions configured | Set permission"
         ansible.builtin.lineinfile:

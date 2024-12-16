@@ -5,7 +5,7 @@
       path: /etc/ssh/sshd_config
       owner: root
       group: root
-      mode: 0600
+      mode: 'u-x,go-rwx'
   when:
       - debian11cis_rule_5_2_1
   tags:
@@ -22,16 +22,16 @@
         ansible.builtin.find:
             paths: /etc/ssh
             patterns: 'ssh_host_*_key'
-        register: debian11cis_5_2_2_ssh_host_priv_keys
+        register: discovered_ssh_host_priv_keys
 
       - name: "5.2.2 | PATCH | Ensure permissions on SSH private host key files are configured | Set permissions"
         ansible.builtin.file:
             path: "{{ item.path }}"
             owner: root
             group: root
-            mode: 0600
+            mode: 'u-x,go-rwx'
         with_items:
-            - "{{ debian11cis_5_2_2_ssh_host_priv_keys.files }}"
+            - "{{ discovered_ssh_host_priv_keys.files }}"
         loop_control:
             label: "{{ item.path }}"
   when:
@@ -50,16 +50,16 @@
         ansible.builtin.find:
             paths: /etc/ssh
             patterns: 'ssh_host_*_key.pub'
-        register: debian11cis_5_2_3_ssh_host_pub_keys
+        register: discovered_ssh_host_pub_keys
 
       - name: "5.2.3 | PATCH | Ensure permissions on SSH public host key files are configured | Set permissions"
         ansible.builtin.file:
             path: "{{ item.path }}"
             owner: root
             group: root
-            mode: 0644
+            mode: 'u-x,go-wx'
         with_items:
-            - "{{ debian11cis_5_2_3_ssh_host_pub_keys.files }}"
+            - "{{ discovered_ssh_host_pub_keys.files }}"
         loop_control:
             label: "{{ item.path }}"
   when:

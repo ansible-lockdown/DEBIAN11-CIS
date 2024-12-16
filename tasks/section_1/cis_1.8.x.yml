@@ -23,7 +23,7 @@
             path: "/etc/dconf/db/{{ debian11cis_dconf_db_name }}.d"
             owner: root
             group: root
-            mode: '0755'
+            mode: 'u+x,go-w'
             state: directory
 
       - name: "1.8.2 | PATCH | Ensure GDM login banner is configured | banner settings"
@@ -35,7 +35,7 @@
             create: true
             owner: root
             group: root
-            mode: '0644'
+            mode: 'u-x,go-wx'
         loop:
             - { regexp: '\[org\/gnome\/login-screen\]', line: '[org/gnome/login-screen]', insertafter: EOF }
             - { regexp: 'banner-message-enable', line: 'banner-message-enable=true', insertafter: '\[org\/gnome\/login-screen\]'}
@@ -59,7 +59,7 @@
             path: "{{ item }}"
             owner: root
             group: root
-            mode: '0755'
+            mode: 'u+x,go-w'
             state: directory
         loop:
             - /etc/dconf/db/{{ debian11cis_dconf_db_name }}.d
@@ -74,7 +74,7 @@
             create: true
             owner: root
             group: root
-            mode: '0644'
+            mode: 'u-x,go-wx'
         loop:
             - { regexp: '\[org\/gnome\/login-screen\]', line: '[org/gnome/login-screen]', insertafter: EOF }
             - { regexp: 'disable-user-list', line: 'disable-user-list=true', insertafter: '\[org\/gnome\/login-screen\]'}
@@ -88,7 +88,7 @@
             create: true
             owner: root
             group: root
-            mode: '0644'
+            mode: 'u-x,go-wx'
         loop:
             - { regexp: '^user-db:user', line: 'user-db:user', insertafter: EOF }
             - { regexp: '^system-db:{{ debian11cis_dconf_db_name }}', line: 'system-db:{{ debian11cis_dconf_db_name }}', insertafter: 'user-db:user'}
@@ -122,7 +122,7 @@
             path: "/etc/dconf/db/{{ debian11cis_dconf_db_name }}.d"
             owner: root
             group: root
-            mode: 0755
+            mode: 'u+x,go-w'
             state: directory
         notify: Update dconf
 
@@ -132,7 +132,7 @@
             dest: "/etc/dconf/db/{{ debian11cis_dconf_db_name }}.d/00-screensaver"
             owner: root
             group: root
-            mode: '0644'
+            mode: 'u-x,go-wx'
         notify: Update dconf
   when:
       - debian11cis_rule_1_8_4
@@ -152,7 +152,7 @@
             path: "/etc/dconf/db/{{ debian11cis_dconf_db_name }}.d/locks"
             owner: root
             group: root
-            mode: '0755'
+            mode: 'u+x,go-w'
             state: directory
         notify: Update dconf
 
@@ -162,7 +162,7 @@
             dest: "/etc/dconf/db/{{ debian11cis_dconf_db_name }}.d/locks/00-screensaver"
             owner: root
             group: root
-            mode: '0644'
+            mode: 'u-x,go-wx'
         notify: Update dconf
   when:
       - debian11cis_rule_1_8_5
@@ -182,7 +182,7 @@
             path: "/etc/dconf/db/{{ debian11cis_dconf_db_name }}.d"
             owner: root
             group: root
-            mode: 0755
+            mode: 'u+x,go-w'
             state: directory
         notify: Update dconf
 
@@ -192,7 +192,7 @@
             dest: "/etc/dconf/db/{{ debian11cis_dconf_db_name }}.d/00-media-automount"
             owner: root
             group: root
-            mode: '0644'
+            mode: 'u-x,go-wx'
         notify: Update dconf
   when:
       - debian11cis_rule_1_8_6
@@ -212,7 +212,7 @@
             path: "/etc/dconf/db/{{ debian11cis_dconf_db_name }}.d/locks"
             owner: root
             group: root
-            mode: '0755'
+            mode: 'u+x,go-w'
             state: directory
         notify: Update dconf
 
@@ -222,7 +222,7 @@
             dest: "/etc/dconf/db/{{ debian11cis_dconf_db_name }}.d/locks/00-automount_lock"
             owner: root
             group: root
-            mode: '0644'
+            mode: 'u-x,go-wx'
         notify: Update dconf
   when:
       - debian11cis_rule_1_8_7
@@ -242,7 +242,7 @@
             path: "/etc/dconf/db/{{ debian11cis_dconf_db_name }}.d"
             owner: root
             group: root
-            mode: 0755
+            mode: 'u+x,go-w'
             state: directory
         notify: Update dconf
 
@@ -252,7 +252,7 @@
             dest: "/etc/dconf/db/{{ debian11cis_dconf_db_name }}.d/00-media-autorun"
             owner: root
             group: root
-            mode: '0644'
+            mode: 'u-x,go-wx'
         notify: Update dconf
   when:
       - debian11cis_rule_1_8_8
@@ -272,7 +272,7 @@
             path: "/etc/dconf/db/{{ debian11cis_dconf_db_name }}.d/locks"
             owner: root
             group: root
-            mode: 0755
+            mode: 'u+x,go-w'
             state: directory
         notify: Update dconf
 
@@ -282,7 +282,7 @@
             dest: "/etc/dconf/db/{{ debian11cis_dconf_db_name }}.d/locks/00-autorun_lock"
             owner: root
             group: root
-            mode: 0644
+            mode: 'u-x,go-wx'
         notify: Update dconf
   when:
       - debian11cis_rule_1_8_9

@@ -61,7 +61,7 @@
       path: /etc/motd
       owner: root
       group: root
-      mode: '0644'
+      mode: 'u-x,go-wx'
   when:
       - debian11cis_rule_1_7_4
   tags:
@@ -78,7 +78,7 @@
       path: /etc/issue
       owner: root
       group: root
-      mode: '0644'
+      mode: 'u-x,go-wx'
   when:
       - debian11cis_rule_1_7_5
   tags:
@@ -95,7 +95,7 @@
       path: /etc/issue.net
       owner: root
       group: root
-      mode: '0644'
+      mode: 'u-x,go-wx'
   when:
       - debian11cis_rule_1_7_6
   tags:

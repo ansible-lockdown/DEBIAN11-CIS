@@ -20,7 +20,7 @@
       path: /etc/crontab
       owner: root
       group: root
-      mode: 0600
+      mode: 'u-x,go-rwx'
   when:
       - debian11cis_rule_5_1_2
   tags:
@@ -36,7 +36,7 @@
       path: /etc/cron.hourly
       owner: root
       group: root
-      mode: 0700
+      mode: 'u+x,go-rwx'
   when:
       - debian11cis_rule_5_1_3
   tags:
@@ -52,7 +52,7 @@
       path: /etc/cron.daily
       owner: root
       group: root
-      mode: 0700
+      mode: 'u+x,go-rwx'
   when:
       - debian11cis_rule_5_1_4
   tags:
@@ -68,7 +68,7 @@
       path: /etc/cron.weekly
       owner: root
       group: root
-      mode: 0700
+      mode: 'u+x,go-rwx'
   when:
       - debian11cis_rule_5_1_5
   tags:
@@ -84,7 +84,7 @@
       path: /etc/cron.monthly
       owner: root
       group: root
-      mode: 0700
+      mode: 'u+x,go-rwx'
   when:
       - debian11cis_rule_5_1_6
   tags:
@@ -100,7 +100,7 @@
       path: /etc/cron.d
       owner: root
       group: root
-      mode: 0700
+      mode: 'u+x,go-rwx'
   when:
       - debian11cis_rule_5_1_7
   tags:
@@ -121,24 +121,24 @@
       - name: "5.1.8 | PATCH | Ensure cron is restricted to authorized users | Check for cron.allow"
         ansible.builtin.stat:
             path: /etc/cron.allow
-        register: debian11cis_5_1_8_status
+        register: discovered_cron_allow_status
 
       - name: "5.1.8 | PATCH | Ensure cron is restricted to authorized users | Create cron.allow if doesn't exist"
         ansible.builtin.file:
             path: /etc/cron.allow
             owner: root
             group: root
-            mode: 0640
+            mode: 'u-x,g-wx,o-rwx'
             state: touch
-        when: not debian11cis_5_1_8_status.stat.exists
+        when: not discovered_cron_allow_status.stat.exists
 
       - name: "5.1.8 | PATCH | Ensure cron is restricted to authorized users |  Update cron.allow if exists"
         ansible.builtin.file:
             path: /etc/cron.allow
             owner: root
             group: root
-            mode: 0640
-        when: debian11cis_5_1_8_status.stat.exists
+            mode: 'u-x,g-wx,o-rwx'
+        when: discovered_cron_allow_status.stat.exists
   when:
       - debian11cis_rule_5_1_8
   tags:
@@ -159,24 +159,24 @@
       - name: "5.1.9 | PATCH | Ensure at is restricted to authorized users | Check for at.allow"
         ansible.builtin.stat:
             path: /etc/at.allow
-        register: debian11cis_5_1_9_status
+        register: discovered_at_allow_status
 
       - name: "5.1.9 | PATCH | Ensure at is restricted to authorized users | Create at.allow if doesn't exist"
         ansible.builtin.file:
             path: /etc/at.allow
             owner: root
             group: root
-            mode: 0640
+            mode: 'u-x,g-wx,o-rwx'
             state: touch
-        when: not debian11cis_5_1_9_status.stat.exists
+        when: not discovered_at_allow_status.stat.exists
 
       - name: "5.1.9 | PATCH | Ensure at is restricted to authorized users | update at.allow if exists"
         ansible.builtin.file:
             path: /etc/at.allow
             owner: root
             group: root
-            mode: 0640
-        when: debian11cis_5_1_9_status.stat.exists
+            mode: 'u-x,g-wx,o-rwx'
+        when: discovered_at_allow_status.stat.exists
   when:
       - debian11cis_rule_5_1_9
   tags:
