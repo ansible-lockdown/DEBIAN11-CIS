@@ -181,7 +181,7 @@
                 - "Warning!! Below is the list the open ports and current rules"
                 - "Please create a rule for any open port that does not have a current rule"
                 - "Open Ports:"
-                - "{{ ddiscovered_ipv4_iptables_open_ports.stdout_lines }}"
+                - "{{ discovered_ipv4_iptables_open_ports.stdout_lines }}"
                 - "Current Rules:"
                 - "{{ discovered_ipv4_iptables_current_rules.stdout_lines }}"
 
