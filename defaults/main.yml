@@ -750,11 +750,10 @@ debian11cis_passwd_setpam_hash_algo: false
 # warn_age is how many days before pw expiry the user will be warned. Set to 7 or more to conform to CIS standards
 # Control 5.5.1.4
 # inactive the number of days of inactivity before the account will lock. Set to 30 day sor less to conform to CIS standards
-debian11cis_pass:
-    max_days: 365
-    min_days: 1
-    warn_age: 7
-    inactive: 30
+debian11cis_pass_max_days: 365
+debian11cis_pass_min_days: 1
+debian11cis_pass_warn_age: 7
+debian11cis_pass_inactive: 30
 
 # Control 5.5.4
 # debian11cis_bash_umask is the umask to set in the /etc/bash.bashrc and /etc/profile.

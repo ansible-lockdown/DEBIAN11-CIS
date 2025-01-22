@@ -228,7 +228,7 @@
       regexp: ^IPT_SYSCTL=.*
       line: IPT_SYSCTL=/etc/sysctl.conf
       create: true
-      mode: '0640'
+      mode: 'u-x,g-wx,o-rwx'
       owner: root
       group: root
   when:

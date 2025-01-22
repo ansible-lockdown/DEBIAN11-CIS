@@ -23,7 +23,7 @@
         changed_when: false
         failed_when: false
         check_mode: false
-        register: debian11cis_1_6_1_2_cmdline_settings
+        register: discovered_grub_cmdline_settings
 
       - name: "1.6.1.2 | PATCH | Ensure AppArmor is enabled in the bootloader configuration | Set apparmor settings if none exist"
         ansible.builtin.lineinfile:
@@ -32,7 +32,7 @@
             line: \1apparmor=1 \3
             backrefs: true
         notify: Grub update
-        when: debian11cis_1_6_1_2_cmdline_settings.stdout is not search('apparmor=')
+        when: discovered_grub_cmdline_settings.stdout is not search('apparmor=')
 
       - name: "1.6.1.2 | PATCH | Ensure AppArmor is enabled in the bootloader configuration | Set security settings if none exist"
         ansible.builtin.lineinfile:
@@ -41,17 +41,17 @@
             line: \1security=apparmor \3
             backrefs: true
         notify: Grub update
-        when: debian11cis_1_6_1_2_cmdline_settings.stdout is not search('security=')
+        when: discovered_grub_cmdline_settings.stdout is not search('security=')
 
       - name: "1.6.1.2 | PATCH | Ensure AppArmor is enabled in the bootloader configuration | Set apparmor settings if none exist"
         ansible.builtin.lineinfile:
             path: /etc/default/grub
             regexp: '^GRUB_CMDLINE_LINUX='
-            line: 'GRUB_CMDLINE_LINUX="apparmor=1 security=apparmor {{ debian11cis_1_6_1_2_cmdline_settings.stdout }}"'
+            line: 'GRUB_CMDLINE_LINUX="apparmor=1 security=apparmor {{ discovered_grub_cmdline_settings.stdout }}"'
             insertafter: '^GRUB_'
         when:
-            - "'apparmor' not in debian11cis_1_6_1_2_cmdline_settings.stdout"
-            - "'security' not in debian11cis_1_6_1_2_cmdline_settings.stdout"
+            - "'apparmor' not in discovered_grub_cmdline_settings.stdout"
+            - "'security' not in discovered_grub_cmdline_settings.stdout"
         notify: Grub update
 
       - name: "1.6.1.2 | PATCH | Ensure AppArmor is enabled in the bootloader configuration | Replace apparmor settings when exists"
@@ -63,8 +63,8 @@
             - { regexp: 'apparmor=\w+', replace: 'apparmor=1' }
             - { regexp: 'security=\w+', replace: 'security=apparmor' }
         when:
-            - "'apparmor' in debian11cis_1_6_1_2_cmdline_settings.stdout or
-              'security' in debian11cis_1_6_1_2_cmdline_settings.stdout"
+            - "'apparmor' in discovered_grub_cmdline_settings.stdout or
+              'security' in discovered_grub_cmdline_settings.stdout"
         notify: Grub update
   when:
       - debian11cis_rule_1_6_1_2
@@ -83,7 +83,7 @@
         ansible.builtin.shell: apparmor_status |  grep "profiles are in enforce mode" | tr -d -c 0-9
         changed_when: false
         failed_when: false
-        register: debian11cis_1_6_1_3_pre_count
+        register: discovered_apparmor_pre_count
 
       - name: "1.6.1.3 | PATCH | Ensure all AppArmor Profiles are in enforce or complain mode | Apply enforcing to /etc/apparmor.d profiles"
         ansible.builtin.shell: aa-enforce /etc/apparmor.d/*
@@ -94,13 +94,13 @@
         ansible.builtin.shell: apparmor_status |  grep "profiles are in enforce mode" | tr -d -c 0-9
         changed_when: false
         failed_when: false
-        register: debian11cis_1_6_1_3_post_count
+        register: discovered_apparmor_pre_count
 
       - name: "1.6.1.3 | PATCH | Ensure all AppArmor Profiles are in enforce or complain mode | This flags for idempotency"
         ansible.builtin.debug:
             msg: Changed! The profiles in /etc/apparmor.d were set to enforcing
         changed_when: true
-        when: debian11cis_1_6_1_3_pre_count.stdout != debian11cis_1_6_1_3_post_count.stdout
+        when: discovered_apparmor_pre_count.stdout != discovered_apparmor_pre_count.stdout
   when:
       - debian11cis_rule_1_6_1_3
       - not debian11cis_apparmor_disable
@@ -119,7 +119,7 @@
         ansible.builtin.shell: apparmor_status |  grep "profiles are in enforce mode" | tr -d -c 0-9
         changed_when: false
         failed_when: false
-        register: debian11cis_1_6_1_4_pre_count
+        register: discovered_apparmor_pre_count
 
       - name: "1.6.1.4 | PATCH | Ensure all AppArmor Profiles are enforcing | Apply enforcing to /etc/apparmor.d profiles"
         ansible.builtin.shell: aa-enforce /etc/apparmor.d/*
@@ -130,13 +130,13 @@
         ansible.builtin.shell: apparmor_status |  grep "profiles are in enforce mode" | tr -d -c 0-9
         changed_when: false
         failed_when: false
-        register: debian11cis_1_6_1_4_post_count
+        register: discovered_apparmor_pre_count
 
       - name: "1.6.1.4 | PATCH | Ensure all AppArmor Profiles are enforcing | This flags for idempotency"
         ansible.builtin.debug:
             msg: Changed! The profiles in /etc/apparmor.d were set to enforcing
         changed_when: true
-        when: debian11cis_1_6_1_4_pre_count.stdout != debian11cis_1_6_1_4_post_count.stdout
+        when: discovered_apparmor_pre_count.stdout != discovered_apparmor_pre_count.stdout
   when:
       - debian11cis_rule_1_6_1_4
       - not debian11cis_apparmor_disable

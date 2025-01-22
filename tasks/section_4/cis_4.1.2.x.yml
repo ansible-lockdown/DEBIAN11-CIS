@@ -6,7 +6,6 @@
       regexp: "^max_log_file( |=)"
       line: "max_log_file = {{ debian11cis_max_log_file_size }}"
       state: present
-  register: rule_4_1_2_1
   notify: Restart auditd
   when:
       - debian11cis_rule_4_1_2_1
@@ -23,7 +22,6 @@
       path: /etc/audit/auditd.conf
       regexp: '^max_log_file_action'
       line: "max_log_file_action = {{ debian11cis_auditd['max_log_file_action'] }}"
-  register: rule_4_1_2_2
   notify: Restart auditd
   when:
       - debian11cis_rule_4_1_2_2
@@ -40,7 +38,6 @@
       path: /etc/audit/auditd.conf
       regexp: "{{ item.regexp }}"
       line: "{{ item.line }}"
-  register: rule_4_1_2_3
   notify: Restart auditd
   with_items:
       - { regexp: '^space_left_action', line: "space_left_action = {{ debian11cis_auditd['space_left_action'] }}" }

@@ -6,19 +6,19 @@
         ansible.builtin.shell: awk -F':' '($2 != "x" ) { print $1}' /etc/passwd
         changed_when: false
         failed_when: false
-        register: debian11cis_6_2_1_nonshadowed_users
+        register: discovered_nonshadowed_users
 
       - name: "6.2.1 | AUDIT | Ensure accounts in /etc/passwd use shadowed passwords | Warn on findings"
         ansible.builtin.debug:
             msg:
                 - "Warning!! You have users that are not using a shadowed password. Please convert the below accounts to use a shadowed password"
-                - "{{ debian11cis_6_2_1_nonshadowed_users.stdout_lines }}"
-        when: debian11cis_6_2_1_nonshadowed_users.stdout | length > 0
+                - "{{ discovered_nonshadowed_users.stdout_lines }}"
+        when: discovered_nonshadowed_users.stdout | length > 0
 
       - name: "6.2.1 | WARN | Ensure accounts in /etc/passwd use shadowed passwords | warn_count"
         ansible.builtin.import_tasks:
             file: warning_facts.yml
-        when: debian11cis_6_2_1_nonshadowed_users.stdout | length > 0
+        when: discovered_nonshadowed_users.stdout | length > 0
   vars:
       warn_control_id: '6.2.1'
   when:
@@ -37,15 +37,15 @@
         ansible.builtin.shell: awk -F":" '($2 == "" ) { print $1 }' /etc/shadow
         changed_when: false
         check_mode: false
-        register: debian11cis_6_2_2_empty_password_acct
+        register: discovered_empty_password_acct
 
       - name: "6.2.2 | PATCH | Ensure /etc/shadow password fields are not empty | Lock users with empty password"
         ansible.builtin.user:
             name: "{{ item }}"
             password_lock: true
         with_items:
-            - "{{ debian11cis_6_2_2_empty_password_acct.stdout_lines }}"
-        when: debian11cis_6_2_2_empty_password_acct.stdout | length > 0
+            - "{{ discovered_empty_password_acct.stdout_lines }}"
+        when: discovered_empty_password_acct.stdout | length > 0
   when:
       - debian11cis_rule_6_2_2
   tags:
@@ -64,22 +64,22 @@
         changed_when: false
         failed_when: false
         check_mode: false
-        register: debian11cis_6_2_3_passwd_gid_check
+        register: discovered_passwd_gid_check
 
       - name: "6.2.3 | AUDIT | Ensure all groups in /etc/passwd exist in /etc/group | Print message that all groups match between passwd and group files"
         ansible.builtin.debug:
             msg: "Good News! There are no users that have non-existent GUIDs (Groups)"
-        when: debian11cis_6_2_3_passwd_gid_check.stdout | length == 0
+        when: discovered_passwd_gid_check.stdout | length == 0
 
       - name: "6.2.3 | AUDIT | Ensure all groups in /etc/passwd exist in /etc/group | Print warning about users with invalid GIDs missing GID entries in /etc/group"
         ansible.builtin.debug:
-            msg: "Warning!! The following users have non-existent GIDs (Groups): {{ debian11cis_6_2_3_passwd_gid_check.stdout_lines | join (', ') }}"
-        when: debian11cis_6_2_3_passwd_gid_check.stdout | length > 0
+            msg: "Warning!! The following users have non-existent GIDs (Groups): {{ discovered_passwd_gid_check.stdout_lines | join (', ') }}"
+        when: discovered_passwd_gid_check.stdout | length > 0
 
       - name: "6.2.3 | WARN | Ensure all groups in /etc/passwd exist in /etc/group | warn_count"
         ansible.builtin.import_tasks:
             file: warning_facts.yml
-        when: debian11cis_6_2_3_passwd_gid_check.stdout | length > 0
+        when: discovered_passwd_gid_check.stdout | length > 0
   vars:
       warn_control_id: '6.2.3'
   when:
@@ -128,17 +128,17 @@
         changed_when: false
         failed_when: false
         check_mode: false
-        register: debian11cis_6_2_5_user_uid_check
+        register: discovered_user_uid_check
 
       - name: "6.2.5 | AUDIT | Ensure no duplicate UIDs exist | Print warning about users with duplicate UIDs"
         ansible.builtin.debug:
-            msg: "Warning!! The following users have UIDs that are duplicates: {{ debian11cis_6_2_5_user_uid_check.stdout_lines }}"
-        when: debian11cis_6_2_5_user_uid_check.stdout | length > 0
+            msg: "Warning!! The following users have UIDs that are duplicates: {{ discovered_user_uid_check.stdout_lines }}"
+        when: discovered_user_uid_check.stdout | length > 0
 
       - name: "6.2.5 | AUDIT | Ensure no duplicate UIDs exist | Set warning count"
         ansible.builtin.import_tasks:
             file: warning_facts.yml
-        when: debian11cis_6_2_5_user_uid_check.stdout | length > 0
+        when: discovered_user_uid_check.stdout | length > 0
   vars:
       warn_control_id: '6.2.5'
   when:
@@ -158,17 +158,17 @@
         changed_when: false
         failed_when: false
         check_mode: false
-        register: debian11cis_6_2_6_user_user_check
+        register: discovered_user_user_check
 
       - name: "6.2.6 | AUDIT | Ensure no duplicate GIDs exist | Print warning about users with duplicate GIDs"
         ansible.builtin.debug:
             msg: "Warning!! The following groups have duplicate GIDs: {{ debian11cis_6_2_14_user_user_check.stdout_lines }}"
-        when: debian11cis_6_2_6_user_user_check.stdout | length > 0
+        when: discovered_user_user_check.stdout | length > 0
 
       - name: "6.2.6 | AUDIT | Ensure no duplicate GIDs exist | Set warning count"
         ansible.builtin.import_tasks:
             file: warning_facts.yml
-        when: debian11cis_6_2_6_user_user_check.stdout | length > 0
+        when: discovered_user_user_check.stdout | length > 0
   vars:
       warn_control_id: '6.2.6'
   when:
@@ -188,17 +188,17 @@
         changed_when: false
         failed_when: false
         check_mode: false
-        register: debian11cis_6_2_7_user_username_check
+        register: discovered_user_username_check
 
       - name: "6.2.7 | AUDIT | Ensure no duplicate user names exist | Print warning about users with duplicate User Names"
         ansible.builtin.debug:
-            msg: "Warning!! The following user names are duplicates: {{ debian11cis_6_2_7_user_username_check.stdout_lines }}"
-        when: debian11cis_6_2_7_user_username_check.stdout | length > 0
+            msg: "Warning!! The following user names are duplicates: {{ discovered_user_username_check.stdout_lines }}"
+        when: discovered_user_username_check.stdout | length > 0
 
       - name: "6.2.7 | AUDIT | Ensure no duplicate user names exist | Set warning count"
         ansible.builtin.import_tasks:
             file: warning_facts.yml
-        when: debian11cis_6_2_7_user_username_check.stdout | length > 0
+        when: discovered_user_username_check.stdout | length > 0
   vars:
       warn_control_id: '6.2.7'
   when:
@@ -218,17 +218,17 @@
         changed_when: false
         failed_when: false
         check_mode: false
-        register: debian11cis_6_2_8_group_group_check
+        register: discovered_group_group_check
 
       - name: "6.2.8 | AUDIT | Ensure no duplicate group names exist | Print warning about users with duplicate group names"
         ansible.builtin.debug:
-            msg: "Warning!! The following group names are duplicates: {{ debian11cis_6_2_8_group_group_check.stdout_lines }}"
-        when: debian11cis_6_2_8_group_group_check.stdout | length > 0
+            msg: "Warning!! The following group names are duplicates: {{ discovered_group_group_check.stdout_lines }}"
+        when: discovered_group_group_check.stdout | length > 0
 
       - name: "6.2.8 | AUDIT | Ensure no duplicate group names exist | Set warning count"
         ansible.builtin.import_tasks:
             file: warning_facts.yml
-        when: debian11cis_6_2_8_group_group_check.stdout | length > 0
+        when: discovered_group_group_check.stdout | length > 0
   vars:
       warn_control_id: '6.2.8'
   when:
@@ -246,36 +246,36 @@
       - name: "6.2.9 | AUDIT | Ensure root PATH Integrity | Get root paths"
         ansible.builtin.shell: sudo -Hiu root env | grep '^PATH' | cut -d= -f2
         changed_when: false
-        register: debian11cis_6_2_9_root_paths
+        register: discovered_root_paths
 
       - name: "6.2.9 | AUDIT | Ensure root PATH Integrity | Get root paths"
         ansible.builtin.shell: sudo -Hiu root env | grep '^PATH' | cut -d= -f2 | tr ":" "\n"
         changed_when: false
-        register: debian11cis_6_2_9_root_paths_split
+        register: discovered_root_paths_split
 
       - name: "6.2.9 | AUDIT | Ensure root PATH Integrity | Set fact"
         ansible.builtin.set_fact:
-            root_paths: "{{ debian11cis_6_2_9_root_paths.stdout }}"
+            root_paths: "{{ discovered_root_paths.stdout }}"
 
       - name: "6.2.9 | AUDIT | Ensure root PATH Integrity | Check for empty dirs"
         ansible.builtin.shell: 'echo {{ root_paths }} | grep -q "::" && echo "roots path contains a empty directory (::)"'
         changed_when: false
-        failed_when: root_path_empty_dir.rc not in [ 0, 1 ]
-        register: root_path_empty_dir
+        failed_when: discovered_root_path_empty_dir.rc not in [ 0, 1 ]
+        register: discovered_root_path_empty_dir
 
       - name: "6.2.9 | AUDIT | Ensure root PATH Integrity | Check for trailing ':'"
         ansible.builtin.shell: '{{ root_paths }} | cut -d= -f2 | grep -q ":$" && echo "roots path contains a trailing (:)"'
         changed_when: false
-        failed_when: root_path_trailing_colon.rc not in [ 0, 1 ]
-        register: root_path_trailing_colon
+        failed_when: discovered_root_path_trailing_colon.rc not in [ 0, 1 ]
+        register: discovered_root_path_trailing_colon
 
       - name: "6.2.9 | AUDIT | Ensure root PATH Integrity | Check for owner and permissions"
         block:
             - name: "6.2.9 | AUDIT | Ensure root PATH Integrity | Check for owner and permissions"
               ansible.builtin.stat:
                   path: "{{ item }}"
-              register: root_path_perms
-              loop: "{{ debian11cis_6_2_9_root_paths_split.stdout_lines }}"
+              register: discovered_root_path_perms
+              loop: "{{ discovered_root_paths_split.stdout_lines }}"
 
             - name: "6.2.9 | AUDIT | Ensure root PATH Integrity | Set permissions"
               ansible.builtin.file:
@@ -283,9 +283,9 @@
                   state: directory
                   owner: root
                   group: root
-                  mode: "0755"
+                  mode: 'u+x,go-w'
                   follow: false
-              loop: "{{ root_path_perms.results }}"
+              loop: "{{ discovered_root_path_perms.results }}"
               loop_control:
                   label: "{{ item }}"
               when:
@@ -326,7 +326,6 @@
             state: directory
             owner: "{{ item.id }}"
             group: "{{ item.gid }}"
-        register: debian11cis_6_2_11_home_dir
         loop: "{{ debian11cis_passwd  | selectattr('uid', '>=', min_int_uid | int ) | selectattr('uid', '<=', max_int_uid | int ) | list }}"
         loop_control:
             label: "{{ item.id }}"
@@ -386,15 +385,15 @@
       - name: "6.2.13 | AUDIT | Ensure local interactive user home directories are mode 750 or more restrictive | get stat"
         ansible.builtin.stat:
             path: "{{ item }}"
-        register: rhel_09_6_2_13_home_dir_perms
+        register: discovered_home_dir_perms
         loop: "{{ interactive_users_home.stdout_lines }}"
 
       - name: "6.2.13 | PATCH | Ensure local interactive user home directories are mode 750 or more restrictive | amend if needed"
         ansible.builtin.file:
             path: "{{ item.stat.path }}"
             state: directory
-            mode: "0750"
-        loop: "{{ rhel_09_6_2_13_home_dir_perms.results }}"
+            mode: 'g-w,o-rwx'
+        loop: "{{ discovered_home_dir_perms.results }}"
         loop_control:
             label: "{{ item }}"
         when:
@@ -488,30 +487,30 @@
         changed_when: false
         failed_when: false
         check_mode: false
-        register: debian11cis_6_2_17_audit
+        register: discovered_dot_files_worldwrite
 
       - name: "6.2.17 | AUDIT | Ensure users' dot files are not group or world-writable | Warning on files found"
         ansible.builtin.debug:
             msg:
                 - "Warning!! You have group or world-writable dot files on your system and have configured for manual intervention"
         when:
-            - debian11cis_6_2_17_audit.stdout | length > 0
+            - discovered_dot_files_worldwrite.stdout | length > 0
             - debian11cis_dotperm_ansiblemanaged
 
       - name: "6.2.17 | PATCH | Ensure users' dot files are not group or world writable | Set warning count"
         ansible.builtin.import_tasks:
             file: warning_facts.yml
         when:
-            - debian11cis_6_2_17_audit.stdout | length > 0
+            - discovered_dot_files_worldwrite.stdout | length > 0
             - debian11cis_dotperm_ansiblemanaged
 
       - name: "6.2.17 | PATCH | Ensure users' dot files are not group or world-writable | Changes files if configured"
         ansible.builtin.file:
             path: '{{ item }}'
-            mode: go-w
-        with_items: "{{ debian11cis_6_2_17_audit.stdout_lines }}"
+            mode: 'go-w'
+        with_items: "{{ discovered_dot_files_worldwrite.stdout_lines }}"
         when:
-            - debian11cis_6_2_17_audit.stdout | length > 0
+            - discovered_dot_files_worldwrite.stdout | length > 0
             - debian11cis_dotperm_ansiblemanaged
   vars:
       warn_control_id: '6.2.17'

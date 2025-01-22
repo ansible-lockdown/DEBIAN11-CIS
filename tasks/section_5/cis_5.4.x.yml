@@ -33,7 +33,7 @@
         changed_when: false
         failed_when: false
         check_mode: false
-        register: debian11cis_5_4_1_pam_pwquality_state
+        register: discovered_pwquality_loaded_state
 
       - name: "5.4.1 | PATCH | Ensure password creation requirements are configured | Set retry to 3 if pwquality exists"
         community.general.pamd:
@@ -43,7 +43,7 @@
             module_path: pam_pwquality.so
             module_arguments: 'retry=3'
             state: args_present
-        when: debian11cis_5_4_1_pam_pwquality_state.stdout | length > 0
+        when: discovered_pwquality_loaded_state.stdout | length > 0
 
       - name: "5.4.1 | PATCH | Ensure password creation requirements are configured | Set retry to 3 if pwquality does not exist"
         community.general.pamd:
@@ -56,7 +56,7 @@
             new_module_path: pam_pwquality.so
             module_arguments: 'retry=3'
             state: after
-        when: debian11cis_5_4_1_pam_pwquality_state.stdout | length == 0
+        when: discovered_pwquality_loaded_state.stdout | length == 0
   when:
       - debian11cis_rule_5_4_1
   tags:
@@ -71,8 +71,8 @@
   block:
       - name: "5.4.2 | PATCH | Ensure lockout for failed password attempts is configured | Check pam faillock is set"
         ansible.builtin.shell: grep -E "preauth|authfail|authsucc" /etc/pam.d/common-auth | grep pam_faillock.so
-        register: faillock_state
-        failed_when: faillock_state.rc not in [0, 1]
+        register: discovered_pam_faillock_loaded_state
+        failed_when: discovered_pam_faillock_loaded_state.rc not in [0, 1]
         changed_when: false
 
       ## Issues have been seen with this control that can't always be replicated
@@ -84,7 +84,7 @@
             regexp: .*pam_unix.so nullok
             replace: "{{ debian11cis_rule_5_4_2_faillock_config }}"
         when:
-            - "'pam_faillock.so' not in faillock_state.stdout"
+            - "'pam_faillock.so' not in discovered_pam_faillock_loaded_state.stdout"
             - debian11cis_allow_common_auth_rewrite
 
       - name: "5.4.2 | PATCH | Ensure lockout for failed password attempts is configured | Set faillock common-account"
@@ -156,7 +156,7 @@
         changed_when: false
         failed_when: false
         check_mode: false
-        register: debian11cis_5_4_4_pam_unix_state
+        register: discovered_pam_unix_algorithm
 
       - name: "5.4.4 | PATCH | Ensure password hashing algorithm is up to date with the latest standards | Set hashing if pam_unix.so exists"
         community.general.pamd:
@@ -167,7 +167,7 @@
             module_arguments: "{{ debian11cis_passwd_hash_algo }}"
             state: "{{ debian11cis_passwd_setpam_hash_algo | ternary('args_present', 'args_absent') }}"
         when:
-            - debian11cis_5_4_4_pam_unix_state.stdout | length > 0
+            - discovered_pam_unix_algorithm.stdout | length > 0
 
       - name: "5.4.4 | PATCH | Ensure password hashing algorithm is up to date with the latest standards | Set hashing if pam_unix.so does not exist"
         ansible.builtin.lineinfile:
@@ -191,18 +191,18 @@
         changed_when: false
         failed_when: false
         check_mode: false
-        register: debian11cis_5_4_5_passwd_hash_used
+        register: discovered_current_passwds_hash
 
       # This is only looking for yescrypt if sha512 need to change the $y$ to $6$
       - name: "5.4.5 | AUDIT | Ensure all current passwords uses the configured hashing algorithm | check has found"
         ansible.builtin.debug:
             msg: "Warning!! Passwords found using not using {{ debian11cis_passwd_hash_algo }} algorithm - This required manual intervention"
-        when: "' $y$' not in debian11cis_5_4_5_passwd_hash_used.stdout"
+        when: "' $y$' not in discovered_current_passwds_hash.stdout"
 
       - name: "5.4.5 | WARN | Ensure all current passwords uses the configured hashing algorithm | warn_count"
         ansible.builtin.import_tasks:
             file: warning_facts.yml
-        when: "' $y$' not in debian11cis_5_4_5_passwd_hash_used.stdout"
+        when: "' $y$' not in discovered_current_passwds_hash.stdout"
   vars:
       warn_control_id: '5.4.5'
   when:
