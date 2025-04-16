@@ -242,7 +242,7 @@
             dest: "{{ ansible_facts_path }}/compliance_facts.fact"
             owner: root
             group: root
-            mode: "u-x,go-wx"
+            mode: 'u-x,go-wx'
   when:
       - create_benchmark_facts
       - (post_audit_summary is defined) or
