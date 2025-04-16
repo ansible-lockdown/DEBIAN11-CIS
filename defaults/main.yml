@@ -31,6 +31,10 @@ debian11cis_ask_passwd_to_boot: false
 # This allows the ability to skip tasks that may cause an issue
 debian11cis_uses_root: false
 
+# Create managed not custom local_facts files
+create_benchmark_facts: true
+ansible_facts_path: /etc/ansible/facts.d
+
 ###
 ### Settings for associated Audit role using Goss
 ###
@@ -49,16 +53,12 @@ audit_run_heavy_tests: true
 
 ## Only run Audit do not remediate
 audit_only: false
-### As part of audit_only ###
-# This will enable files to be copied back to control node in audit_only mode
-fetch_audit_files: false
-# Path to copy the files to will create dir structure in audit_only mode
-audit_capture_files_dir: /some/location to copy to on control node
+
 #############################
 
 # How to retrieve audit binary
 # Options are copy or download - detailed settings at the bottom of this file
-# you will need to access to either github or the file already dowmloaded
+# you will need to access to either github or the file already downloaded
 get_audit_binary_method: download
 
 ## if get_audit_binary_method - copy the following needs to be updated for your environment
@@ -82,6 +82,20 @@ audit_conf_dest: "/opt"
 
 # Where the audit logs are stored
 audit_log_dir: '/opt'
+
+## Ability to collect and take audit files moving to a centralised location
+# This enables the collection of the files from the host
+fetch_audit_output: false
+
+# Method of getting,uploading the summary files
+## Ensure access and permissions are available for these to occur.
+## options are
+# fetch - fetches from server and moves to location on the ansible controller (could be a mount point available to controller)
+# copy - copies file to a location available to the managed node
+audit_output_collection_method: fetch
+
+# Location to put the audit files
+audit_output_destination: /opt/audit_summaries/
 
 ### Goss Settings ##
 ####### END ########
@@ -464,7 +478,7 @@ debian11cis_aide_cron:
     aide_weekday: '*'
 
 # Control 1.4.x
-# THIS VARAIBLE SHOULD BE CHANGED AND INCORPORATED INTO VAULT
+# THIS VARIABLE SHOULD BE CHANGED AND INCORPORATED INTO VAULT
 # THIS VALUE IS WHAT THE ROOT PW WILL BECOME!!!!!!!!
 # HAVING THAT PW EXPOSED IN RAW TEXT IS NOT SECURE!!!!
 debian11cis_grub_user: root
@@ -580,7 +594,7 @@ debian11cis_sysctl_network_conf: /etc/sysctl.conf
 # If using nftables please manually adjust firewall settings
 debian11cis_firewall_package: "ufw"
 
-# If UFW force to use syctl settings now UFW
+# If UFW force to use sysctl settings now UFW
 debian11cis_ufw_use_sysctl: false
 
 # Control 3.5.1.5
@@ -731,7 +745,7 @@ debian11cis_rule_5_4_2_faillock_config: |
     auth       sufficient pam_faillock.so authsucc
 
 # Control 5.4.3
-# debian11cis_pamd_pwhistory_remember is number of password chnage cycles a user can re-use a password
+# debian11cis_pamd_pwhistory_remember is number of password change cycles a user can re-use a password
 # This needs to be 5 or more to conform to CIS standards
 debian11cis_pamd_pwhistory_remember: 5
 
