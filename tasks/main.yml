@@ -207,6 +207,7 @@
       - name: POST | PATCH | Reboot system if changes require it and not skipped
         when: not skip_reboot
         ansible.builtin.reboot:
+            post_reboot_delay: 60
 
       - name: "POST | WARN | Warning a reboot required but skip option set"
         when: skip_reboot
