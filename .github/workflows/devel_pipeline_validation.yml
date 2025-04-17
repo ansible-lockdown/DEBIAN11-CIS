@@ -94,7 +94,6 @@
               echo "OSVAR = $OSVAR"
               echo "benchmark_type = $benchmark_type"
               pwd
-              ls
             env:
               # Imported from GitHub variables this is used to load the relevant OS.tfvars file
               OSVAR: ${{ vars.OSVAR }}
