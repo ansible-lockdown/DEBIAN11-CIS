@@ -192,31 +192,38 @@
   tags:
       - section6
 
-- name: run auditd logic
+- name: Run auditd logic
   ansible.builtin.import_tasks:
       file: auditd.yml
   when: update_audit_template
   tags:
       - always
 
-- name: flush handlers
+- name: Flush handlers
   ansible.builtin.meta: flush_handlers
 
-- name: reboot system
+- name: "POST | PATCH |reboot system if changes require it and not skipped"
   block:
-      - name: reboot system if not skipped
+      - name: POST | PATCH | Reboot system if changes require it and not skipped
+        when: not skip_reboot
         ansible.builtin.reboot:
-        when:
-            - not skip_reboot
-            - change_requires_reboot
+            post_reboot_delay: 60
 
-      - name: Warning a reboot required but skip option set
+      - name: "POST | WARN | Warning a reboot required but skip option set"
+        when: skip_reboot
         ansible.builtin.debug:
             msg: "Warning!! changes have been made that require a reboot to be implemented but skip reboot was set - Can affect compliance check results"
         changed_when: true
-        when:
-            - skip_reboot
-            - change_requires_reboot
+
+      - name: "POST | WARN | Warning a reboot required but skip option set | warning count"
+        when: skip_reboot
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
+  when: change_requires_reboot
+  tags:
+      - always
+  vars:
+      warn_control_id: Reboot_required
 
 - name: run post remediation audit
   ansible.builtin.import_tasks:
@@ -225,6 +232,39 @@
       - run_audit
   tags:
       - always
+
+- name: Add ansible file showing Benchmark and levels applied
+  block:
+      - name: Create ansible facts directory
+        ansible.builtin.file:
+            path: "{{ ansible_facts_path }}"
+            state: directory
+            owner: root
+            group: root
+            mode: 'u=rwx,go=rx'
+
+      - name: Create ansible facts file
+        ansible.builtin.template:
+            src: etc/ansible/compliance_facts.j2
+            dest: "{{ ansible_facts_path }}/compliance_facts.fact"
+            owner: root
+            group: root
+            mode: 'u-x,go-wx'
+  when:
+      - create_benchmark_facts
+      - (post_audit_summary is defined) or
+        (ansible_local['compliance_facts']['lockdown_audit_details']['audit_summary'] is undefined and post_audit_summary is undefined)
+  tags:
+      - always
+      - benchmark
+
+- name: Fetch audit files
+  ansible.builtin.import_tasks:
+      file: fetch_audit_output.yml
+  when:
+      - fetch_audit_output
+      - run_audit
+  tags: always
 
 - name: Show Audit Summary
   ansible.builtin.debug:

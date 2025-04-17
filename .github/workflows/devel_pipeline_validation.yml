@@ -7,6 +7,7 @@
         types: [opened, reopened, synchronize]
         branches:
             - devel
+            - benchmark*
         paths:
             - '**.yml'
             - '**.sh'
@@ -27,7 +28,7 @@
   jobs:
     # This will create messages for first time contributers and direct them to the Discord server
       welcome:
-        runs-on: self-hosted
+        runs-on: ubuntu-latest
 
         steps:
             - uses: actions/first-interaction@main
@@ -70,7 +71,6 @@
                  echo IAC_BRANCH=main >> $GITHUB_ENV
               fi
 
-
           # Pull in terraform code for linux servers
           - name: Clone GitHub IaC plan
             uses: actions/checkout@v4
@@ -93,16 +93,11 @@
             run: |
               echo "OSVAR = $OSVAR"
               echo "benchmark_type = $benchmark_type"
-              echo "PRIVSUBNET_ID = $AWS_PRIVSUBNET_ID"
-              echo "VPC_ID" = $AWS_VPC_SECGRP_ID"
               pwd
-              ls
             env:
               # Imported from GitHub variables this is used to load the relevant OS.tfvars file
               OSVAR: ${{ vars.OSVAR }}
               benchmark_type: ${{ vars.BENCHMARK_TYPE }}
-              PRIVSUBNET_ID: ${{ secrets.AWS_PRIVSUBNET_ID }}
-              VPC_ID: ${{ secrets.AWS_VPC_SECGRP_ID }}
 
           - name: Tofu init
             id: init
