@@ -225,7 +225,7 @@
   vars:
       warn_control_id: Reboot_required
 
-- name: run post remediation audit
+- name: Run post remediation audit
   ansible.builtin.import_tasks:
       file: post_remediation_audit.yml
   when:
