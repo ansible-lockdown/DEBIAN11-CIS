@@ -18,8 +18,7 @@
             - { regexp: '(session\s+optional\s+pam_motd.so noupdate)', line: '# \1' }
             - { regexp: '# Pam_motd.so disabled for CIS benchmark', line: '# Pam_motd.so disabled for CIS benchmark' }
         when: debian11cis_disable_dynamic_motd
-  when:
-      - debian11cis_rule_1_7_1
+  when: debian11cis_rule_1_7_1
   tags:
       - level1-server
       - level1-workstation
@@ -32,8 +31,7 @@
   ansible.builtin.template:
       src: etc/issue.j2
       dest: /etc/issue
-  when:
-      - debian11cis_rule_1_7_2
+  when: debian11cis_rule_1_7_2
   tags:
       - level1-server
       - level1-workstation
@@ -46,8 +44,7 @@
   ansible.builtin.template:
       src: etc/issue.net.j2
       dest: /etc/issue.net
-  when:
-      - debian11cis_rule_1_7_3
+  when: debian11cis_rule_1_7_3
   tags:
       - level1-server
       - level1-workstation
@@ -62,8 +59,7 @@
       owner: root
       group: root
       mode: 'u-x,go-wx'
-  when:
-      - debian11cis_rule_1_7_4
+  when: debian11cis_rule_1_7_4
   tags:
       - level1-server
       - level1-workstation
@@ -79,8 +75,7 @@
       owner: root
       group: root
       mode: 'u-x,go-wx'
-  when:
-      - debian11cis_rule_1_7_5
+  when: debian11cis_rule_1_7_5
   tags:
       - level1-server
       - level1-workstation
@@ -96,8 +91,7 @@
       owner: root
       group: root
       mode: 'u-x,go-wx'
-  when:
-      - debian11cis_rule_1_7_6
+  when: debian11cis_rule_1_7_6
   tags:
       - level1-server
       - level1-workstation
