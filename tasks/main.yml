@@ -1,24 +1,26 @@
 ---
 
 - name: Check OS version and family
-  ansible.builtin.fail:
-      msg: "This role can only be run against Debian 11. {{ ansible_facts.distribution }} {{ ansible_facts.distribution_major_version }} is not supported."
   when:
       - ansible_facts.distribution == 'Debian'
       - ansible_facts.distribution_major_version is version_compare('11', '!=')
-  tags:
-      - always
+  tags: always
+  ansible.builtin.fail:
+      msg: "This role can only be run against Debian 11. {{ ansible_facts.distribution }} {{ ansible_facts.distribution_major_version }} is not supported."
 
 - name: Check ansible version
+  tags: always
   ansible.builtin.assert:
       that: ansible_version.full is version_compare(min_ansible_version, '>=')
       fail_msg: "You must use Ansible {{ min_ansible_version }} or greater"
       success_msg: "This role is running a supported version of ansible {{ ansible_version.full }} >= {{ min_ansible_version }}"
-  tags:
-      - always
 
 #  This control should always run as this can pass on unintended issues.
 - name: "Check password set for connecting user"
+  when:
+      - debian11cis_rule_5_3_4
+      - ansible_env.SUDO_USER is defined
+  tags: always
   block:
       - name: Capture current password state of connecting user"
         ansible.builtin.shell: "grep {{ ansible_env.SUDO_USER }} /etc/shadow | awk -F: '{print $2}'"
@@ -34,23 +36,18 @@
             success_msg: "You have a password set for sudo user {{ ansible_env.SUDO_USER }}"
         vars:
             sudo_password_rule: debian11cis_rule_5_3_4  # pragma: allowlist secret
-  when:
-      - debian11cis_rule_5_3_4
-      - ansible_env.SUDO_USER is defined
-  tags:
-      - always
 
 - name: Check debian11cis_bootloader_password_hash variable has been changed
-  ansible.builtin.assert:
-      that: debian11cis_bootloader_password_hash.find('grub.pbkdf2.sha512') != -1 and debian11cis_bootloader_password_hash != 'grub.pbkdf2.sha512.changethispassword'  # pragma: allowlist secret
-      msg: "This role will not be able to run single user password commands as debian11cis_bootloader_password_hash variable has not been set correctly"
   when:
       - debian11cis_set_boot_pass
       - debian11cis_rule_1_4_1
-  tags:
-      - always
+  tags: always
+  ansible.builtin.assert:
+      that: debian11cis_bootloader_password_hash.find('grub.pbkdf2.sha512') != -1 and debian11cis_bootloader_password_hash != 'grub.pbkdf2.sha512.changethispassword'  # pragma: allowlist secret
+      msg: "This role will not be able to run single user password commands as debian11cis_bootloader_password_hash variable has not been set correctly"
 
 - name: Check debian11cis_grub_user password variable has been changed
+  tags: always
   block:
       - name: Check debian11cis_grub_user password variable has been changed | check password is set
         ansible.builtin.shell: "grep ^{{ debian11cis_grub_user }} /etc/shadow | awk -F : '{print $2}'"
@@ -58,25 +55,26 @@
         register: debian11cis_password_set_grub_user
 
       - name: Check debian11cis_grub_user password variable has been changed | check password is set
-        ansible.builtin.assert:
-            that: debian11cis_set_grub_user_pass and {{'true' if debian11cis_grub_user_passwd | regex_search('^\$y\$|^\$6\$') else 'false' }} and debian11cis_grub_user_passwd != '$y$j9T$MBA5l/tQyWifM869nQjsi.$cTy0ConcNjIYOn6Cppo5NAky20osrkRxz4fEWA8xac6'
-            msg: "This role will not set the {{ debian11cis_grub_user }} user password is not set or debian11cis_grub_user_passwd variable has not been set correctly"
         when:
             - "'$y$' in debian11cis_password_set_grub_user.stdout"
             - debian11cis_set_grub_user_pass
             - debian11cis_rule_1_4_3
+        ansible.builtin.assert:
+            that: debian11cis_set_grub_user_pass and {{'true' if debian11cis_grub_user_passwd | regex_search('^\$y\$|^\$6\$') else 'false' }} and debian11cis_grub_user_passwd != '$y$j9T$MBA5l/tQyWifM869nQjsi.$cTy0ConcNjIYOn6Cppo5NAky20osrkRxz4fEWA8xac6'
+            msg: "This role will not set the {{ debian11cis_grub_user }} user password is not set or debian11cis_grub_user_passwd variable has not been set correctly"
 
       - name: Check debian11cis_grub_user password variable has been changed | if password blank or incorrect type and not being set
+        when: not debian11cis_set_grub_user_pass
         ansible.builtin.assert:
             that: ( debian11cis_password_set_grub_user.stdout | length > 10 ) and '$y$' in debian11cis_password_set_grub_user.stdout
             fail_msg: "Grub User {{ debian11cis_grub_user }} has no password set or incorrect encryption"
             success_msg: "Grub User {{ debian11cis_grub_user }} has a valid password set to be used in single user mode"
-        when:
-            - not debian11cis_set_grub_user_pass
-  tags:
-      - always
 
 - name: Setup rules if container
+  when: ansible_connection == 'docker' or ansible_facts.virtualization_type in ["docker", "lxc", "openvz", "podman", "container"]
+  tags:
+      - container_discovery
+      - always
   block:
       - name: Discover and set container variable if required
         ansible.builtin.set_fact:
@@ -91,118 +89,101 @@
             msg: system has been discovered as a container
         when:
             - system_is_container
-  when:
-      - ansible_connection == 'docker' or
-        ansible_facts.virtualization_type in ["docker", "lxc", "openvz", "podman", "container"]
-  tags:
-      - container_discovery
-      - always
 
 - name: Gather the package facts before prelim
+  tags: always
   ansible.builtin.package_facts:
       manager: auto
-  tags:
-      - always
 
 - name: Run prelim tasks
-  ansible.builtin.import_tasks:
-      file: prelim.yml
   tags:
       - prelim_tasks
       - run_audit
       - always
+  ansible.builtin.import_tasks:
+      file: prelim.yml
 
 - name: Gather the package facts after prelim
+  tags: always
   ansible.builtin.package_facts:
       manager: auto
-  tags:
-      - always
 
 - name: Include audit specific variables
-  ansible.builtin.include_vars: audit.yml
   when:
       - run_audit or audit_only
       - setup_audit
   tags:
       - setup_audit
       - run_audit
+  ansible.builtin.include_vars: audit.yml
 
 - name: Include pre-remediation audit tasks
-  ansible.builtin.import_tasks: pre_remediation_audit.yml
   when:
       - run_audit or audit_only
       - setup_audit
-  tags:
-      - run_audit
+  tags: run_audit
+  ansible.builtin.import_tasks: pre_remediation_audit.yml
 
 - name: Run parse /etc/passwd
+  when:
+      - debian11cis_section5 or debian11cis_section6
+  tags: always
   ansible.builtin.import_tasks:
       file: parse_etc_password.yml
-  when:
-      - debian11cis_section5 or
-        debian11cis_section6
-  tags:
-      - always
 
 - name: Gather the package facts
+  tags: always
   ansible.builtin.package_facts:
       manager: auto
-  tags:
-      - always
 
 - name: Include section 1 patches
+  when: debian11cis_section1
+  tags: section1
   ansible.builtin.import_tasks:
       file: section_1/main.yml
-  when: debian11cis_section1
-  tags:
-      - section1
 
 - name: Include section 2 patches
+  when: debian11cis_section2
+  tags: section2
   ansible.builtin.import_tasks:
       file: section_2/main.yml
-  when: debian11cis_section2
-  tags:
-      - section2
 
 - name: Include section 3 patches
+  when: debian11cis_section3
+  tags: section3
   ansible.builtin.import_tasks:
       file: section_3/main.yml
-  when: debian11cis_section3
-  tags:
-      - section3
 
 - name: Include section 4 patches
+  when: debian11cis_section4
+  tags: section4
   ansible.builtin.import_tasks:
       file: section_4/main.yml
-  when: debian11cis_section4
-  tags:
-      - section4
 
 - name: Include section 5 patches
+  when: debian11cis_section5
+  tags: section5
   ansible.builtin.import_tasks:
       file: section_5/main.yml
-  when: debian11cis_section5
-  tags:
-      - section5
 
 - name: Include section 6 patches
+  when: debian11cis_section6
+  tags: section6
   ansible.builtin.import_tasks:
       file: section_6/main.yml
-  when: debian11cis_section6
-  tags:
-      - section6
 
 - name: Run auditd logic
+  when: update_audit_template
+  tags: always
   ansible.builtin.import_tasks:
       file: auditd.yml
-  when: update_audit_template
-  tags:
-      - always
 
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
 
 - name: "POST | PATCH |reboot system if changes require it and not skipped"
+  when: change_requires_reboot
+  tags: always
   block:
       - name: POST | PATCH | Reboot system if changes require it and not skipped
         when: not skip_reboot
@@ -219,21 +200,23 @@
         when: skip_reboot
         ansible.builtin.import_tasks:
             file: warning_facts.yml
-  when: change_requires_reboot
-  tags:
-      - always
   vars:
       warn_control_id: Reboot_required
 
 - name: Run post remediation audit
+  when: run_audit
+  tags: always
   ansible.builtin.import_tasks:
       file: post_remediation_audit.yml
-  when:
-      - run_audit
-  tags:
-      - always
 
 - name: Add ansible file showing Benchmark and levels applied
+  when:
+      - create_benchmark_facts
+      - (post_audit_summary is defined) or
+        (ansible_local['compliance_facts']['lockdown_audit_details']['audit_summary'] is undefined and post_audit_summary is undefined)
+  tags:
+      - always
+      - benchmark
   block:
       - name: Create ansible facts directory
         ansible.builtin.file:
@@ -250,34 +233,25 @@
             owner: root
             group: root
             mode: 'u-x,go-wx'
-  when:
-      - create_benchmark_facts
-      - (post_audit_summary is defined) or
-        (ansible_local['compliance_facts']['lockdown_audit_details']['audit_summary'] is undefined and post_audit_summary is undefined)
-  tags:
-      - always
-      - benchmark
 
 - name: Fetch audit files
-  ansible.builtin.import_tasks:
-      file: fetch_audit_output.yml
   when:
       - fetch_audit_output
       - run_audit
   tags: always
+  ansible.builtin.import_tasks:
+      file: fetch_audit_output.yml
 
 - name: Show Audit Summary
+  when: run_audit
+  tags:
+      - run_audit
+      - always
   ansible.builtin.debug:
       msg: "{{ audit_results.split('\n') }}"
-  when:
-      - run_audit
-  tags:
-      - run_audit
-      - always
 
 - name: If Warnings found Output count and control IDs affected
+  when: warn_count != 0
+  tags: always
   ansible.builtin.debug:
       msg: "You have {{ warn_count }} Warning(s) that require investigating that are related to the following benchmark ID(s) {{ warn_control_list }}"
-  when: warn_count != 0
-  tags:
-      - always

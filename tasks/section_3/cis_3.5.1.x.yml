@@ -33,6 +33,14 @@
 
 # Adding the allow OpenSSH rule while enabling ufw to allow ansible to run after enabling
 - name: "3.5.1.3 | PATCH | Ensure ufw service is enabled"
+  when: debian11cis_rule_3_5_1_3
+  tags:
+      - level1-server
+      - level1-workstation
+      - automated
+      - patch
+      - rule_3.5.1.3
+      - ufw
   block:
       - name: "3.5.1.3 | PATCH | Ensure ufw service is enabled | ssh port enabled"
         community.general.ufw:
@@ -45,16 +53,6 @@
             enabled: true
             state: started
             masked: false
-
-  when:
-      - debian11cis_rule_3_5_1_3
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_3.5.1.3
-      - ufw
 
 - name: "3.5.1.4 | PATCH | Ensure loopback traffic is configured"
   block:

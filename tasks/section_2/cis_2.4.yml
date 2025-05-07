@@ -22,8 +22,7 @@
         when: discovered_listening_services.stdout | length > 0
   vars:
       warn_control_id: '2.4'
-  when:
-      - debian11cis_rule_2_4
+  when: debian11cis_rule_2_4
   tags:
       - level1-server
       - level1-workstation
