@@ -441,7 +441,7 @@ debian11cis_ipv4_required: true
 debian11cis_ipv6_required: false
 
 # Other system wide variables
-# debian11cis_desktop_required is the toggle for requiring desktop environments. True means you use a desktop and will not disable/remove needed items to run a desktop (not recommented for servers)
+# debian11cis_desktop_required is the toggle for requiring desktop environments. True means you use a desktop and will not disable/remove needed items to run a desktop (not recommended for servers)
 # false means you do not require a desktop
 debian11cis_desktop_required: false
 
@@ -631,8 +631,13 @@ debian11cis_max_log_file_size: 10
 ### 4.1.3.x audit template
 update_audit_template: false
 
+# allow exceptions for UID in auditd config
 ## Advanced option found in auditd post
-allow_auditd_uid_user_exclusions: false
+# This variable governs if defining user exceptions for auditd logging is acceptable.
+deb11cis_allow_auditd_uid_user_exclusions: false
+# This variable contains a list of uids to be excluded(users whose actions are not logged by auditd)
+deb11cis_auditd_uid_exclude:
+  - 1999
 
 # Control 4.1.2.3
 debian11cis_auditd:

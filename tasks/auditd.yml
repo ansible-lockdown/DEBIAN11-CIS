@@ -16,8 +16,8 @@
 
 - name: POST | Set up auditd user logging exceptions
   when:
-      - allow_auditd_uid_user_exclusions
-      - debian11ciscis_auditd_uid_exclude | length > 0
+      - deb11cis_allow_auditd_uid_user_exclusions
+      - deb11cis_auditd_uid_exclude | length > 0
   ansible.builtin.template:
       src: audit/98_auditd_exception.rules.j2
       dest: /etc/audit/rules.d/98_auditd_exceptions.rules
