@@ -637,7 +637,7 @@ update_audit_template: false
 deb11cis_allow_auditd_uid_user_exclusions: false
 # This variable contains a list of uids to be excluded(users whose actions are not logged by auditd)
 deb11cis_auditd_uid_exclude:
-  - 1999
+    - 1999
 
 # Control 4.1.2.3
 debian11cis_auditd:
