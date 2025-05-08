@@ -5,8 +5,7 @@
   changed_when: false
   failed_when: snap_pkg_mgr.rc not in [ 0, 1 ]
   register: snap_pkg_mgr
-  when:
-      - debian11cis_rule_1_1_1_2
+  when: debian11cis_rule_1_1_1_2
   tags:
       - rule_1.1.1.2
       - always
@@ -19,14 +18,12 @@
   tags:
       - rule_1.1.1.2
       - always
-  when:
-      - debian11cis_rule_1_1_1_2
+  when: debian11cis_rule_1_1_1_2
 
 - name: "PRELIM | Section 1.1 | Create list of mount points"
   ansible.builtin.set_fact:
       mount_names: "{{ ansible_facts.mounts | map(attribute='mount') | list }}"
-  tags:
-      - always
+  tags: always
 
 - name: PRELIM | Capture tmp mount type | discover mount tmp type
   block:
@@ -51,8 +48,7 @@
         debian11cis_rule_1_1_2_2 or
         debian11cis_rule_1_1_2_3 or
         debian11cis_rule_1_1_2_4
-  tags:
-      - always
+  tags: always
 
 - name: "PRELIM | Run apt update"
   ansible.builtin.package:
@@ -60,16 +56,14 @@
   when:
       - debian11cis_rule_1_3_1 or
         debian11cis_rule_1_9
-  tags:
-      - always
+  tags: always
 
 - name: "PRELIM | Check for autofs service"
   ansible.builtin.shell: "systemctl show autofs | grep LoadState | cut -d = -f 2"
   register: debian11cis_autofs_service_status
   changed_when: false
   check_mode: false
-  when:
-      - debian11cis_rule_1_1_9
+  when: debian11cis_rule_1_1_9
   tags:
       - skip_ansible_lint
       - section1
@@ -80,8 +74,7 @@
   register: avahi_service_status
   changed_when: false
   check_mode: false
-  when:
-      - debian11cis_rule_2_2_2
+  when: debian11cis_rule_2_2_2
   tags:
       - skip_ansible_lint
       - always
@@ -95,8 +88,7 @@
       - debian11cis_install_network_manager
       - not debian11cis_system_is_container
       - "'network-manager' not in ansible_facts.packages"
-  tags:
-      - always
+  tags: always
 
 - name: "PRELIM | PATCH | Ensure auditd is installed"
   block:
@@ -133,8 +125,7 @@
   failed_when: auditd_immutable_check.rc not in [ 0, 1 ]
   register: auditd_immutable_check
   when: "'auditd' in ansible_facts.packages"
-  tags:
-      - always
+  tags: always
 
 - name: "PRELIM | 5.3.4 | 5.3.5 | Find all sudoers files."
   ansible.builtin.shell: "find /etc/sudoers /etc/sudoers.d/ -type f ! -name '*~' ! -name '*.*'"
@@ -145,8 +136,7 @@
   when:
       - debian11cis_rule_5_3_4 or
         debian11cis_rule_5_3_5
-  tags:
-      - always
+  tags: always
 
 - name: "PRELIM | Discover Interactive UID MIN and MIN from logins.def"
   block:
@@ -170,10 +160,8 @@
             min_int_uid: "{{ uid_min_id.stdout }}"
             max_int_uid: "{{ uid_max_id.stdout }}"
             min_int_gid: "{{ gid_min_id.stdout }}"
-  when:
-      - not discover_int_uid
-  tags:
-      - always
+  when: not discover_int_uid
+  tags: always
 
 - name: "PRELIM | Interactive User accounts"
   ansible.builtin.shell: 'cat /etc/passwd | grep -Ev "nologin|/sbin|/bin" | cut -d: -f6'
@@ -185,8 +173,7 @@
         debian11cis_rule_6_2_14 or
         debian11cis_rule_6_2_15 or
         debian11cis_rule_6_2_16
-  tags:
-      - always
+  tags: always
 
 - name: "PRELIM | Install ACL"
   ansible.builtin.package:
@@ -195,8 +182,7 @@
   when:
       - debian11cis_rule_6_2_6
       - "'acl' not in ansible_facts.packages"
-  tags:
-      - always
+  tags: always
 
 - name: "PRELIM | Gather UID 0 accounts other than root"
   ansible.builtin.shell: "cat /etc/passwd | awk -F: '($3 == 0 && $1 != \"root\") {i++;print $1 } END {exit i}'"
@@ -219,8 +205,7 @@
       - debian11cis_rule_6_2_14 or
         debian11cis_rule_6_2_15 or
         debian11cis_rule_6_2_16
-  tags:
-      - always
+  tags: always
 
 - name: "Optional | Patch | UFW firewall force to use /etc/sysctl.conf settings"
   ansible.builtin.lineinfile:
@@ -234,5 +219,4 @@
   when:
       - debian11cis_firewall_package == "ufw"
       - debian11cis_ufw_use_sysctl
-  tags:
-      - always
+  tags: always
