@@ -125,8 +125,7 @@
   ansible.builtin.import_tasks: pre_remediation_audit.yml
 
 - name: Run parse /etc/passwd
-  when:
-      - debian11cis_section5 or debian11cis_section6
+  when: debian11cis_section5 or debian11cis_section6
   tags: always
   ansible.builtin.import_tasks:
       file: parse_etc_password.yml
