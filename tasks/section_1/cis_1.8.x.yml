@@ -300,8 +300,7 @@
       path: /etc/gdm3/custom.conf
       regexp: '^Enable.*=.*true'
       state: absent
-  when:
-      - debian11cis_rule_1_8_10
+  when: debian11cis_rule_1_8_10
   tags:
       - level1-server
       - level1-workstation

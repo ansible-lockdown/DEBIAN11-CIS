@@ -22,8 +22,7 @@
             line: blacklist cramfs
             create: true
   notify: Update_Initramfs
-  when:
-      - debian11cis_rule_1_1_1_1
+  when: debian11cis_rule_1_1_1_1
   tags:
       - level1-server
       - level1-workstation
@@ -88,8 +87,7 @@
             line: blacklist udf
             create: true
   notify: Update_Initramfs
-  when:
-      - debian11cis_rule_1_1_1_3
+  when: debian11cis_rule_1_1_1_3
   tags:
       - level2-server
       - level2-workstation

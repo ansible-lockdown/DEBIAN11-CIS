@@ -66,8 +66,7 @@
             - "'apparmor' in discovered_grub_cmdline_settings.stdout or
               'security' in discovered_grub_cmdline_settings.stdout"
         notify: Grub update
-  when:
-      - debian11cis_rule_1_6_1_2
+  when: debian11cis_rule_1_6_1_2
   tags:
       - level1-server
       - level1-workstation

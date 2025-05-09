@@ -9,8 +9,7 @@
       - '-4'
       - '-6'
   notify: Restart timeservice
-  when:
-      - debian11cis_rule_2_1_4_1
+  when: debian11cis_rule_2_1_4_1
   tags:
       - level1-server
       - level1-workstation
@@ -39,8 +38,7 @@
         loop_control:
             label: "{{ item.name }}"
         notify: Restart timeservice
-  when:
-      - debian11cis_rule_2_1_4_2
+  when: debian11cis_rule_2_1_4_2
   tags:
       - level1-server
       - level1-workstation
@@ -54,8 +52,7 @@
       regexp: '^RUNASUSER.*'
       line: 'RUNASUSER=ntp'
   notify: Restart timeservice
-  when:
-      - debian11cis_rule_2_1_4_3
+  when: debian11cis_rule_2_1_4_3
   tags:
       - level1-server
       - level1-workstation
@@ -69,8 +66,7 @@
       state: started
       enabled: true
       masked: false
-  when:
-      - debian11cis_rule_2_1_4_4
+  when: debian11cis_rule_2_1_4_4
   tags:
       - level1-server
       - level1-workstation

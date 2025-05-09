@@ -26,8 +26,7 @@
         when:
             - "'systemd-timesyncd' not in debian11cis_time_sync_tool"
             - "'systemd-timesyncd' in ansible_facts.packages"
-  when:
-      - debian11cis_rule_2_1_1_1
+  when: debian11cis_rule_2_1_1_1
   tags:
       - level1-server
       - level1-workstation

@@ -76,8 +76,7 @@
             - net.ipv6.conf.all.accept_redirects
             - net.ipv6.conf.default.accept_redirects
         notify: Flush ipv6 route table
-  when:
-      - debian11cis_rule_3_3_2
+  when: debian11cis_rule_3_3_2
   tags:
       - level1-server
       - level1-workstation
@@ -100,8 +99,7 @@
       - net.ipv4.conf.all.secure_redirects
       - net.ipv4.conf.default.secure_redirects
   notify: Flush ipv4 route table
-  when:
-      - debian11cis_rule_3_3_3
+  when: debian11cis_rule_3_3_3
   tags:
       - level1-server
       - level1-workstation
@@ -124,8 +122,7 @@
       - net.ipv4.conf.all.log_martians
       - net.ipv4.conf.default.log_martians
   notify: Flush ipv4 route table
-  when:
-      - debian11cis_rule_3_3_4
+  when: debian11cis_rule_3_3_4
   tags:
       - level1-server
       - level1-workstation
@@ -145,8 +142,7 @@
       reload: true
       ignoreerrors: true
   notify: Flush ipv4 route table
-  when:
-      - debian11cis_rule_3_3_5
+  when: debian11cis_rule_3_3_5
   tags:
       - level1-server
       - level1-workstation
@@ -166,8 +162,7 @@
       reload: true
       ignoreerrors: true
   notify: Flush ipv4 route table
-  when:
-      - debian11cis_rule_3_3_6
+  when: debian11cis_rule_3_3_6
   tags:
       - level1-server
       - level1-workstation
@@ -190,8 +185,7 @@
       - net.ipv4.conf.all.rp_filter
       - net.ipv4.conf.default.rp_filter
   notify: Flush ipv4 route table
-  when:
-      - debian11cis_rule_3_3_7
+  when: debian11cis_rule_3_3_7
   tags:
       - level1-server
       - level1-workstation
@@ -211,8 +205,7 @@
       reload: true
       ignoreerrors: true
   notify: Flush ipv4 route table
-  when:
-      - debian11cis_rule_3_3_8
+  when: debian11cis_rule_3_3_8
   tags:
       - level1-server
       - level1-workstation
