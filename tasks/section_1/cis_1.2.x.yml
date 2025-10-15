@@ -21,8 +21,7 @@
             file: warning_facts.yml
   vars:
       warn_control_id: '1.2.1'
-  when:
-      - debian11cis_rule_1_2_1
+  when: debian11cis_rule_1_2_1
   tags:
       - level1-server
       - level1-workstation
@@ -53,8 +52,7 @@
             file: warning_facts.yml
   vars:
       warn_control_id: '1.2.2'
-  when:
-      - debian11cis_rule_1_2_2
+  when: debian11cis_rule_1_2_2
   tags:
       - level1-server
       - level1-workstation

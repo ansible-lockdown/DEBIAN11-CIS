@@ -46,8 +46,7 @@
             mode: 'go-wx'
         when:
             - discovered_grub_cfg_status.stat.exists
-  when:
-      - debian11cis_rule_1_4_2
+  when: debian11cis_rule_1_4_2
   tags:
       - level1-server
       - level1-workstation

@@ -81,8 +81,7 @@
         when: "'network-manager' not in ansible_facts.packages"
   vars:
       warn_control_id: '3.1.2'
-  when:
-      - debian11cis_rule_3_1_2
+  when: debian11cis_rule_3_1_2
   tags:
       - level1-server
       - level2-workstation
@@ -100,8 +99,7 @@
   loop:
       - install dccp /bin/true
       - blacklist dccp
-  when:
-      - debian11cis_rule_3_1_3
+  when: debian11cis_rule_3_1_3
   tags:
       - level2-server
       - level2-workstation
@@ -119,8 +117,7 @@
   loop:
       - install sctp /bin/true
       - blacklist sctp
-  when:
-      - debian11cis_rule_3_1_4
+  when: debian11cis_rule_3_1_4
   tags:
       - level2-server
       - level2-workstation
@@ -138,8 +135,7 @@
   loop:
       - install rds /bin/true
       - blacklist rds
-  when:
-      - debian11cis_rule_3_1_5
+  when: debian11cis_rule_3_1_5
   tags:
       - level2-server
       - level2-workstation
@@ -157,8 +153,7 @@
   loop:
       - install tipc /bin/true
       - blacklist tipc
-  when:
-      - debian11cis_rule_3_1_6
+  when: debian11cis_rule_3_1_6
   tags:
       - level2-server
       - level2-workstation

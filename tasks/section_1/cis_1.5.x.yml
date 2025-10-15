@@ -9,8 +9,7 @@
       sysctl_set: true
       sysctl_file: "{{ debian11cis_sysctl_kernel_file }}"
       ignoreerrors: true
-  when:
-      - debian11cis_rule_1_5_1
+  when: debian11cis_rule_1_5_1
   tags:
       - level1-server
       - level1-workstation
@@ -61,8 +60,7 @@
         notify: Purge_packages
         when:
             - "'apport' in ansible_facts.packages"
-  when:
-      - debian11cis_rule_1_5_3
+  when: debian11cis_rule_1_5_3
   tags:
       - level1-server
       - level1-workstation
@@ -116,8 +114,7 @@
             - { regexp: '^Storage', line: 'Storage=none' }
             - { regexp: '^ProcessSizeMax', line: 'ProcessSizeMax=0' }
         when: "'systemd-coredump' in ansible_facts.packages"
-  when:
-      - debian11cis_rule_1_5_4
+  when: debian11cis_rule_1_5_4
   tags:
       - level1-server
       - level1-workstation

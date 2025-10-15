@@ -20,8 +20,7 @@
         loop:
             - "etc/systemd/timesyncd.conf.d/50-timesyncd.conf"
         notify: Restart timeservice
-  when:
-      - debian11cis_rule_2_1_3_1
+  when: debian11cis_rule_2_1_3_1
   tags:
       - level1-server
       - level1-workstation
@@ -35,8 +34,7 @@
       state: started
       enabled: true
       masked: false
-  when:
-      - debian11cis_rule_2_1_3_2
+  when: debian11cis_rule_2_1_3_2
   tags:
       - level1-server
       - level1-workstation
