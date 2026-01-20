@@ -2,6 +2,6 @@
 # Added as part of ansible-lockdown CIS baseline
 # provided by Mindpoint Group - A Tyto Athene Company
 
-{% for server in debian11cis_time_servers %}
+{% for server in deb11cis_time_servers %}
 server {{ server.name }} {{ server.options }}
 {% endfor %}

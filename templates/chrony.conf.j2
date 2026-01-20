@@ -15,8 +15,8 @@
 # Approved by debian Technical Board on 2011-02-08.
 # See http://www.pool.ntp.org/join.html for more information.
 
-{% for server in debian11cis_time_synchronization_servers -%}
-server {{ server }} {{ debian11cis_chrony_server_options }}
+{% for server in deb11cis_time_synchronization_servers -%}
+server {{ server }} {{ deb11cis_chrony_server_options }}
 {% endfor %}
 
 # This directive specify the location of the file containing ID/key pairs for
@@ -90,4 +90,4 @@ logchange 0.5
 # change it if necessary.
 rtconutc
 
-user {{ debian11cis_chrony_user }}
+user {{ deb11cis_chrony_user }}

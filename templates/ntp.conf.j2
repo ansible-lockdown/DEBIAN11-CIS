@@ -18,12 +18,12 @@ filegen clockstats file clockstats type day enable
 # Use servers from the NTP Pool Project.
 # on 2011-02-08 (LP: #104525). See http://www.pool.ntp.org/join.html for
 # more information.
-{% for server in debian11cis_time_servers -%}
+{% for server in deb11cis_time_servers -%}
 server {{ server.name }} {{ server.options }}
 {% endfor %}
 
 # Use ntp server as a fallback.
-{% for pool in debian11cis_time_pool %}
+{% for pool in deb11cis_time_pool %}
 pool {{ pool.name }} {{ pool.options }}
 {% endfor %}
 
