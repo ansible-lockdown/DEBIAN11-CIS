@@ -130,7 +130,7 @@ audit_output_destination: /opt/audit_summaries/
 ####### END ########
 
 # tweak role to run in a non-privileged container
-debian11cis_system_is_container: false
+system_is_container: false
 
 # skip events for ec2 instance testing pipeline
 system_is_ec2: false
