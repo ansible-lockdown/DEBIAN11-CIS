@@ -53,7 +53,7 @@ benchmark: DEBIAN11-CIS
 # System will reboot if false, can give better audit results
 skip_reboot: true
 
-# default value will change to true but wont reboot if not enabled but will error
+# default value will change to true but won't reboot if not enabled but will error
 change_requires_reboot: false
 
 # Create managed not custom local_facts files
@@ -1009,7 +1009,7 @@ deb11cis_passwd_quality_enforce_root_value: enforce_for_root  # pragma: allowlis
 # Uses value for deb11cis_pam_pwhistory_file in 5.3.2.4
 # Control 5.3.3.3.1
 # This variable represents the number of password change cycles, after which
-# a user can re-use a password. # CIS requires a value of 24 or more.
+# a user can reuse a password. # CIS requires a value of 24 or more.
 deb11cis_pamd_pwhistory_remember: 24
 
 ## Controls 5.4.1.x - Password settings
@@ -1114,7 +1114,7 @@ deb11cis_aide_db_recreate: false
 deb11cis_aide_db_file: /var/lib/aide/aide.db
 
 ## When Initializing aide this can take longer on some systems
-# changing the values enables user to change to thier own requirements
+# changing the values enables user to change to their own requirements
 # Maximum Time in seconds
 deb11cis_aide_init_async: 600
 # Polling Interval in seconds

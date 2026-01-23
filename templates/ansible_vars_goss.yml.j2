@@ -122,7 +122,7 @@ deb11cis_rule_1_7_8: {{ deb11cis_rule_1_7_8 }}
 deb11cis_rule_1_7_9: {{ deb11cis_rule_1_7_9 }}
 deb11cis_rule_1_7_10: {{ deb11cis_rule_1_7_10 }}
 
-# Section 2 rules are controling Services (Special Purpose Services, and service clients)
+# Section 2 rules are controlling Services (Special Purpose Services, and service clients)
 ## Configure Server Services
 deb11cis_rule_2_1_1: {{ deb11cis_rule_2_1_1 }}
 deb11cis_rule_2_1_2: {{ deb11cis_rule_2_1_2 }}
@@ -536,7 +536,7 @@ deb11cis_ipv6_disable: grub
 # Options are
 # true to leave installed if exists not changes take place
 # false - this removes the package
-# mask - if a dependancy for product so cannot be removed
+# mask - if a dependency for product so cannot be removed
 deb11cis_bluetooth_service: {{ deb11cis_bluetooth_service }}
 deb11cis_bluetooth_mask: {{ deb11cis_bluetooth_mask }}
 
@@ -615,7 +615,7 @@ deb11cis_ssh_weak_kex:
 
 deb11cis_sshd_config_file: /etc/ssh/sshd_config
 
-## 5.1.4 Note the following to understand precedence and layout , comma seperated
+## 5.1.4 Note the following to understand precedence and layout, comma separated
 deb11cis_sshd_allowusers: {{ deb11cis_sshd_allow_users }}
 deb11cis_sshd_allowgroups: {{ deb11cis_sshd_allow_groups }}
 deb11cis_sshd_denyusers: {{ deb11cis_sshd_deny_users }}

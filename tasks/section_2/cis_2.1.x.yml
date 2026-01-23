@@ -585,7 +585,7 @@
         - deb11cis_nginx_mask
       notify: Systemd_daemon_reload
       ansible.builtin.systemd:
-        name: ngnix.service
+        name: nginx.service
         enabled: false
         state: stopped
         masked: true
