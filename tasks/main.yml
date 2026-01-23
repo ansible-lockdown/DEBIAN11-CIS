@@ -200,7 +200,7 @@
         dest: "{{ ansible_facts_path }}/compliance_facts.fact"
         owner: root
         group: root
-        mode: 'u-x,go=r'
+        mode: 'u-x,go-wx'
 
 - name: Fetch audit files
   when:
