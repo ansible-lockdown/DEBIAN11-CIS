@@ -18,12 +18,12 @@ filegen clockstats file clockstats type day enable
 # Use servers from the NTP Pool Project.
 # on 2011-02-08 (LP: #104525). See http://www.pool.ntp.org/join.html for
 # more information.
-{% for server in debian11cis_time_servers -%}
+{% for server in deb11cis_time_servers -%}
 server {{ server.name }} {{ server.options }}
 {% endfor %}
 
 # Use ntp server as a fallback.
-{% for pool in debian11cis_time_pool %}
+{% for pool in deb11cis_time_pool %}
 pool {{ pool.name }} {{ pool.options }}
 {% endfor %}
 
@@ -61,7 +61,7 @@ restrict source notrap nomodify noquery
 #disable auth
 #broadcastclient
 
-#Changes recquired to use pps synchonisation as explained in documentation:
+#Changes required to use pps synchronisation as explained in documentation:
 #http://www.ntp.org/ntpfaq/NTP-s-config-adv.htm#AEN3918
 
 #server 127.127.8.1 mode 135 prefer    # Meinberg GPS167 with PPS
