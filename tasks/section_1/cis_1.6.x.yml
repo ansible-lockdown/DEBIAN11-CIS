@@ -1,150 +1,126 @@
 ---
 
-- name: "1.6.1.1 | PATCH | Ensure AppArmor is installed"
-  ansible.builtin.package:
-      name: ['apparmor', 'apparmor-utils']
-      state: present
-  when:
-      - debian11cis_rule_1_6_1_1
-      - "'apparmor' not in ansible_facts.packages or
-        'apparmor-utils' not in ansible_facts.packages"
+- name: "1.6.1 | PATCH | Ensure message of the day is configured properly"
+  when: deb11cis_rule_1_6_1
   tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_1.6.1.1
-      - apparmor
-
-- name: "1.6.1.2 | PATCH | Ensure AppArmor is enabled in the bootloader configuration"
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_1.6.1
+    - motd
+    - NIST800-53R5_CM-1
+    - NIST800-53R5_CM-3
+    - NIST800-53R5_CM-6
   block:
-      - name: "1.6.1.2 | AUDIT | Ensure AppArmor is enabled in the bootloader configuration | Get current settings"
-        ansible.builtin.shell: grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | cut -f2 -d'"'
-        changed_when: false
-        failed_when: false
-        check_mode: false
-        register: discovered_grub_cmdline_settings
+    - name: "1.6.1 | PATCH | Ensure message of the day is configured properly | motd"
+      ansible.builtin.template:
+        src: etc/motd.j2
+        dest: /etc/motd
+        mode: 'u-x,go-wx'
 
-      - name: "1.6.1.2 | PATCH | Ensure AppArmor is enabled in the bootloader configuration | Set apparmor settings if none exist"
-        ansible.builtin.lineinfile:
-            path: /etc/default/grub
-            regexp: ^(GRUB_CMDLINE_LINUX=")(|apparmor=\d\s)(.*\w+")
-            line: \1apparmor=1 \3
-            backrefs: true
-        notify: Grub update
-        when: discovered_grub_cmdline_settings.stdout is not search('apparmor=')
+    - name: "1.6.1 | PATCH | Ensure message of the day is configured properly | disable dynamic_motd"
+      when: deb11cis_disable_dynamic_motd
+      ansible.builtin.lineinfile:
+        path: /etc/pam.d/sshd
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        backrefs: true
+      loop:
+        - { regexp: '(session\s+optional\s+pam_motd.so\s+motd=/run/motd.dynamic)', line: '# \1' }
+        - { regexp: '(session\s+optional\s+pam_motd.so noupdate)', line: '# \1' }
+        - { regexp: '# Pam_motd.so disabled for CIS benchmark', line: '# Pam_motd.so disabled for CIS benchmark' }
 
-      - name: "1.6.1.2 | PATCH | Ensure AppArmor is enabled in the bootloader configuration | Set security settings if none exist"
-        ansible.builtin.lineinfile:
-            path: /etc/default/grub
-            regexp: ^(GRUB_CMDLINE_LINUX=")(|security=\w+\s)(.*\w+")
-            line: \1security=apparmor \3
-            backrefs: true
-        notify: Grub update
-        when: discovered_grub_cmdline_settings.stdout is not search('security=')
-
-      - name: "1.6.1.2 | PATCH | Ensure AppArmor is enabled in the bootloader configuration | Set apparmor settings if none exist"
-        ansible.builtin.lineinfile:
-            path: /etc/default/grub
-            regexp: '^GRUB_CMDLINE_LINUX='
-            line: 'GRUB_CMDLINE_LINUX="apparmor=1 security=apparmor {{ discovered_grub_cmdline_settings.stdout }}"'
-            insertafter: '^GRUB_'
-        when:
-            - "'apparmor' not in discovered_grub_cmdline_settings.stdout"
-            - "'security' not in discovered_grub_cmdline_settings.stdout"
-        notify: Grub update
-
-      - name: "1.6.1.2 | PATCH | Ensure AppArmor is enabled in the bootloader configuration | Replace apparmor settings when exists"
-        ansible.builtin.replace:
-            path: /etc/default/grub
-            regexp: "{{ item.regexp }}"
-            replace: "{{ item.replace }}"
-        with_items:
-            - { regexp: 'apparmor=\w+', replace: 'apparmor=1' }
-            - { regexp: 'security=\w+', replace: 'security=apparmor' }
-        when:
-            - "'apparmor' in discovered_grub_cmdline_settings.stdout or
-              'security' in discovered_grub_cmdline_settings.stdout"
-        notify: Grub update
-  when: debian11cis_rule_1_6_1_2
+- name: "1.6.2 | PATCH | Ensure local login warning banner is configured properly"
+  when: deb11cis_rule_1_6_2
   tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_1.6.1.2
-      - apparmor
-
-# This is handled via this block to allow for proper flagging of idempotency for the control
-- name: "1.6.1.3 | PATCH | Ensure all AppArmor Profiles are in enforce or complain mode"
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_1.6.2
+    - banner
+    - NIST800-53R5_CM-1
+    - NIST800-53R5_CM-3
+    - NIST800-53R5_CM-6
   block:
-      - name: "1.6.1.3 | PATCH | Ensure all AppArmor Profiles are in enforce or complain mode | Get pre apply enforce count"
-        ansible.builtin.shell: apparmor_status |  grep "profiles are in enforce mode" | tr -d -c 0-9
-        changed_when: false
-        failed_when: false
-        register: discovered_apparmor_pre_count
+    - name: "1.6.2 | PATCH | Ensure local login warning banner is configured properly | issue"
+      ansible.builtin.template:
+        src: etc/issue.j2
+        dest: /etc/issue
+        mode: 'u-x,go-wx'
 
-      - name: "1.6.1.3 | PATCH | Ensure all AppArmor Profiles are in enforce or complain mode | Apply enforcing to /etc/apparmor.d profiles"
-        ansible.builtin.shell: aa-enforce /etc/apparmor.d/*
-        changed_when: false
-        failed_when: false
+    - name: "1.6.2 | PATCH | Ensure local login warning banner is kept on package upgrade | issue"
+      community.general.dpkg_divert:
+        path: /etc/issue
 
-      - name: "1.6.1.3 | PATCH | Ensure all AppArmor Profiles are in enforce or complain mode | Get post apply enforce count"
-        ansible.builtin.shell: apparmor_status |  grep "profiles are in enforce mode" | tr -d -c 0-9
-        changed_when: false
-        failed_when: false
-        register: discovered_apparmor_pre_count
-
-      - name: "1.6.1.3 | PATCH | Ensure all AppArmor Profiles are in enforce or complain mode | This flags for idempotency"
-        ansible.builtin.debug:
-            msg: Changed! The profiles in /etc/apparmor.d were set to enforcing
-        changed_when: true
-        when: discovered_apparmor_pre_count.stdout != discovered_apparmor_pre_count.stdout
-  when:
-      - debian11cis_rule_1_6_1_3
-      - not debian11cis_apparmor_disable
-      - not debian11cis_apparmor_enforce_only
+- name: "1.6.3 | PATCH | Ensure remote login warning banner is configured properly"
+  when: deb11cis_rule_1_6_3
   tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_1.6.1.3
-      - apparmor
-
-- name: "1.6.1.4 | PATCH | Ensure all AppArmor Profiles are enforcing"
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_1.6.3
+    - banner
+    - NIST800-53R5_CM-1
+    - NIST800-53R5_CM-3
+    - NIST800-53R5_CM-6
   block:
-      - name: "1.6.1.4 | PATCH | Ensure all AppArmor Profiles are enforcing | Get pre apply enforce count"
-        ansible.builtin.shell: apparmor_status |  grep "profiles are in enforce mode" | tr -d -c 0-9
-        changed_when: false
-        failed_when: false
-        register: discovered_apparmor_pre_count
+    - name: "1.6.3 | PATCH | Ensure remote login warning banner is configured properly | issue.net"
+      ansible.builtin.template:
+        src: etc/issue.net.j2
+        dest: /etc/issue.net
+        mode: 'u-x,go-wx'
 
-      - name: "1.6.1.4 | PATCH | Ensure all AppArmor Profiles are enforcing | Apply enforcing to /etc/apparmor.d profiles"
-        ansible.builtin.shell: aa-enforce /etc/apparmor.d/*
-        changed_when: false
-        failed_when: false
+    - name: "1.6.3 | PATCH | Ensure remote login warning banner is kept on package upgrade | issue.net"
+      community.general.dpkg_divert:
+        path: /etc/issue.net
 
-      - name: "1.6.1.4 | PATCH | Ensure all AppArmor Profiles are enforcing | Get post apply enforce count"
-        ansible.builtin.shell: apparmor_status |  grep "profiles are in enforce mode" | tr -d -c 0-9
-        changed_when: false
-        failed_when: false
-        register: discovered_apparmor_pre_count
-
-      - name: "1.6.1.4 | PATCH | Ensure all AppArmor Profiles are enforcing | This flags for idempotency"
-        ansible.builtin.debug:
-            msg: Changed! The profiles in /etc/apparmor.d were set to enforcing
-        changed_when: true
-        when: discovered_apparmor_pre_count.stdout != discovered_apparmor_pre_count.stdout
-  when:
-      - debian11cis_rule_1_6_1_4
-      - not debian11cis_apparmor_disable
-      - debian11cis_apparmor_enforce_only
+- name: "1.6.4 | PATCH | Ensure permissions on /etc/motd are configured"
+  when: deb11cis_rule_1_6_4
   tags:
-      - level2-server
-      - level2-workstation
-      - automated
-      - scored
-      - patch
-      - rule_1.6.1.4
-      - apparmor
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_1.6.4
+    - permissions
+    - motd
+    - NIST800-53R5_AC-3
+    - NIST800-53R5_MP-2
+  ansible.builtin.file:
+    path: /etc/motd
+    owner: root
+    group: root
+    mode: 'u-x,go-wx'
+
+- name: "1.6.5 | PATCH | Ensure permissions on /etc/issue are configured"
+  when: deb11cis_rule_1_6_5
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_1.6.5
+    - permissions
+    - banner
+    - NIST800-53R5_AC-3
+    - NIST800-53R5_MP-2
+  ansible.builtin.file:
+    path: /etc/issue
+    owner: root
+    group: root
+    mode: 'u-x,go-wx'
+
+- name: "1.6.6 | PATCH | Ensure permissions on /etc/issue.net are configured"
+  when: deb11cis_rule_1_6_6
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_1.6.6
+    - permissions
+    - banner
+    - NIST800-53R5_AC-3
+    - NIST800-53R5_MP-2
+  ansible.builtin.file:
+    path: /etc/issue.net
+    owner: root
+    group: root
+    mode: 'u-x,go-wx'

@@ -1,0 +1,11 @@
+# CIS Configurations
+# 5.3.3.2.3 Ensure password complexity is configured
+{% if deb11cis_passwd_complex_option == 'minclass' %}  # pragma: allowlist secret
+minclass = {{ deb11cis_passwd_minclass }}
+{% endif %}
+{% if deb11cis_passwd_complex_option == 'credits' %}  # pragma: allowlist secret
+dcredit = {{ deb11cis_passwd_dcredit }}
+ucredit = {{ deb11cis_passwd_ucredit }}
+ocredit = {{ deb11cis_passwd_ocredit }}
+lcredit = {{ deb11cis_passwd_lcredit }}
+{% endif %}
