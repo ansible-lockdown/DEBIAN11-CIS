@@ -1,6 +1,6 @@
 ---
 
-- name: "1.7.1 | PATCH | Ensure GNOME Display Manager is removed"
+- name: "1.7.1 | PATCH | Ensure GDM is removed"
   when:
     - deb11cis_rule_1_7_1
     - not deb11cis_desktop_required
@@ -56,7 +56,7 @@
         - { regexp: 'banner-message-enable', line: 'banner-message-enable=true', insertafter: '\[org\/gnome\/login-screen\]'}
         - { regexp: 'banner-message-text', line: "banner-message-text='{{ deb11cis_warning_banner | regex_replace('\n', ' ') | trim }}'", insertafter: 'banner-message-enable' }
 
-- name: "1.7.3 | PATCH | Ensure disable-user-list option is enabled"
+- name: "1.7.3 | PATCH | Ensure GDM disable-user-list option is enabled"
   when:
     - deb11cis_rule_1_7_3
     - deb11cis_desktop_required

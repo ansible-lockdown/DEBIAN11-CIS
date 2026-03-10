@@ -40,7 +40,7 @@
     - { regexp: 'ServerCertificateFile=', line: 'ServerCertificateFile={{ deb11cis_journal_servercertificatefile }}'}
     - { regexp: 'TrustedCertificateFile=', line: 'TrustedCertificateFile={{ deb11cis_journal_trustedcertificatefile }}'}
 
-- name: "6.2.1.2.3 | PATCH | Ensure systemd-journal-remote is enabled and active"
+- name: "6.2.1.2.3 | PATCH | Ensure systemd-journal-upload is enabled and active"
   when:
     - not deb11cis_system_is_log_server
     - deb11cis_rule_6_2_1_2_3

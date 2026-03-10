@@ -1,6 +1,6 @@
 ---
 
-- name: "1.5.1 | PATCH | Ensure address space layout randomization (ASLR) is enabled"
+- name: "1.5.1 | PATCH | Ensure address space layout randomization is enabled"
   when: deb11cis_rule_1_5_1
   tags:
     - level1-server
@@ -10,7 +10,7 @@
     - rule_1.5.1
     - NIST800-53R5_CM-6
   block:
-    - name: "1.5.1 | PATCH | Ensure address space layout randomization (ASLR) is enabled"
+    - name: "1.5.1 | PATCH | Ensure address space layout randomization is enabled"
       ansible.builtin.set_fact:
         deb11cis_sysctl_update: true
 

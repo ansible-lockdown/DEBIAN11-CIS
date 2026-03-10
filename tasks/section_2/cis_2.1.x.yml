@@ -130,7 +130,7 @@
         state: stopped
         masked: true
 
-- name: "2.1.5 | PATCH | Ensure dnsmasq server services are not in use"
+- name: "2.1.5 | PATCH | Ensure dnsmasq services are not in use"
   when: deb11cis_rule_2_1_5
   tags:
     - level1-server
@@ -141,7 +141,7 @@
     - NIST800-53R5_CM-7
     - rule_2.1.5
   block:
-    - name: "2.1.5 | PATCH | Ensure dnsmasq server services are not in use | Remove package"
+    - name: "2.1.5 | PATCH | Ensure dnsmasq services are not in use | Remove package"
       when:
         - not deb11cis_dnsmasq_server
         - not deb11cis_dnsmasq_mask
@@ -149,7 +149,7 @@
         name: dnsmasq
         state: absent
 
-    - name: "2.1.5 | PATCH | Ensure dnsmasq server services are not in use | Mask service"
+    - name: "2.1.5 | PATCH | Ensure dnsmasq services are not in use | Mask service"
       when:
         - not deb11cis_dnsmasq_server
         - deb11cis_dnsmasq_mask
@@ -201,7 +201,7 @@
     - ldap
     - NIST800-53R5_CM-6
     - NIST800-53R5_CM-7
-    - rule_2.1.6
+    - rule_2.1.7
   block:
     - name: "2.1.7 | PATCH | Ensure ldap server services are not in use | Remove package"
       when:
@@ -418,7 +418,7 @@
         state: stopped
         masked: true
 
-- name: "2.1.14 | PATCH | Ensure samba services are not in use"
+- name: "2.1.14 | PATCH | Ensure samba file server services are not in use"
   when: deb11cis_rule_2_1_14
   tags:
     - level1-server
@@ -429,7 +429,7 @@
     - NIST800-53R5_CM-7
     - rule_2.1.14
   block:
-    - name: "2.1.14 | PATCH | Ensure samba services are not in use | Remove package"
+    - name: "2.1.14 | PATCH | Ensure samba file server services are not in use | Remove package"
       when:
         - not deb11cis_samba_server
         - not deb11cis_samba_mask
@@ -437,7 +437,7 @@
         name: samba
         state: absent
 
-    - name: "2.1.14 | PATCH | Ensure samba services are not in use | Mask service"
+    - name: "2.1.14 | PATCH | Ensure samba file server services are not in use | Mask service"
       when:
         - not deb11cis_samba_server
         - deb11cis_samba_mask
@@ -636,7 +636,7 @@
     name: xserver-common
     state: absent
 
-- name: "2.1.21 | PATCH | Ensure mail transfer agents are configured for local-only mode"
+- name: "2.1.21 | PATCH | Ensure mail transfer agent is configured for local-only mode"
   when:
     - not deb11cis_is_mail_server
     - "'postfix' in ansible_facts.packages"
