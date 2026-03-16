@@ -431,6 +431,7 @@ deb11cis_rule_5_4_3_3: true
 ## 6.1 Configure Integrity Checking
 deb11cis_rule_6_1_1: true
 deb11cis_rule_6_1_2: true
+deb11cis_rule_6_1_3: true
 ## 6.2.1.1.x Configure systemd-journald service
 deb11cis_rule_6_2_1_1_1: true
 deb11cis_rule_6_2_1_1_2: true
@@ -447,48 +448,48 @@ deb11cis_rule_6_2_1_2_4: true
 deb11cis_rule_6_2_2_1: true
 ## 6.4 Configure Auditing
 ## 6.4.1 Configure auditd Service
-deb11cis_rule_6_3_1_1: true
-deb11cis_rule_6_3_1_2: true
-deb11cis_rule_6_3_1_3: true
-deb11cis_rule_6_3_1_4: true
+deb11cis_rule_6_4_1_1: true
+deb11cis_rule_6_4_1_2: true
+deb11cis_rule_6_4_1_3: true
+deb11cis_rule_6_4_1_4: true
 ## 6.4.2 Configure Data Retention
-deb11cis_rule_6_3_2_1: true
-deb11cis_rule_6_3_2_2: true
-deb11cis_rule_6_3_2_3: true
-deb11cis_rule_6_3_2_4: true
-## 6.3.3 Configure auditd Rules
-deb11cis_rule_6_3_3_1: true
-deb11cis_rule_6_3_3_2: true
-deb11cis_rule_6_3_3_3: true
-deb11cis_rule_6_3_3_4: true
-deb11cis_rule_6_3_3_5: true
-deb11cis_rule_6_3_3_6: true
-deb11cis_rule_6_3_3_7: true
-deb11cis_rule_6_3_3_8: true
-deb11cis_rule_6_3_3_9: true
-deb11cis_rule_6_3_3_10: true
-deb11cis_rule_6_3_3_11: true
-deb11cis_rule_6_3_3_12: true
-deb11cis_rule_6_3_3_13: true
-deb11cis_rule_6_3_3_14: true
-deb11cis_rule_6_3_3_15: true
-deb11cis_rule_6_3_3_16: true
-deb11cis_rule_6_3_3_17: true
-deb11cis_rule_6_3_3_18: true
-deb11cis_rule_6_3_3_19: true
-deb11cis_rule_6_3_3_20: true
-deb11cis_rule_6_3_3_21: true
-## 6.3.4 Configure auditd File Access
-deb11cis_rule_6_3_4_1: true
-deb11cis_rule_6_3_4_2: true
-deb11cis_rule_6_3_4_3: true
-deb11cis_rule_6_3_4_4: true
-deb11cis_rule_6_3_4_5: true
-deb11cis_rule_6_3_4_6: true
-deb11cis_rule_6_3_4_7: true
-deb11cis_rule_6_3_4_8: true
-deb11cis_rule_6_3_4_9: true
-deb11cis_rule_6_3_4_10: true
+deb11cis_rule_6_4_2_1: true
+deb11cis_rule_6_4_2_2: true
+deb11cis_rule_6_4_2_3: true
+deb11cis_rule_6_4_2_4: true
+## 6.4.3 Configure auditd Rules
+deb11cis_rule_6_4_3_1: true
+deb11cis_rule_6_4_3_2: true
+deb11cis_rule_6_4_3_3: true
+deb11cis_rule_6_4_3_4: true
+deb11cis_rule_6_4_3_5: true
+deb11cis_rule_6_4_3_6: true
+deb11cis_rule_6_4_3_7: true
+deb11cis_rule_6_4_3_8: true
+deb11cis_rule_6_4_3_9: true
+deb11cis_rule_6_4_3_10: true
+deb11cis_rule_6_4_3_11: true
+deb11cis_rule_6_4_3_12: true
+deb11cis_rule_6_4_3_13: true
+deb11cis_rule_6_4_3_14: true
+deb11cis_rule_6_4_3_15: true
+deb11cis_rule_6_4_3_16: true
+deb11cis_rule_6_4_3_17: true
+deb11cis_rule_6_4_3_18: true
+deb11cis_rule_6_4_3_19: true
+deb11cis_rule_6_4_3_20: true
+deb11cis_rule_6_4_3_21: true
+## 6.4.4 Configure auditd File Access
+deb11cis_rule_6_4_4_1: true
+deb11cis_rule_6_4_4_2: true
+deb11cis_rule_6_4_4_3: true
+deb11cis_rule_6_4_4_4: true
+deb11cis_rule_6_4_4_5: true
+deb11cis_rule_6_4_4_6: true
+deb11cis_rule_6_4_4_7: true
+deb11cis_rule_6_4_4_8: true
+deb11cis_rule_6_4_4_9: true
+deb11cis_rule_6_4_4_10: true
 
 # Section 7 System Maintenance
 ## 7.1 System File Permissions
