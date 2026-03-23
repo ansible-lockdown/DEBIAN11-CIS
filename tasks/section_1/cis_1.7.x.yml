@@ -73,7 +73,7 @@
     - NIST800-53R5_IA-5
   notify: Update dconf
   block:
-    - name: "1.7.3 | PATCH | Ensure disable-user-list option is enabled | make directories"
+    - name: "1.7.3 | PATCH | Ensure GDM disable-user-list option is enabled | make directories"
       ansible.builtin.file:
         path: "{{ item }}"
         owner: root
@@ -84,7 +84,7 @@
         - /etc/dconf/db/{{ deb11cis_dconf_db_name }}.d
         - /etc/dconf/profile
 
-    - name: "1.7.3 | PATCH | Ensure disable-user-list option is enabled | disable-user-list setting login-screen"
+    - name: "1.7.3 | PATCH | Ensure GDM disable-user-list option is enabled | disable-user-list setting login-screen"
       ansible.builtin.lineinfile:
         path: "/etc/dconf/db/{{ deb11cis_dconf_db_name }}.d/00-login-screen"
         regexp: "{{ item.regexp }}"
@@ -98,7 +98,7 @@
         - { regexp: '\[org\/gnome\/login-screen\]', line: '[org/gnome/login-screen]', insertafter: EOF }
         - { regexp: 'disable-user-list', line: 'disable-user-list=true', insertafter: '\[org\/gnome\/login-screen\]'}
 
-    - name: "1.7.3 | PATCH | Ensure disable-user-list option is enabled | disable-user-list setting profile"
+    - name: "1.7.3 | PATCH | Ensure GDM disable-user-list option is enabled | disable-user-list setting profile"
       ansible.builtin.lineinfile:
         path: "/etc/dconf/profile/{{ deb11cis_dconf_db_name }}"
         regexp: "{{ item.regexp }}"

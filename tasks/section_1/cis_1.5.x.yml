@@ -14,7 +14,7 @@
       ansible.builtin.set_fact:
         deb11cis_sysctl_update: true
 
-    - name: "1.5.1 | PATCH | Ensure address space layout randomization (ASLR) is enabled"
+    - name: "1.5.1 | PATCH | Ensure address space layout randomization is enabled"
       ansible.builtin.debug:
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-kernel_sysctl.conf"
 

@@ -140,7 +140,7 @@
         mode: 'u-x,g-wx,o-rwx'
         state: touch
 
-    - name: "2.4.1.8 | PATCH | Ensure crontab is restricted to authorized users |  Update cron.allow if exists"
+    - name: "2.4.1.8 | PATCH | Ensure crontab is restricted to authorized users | Update cron.allow if exists"
       when: discovered_cron_allow_status.stat.exists
       ansible.builtin.file:
         path: /etc/cron.allow
