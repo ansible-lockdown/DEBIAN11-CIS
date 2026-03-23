@@ -198,10 +198,10 @@
     - level1-workstation
     - automated
     - patch
-    - ldap
+    - rule_2.1.7
     - NIST800-53R5_CM-6
     - NIST800-53R5_CM-7
-    - rule_2.1.7
+    - rule_2.1.6
   block:
     - name: "2.1.7 | PATCH | Ensure ldap server services are not in use | Remove package"
       when:
