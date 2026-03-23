@@ -86,37 +86,25 @@
         weekday: "{{ deb11cis_aide_cron_weekday | default('*') }}"
         job: "{{ deb11cis_aide_cron_job }}"
 
-    - name: "6.1.2 | PATCH | Ensure filesystem integrity is regularly checked | aide service"
-      when: deb11cis_aide_scan == "timer"
-      ansible.builtin.systemd:
-        name: aidecheck.service
-        enabled: true
+    - name: "6.1.2 | PATCH | Ensure filesystem integrity is regularly checked | timer template"
+      when: deb11cis_aide_scan == 'timer'
+      ansible.builtin.template:
+        src: "{{ item }}.j2"
+        dest: "/{{ item }}"
+        owner: root
+        group: root
+        mode: 'go-wx'
+      loop:
+        - etc/systemd/system/dailyaidecheck.service
+        - etc/systemd/system/dailyaidecheck.timer
 
-    - name: "6.1.2 | PATCH | Ensure filesystem integrity is regularly checked | aide service"
-      when: deb11cis_aide_scan == "timer"
+    - name: "6.1.2 | PATCH | Ensure filesystem integrity is regularly checked | timer service"
+      when: deb11cis_aide_scan == 'timer'
       ansible.builtin.systemd:
-        name: aidecheck.timer
+        name: "{{ item }}"
         state: started
         enabled: true
-
-- name: "6.1.3 | Ensure cryptographic mechanisms are used to protect the integrity of audit tools"
-  when: deb11cis_rule_6_1_3
-  tags:
-    - level2-server
-    - level2-workstation
-    - aide
-    - file_integrity
-    - patch
-    - rule_6.1.3
-    - NIST800-53R5_NA
-  ansible.builtin.blockinfile:
-    path: /etc/aide/aide.conf
-    marker: "# {mark} Audit tools - CIS benchmark - Ansible-lockdown"
-    block: |
-      /usr/sbin/auditctl p+i+n+u+g+s+b+acl+xattrs+sha512
-      /usr/sbin/auditd p+i+n+u+g+s+b+acl+xattrs+sha512
-      /usr/sbin/ausearch p+i+n+u+g+s+b+acl+xattrs+sha512
-      /usr/sbin/aureport p+i+n+u+g+s+b+acl+xattrs+sha512
-      /usr/sbin/autrace p+i+n+u+g+s+b+acl+xattrs+sha512
-      /usr/sbin/augenrules p+i+n+u+g+s+b+acl+xattrs+sha512
-    validate: aide -D --config %s
+        daemon_reload: true
+      loop:
+        - dailyaidecheck.service
+        - dailyaidecheck.timer
