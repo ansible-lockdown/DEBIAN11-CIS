@@ -2,6 +2,11 @@
 
 ## Based on CIS V2.0.0
 
+Apr 2026 - April 2026
+
+- tidy up of legacy confusing default variables and defaults for 5.1
+- pre-commit update
+
 Mar 2026 — aligned from Private-DEBIAN11-CIS
 
 - Common files aligned
