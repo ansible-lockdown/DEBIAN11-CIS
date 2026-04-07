@@ -1,3 +1,5 @@
+---
+
 ## metadata for benchmark Debian 11
 
 ## metadata for Audit benchmark
@@ -417,7 +419,7 @@ deb11cis_rule_7_2_10: {{ deb11cis_rule_7_2_10 }}
 # Section 1
 
 # Whether or not to run tasks related to auditing/patching the desktop environment
-deb11cis_gui: {{ deb11cis_desktop_required }}
+deb11cis_desktop_required: {{ deb11cis_desktop_required }}
 
 ## Controls 1.3.1.3 and 1.3.1.4 Ensure all AppArmor Profiles are in enforce (1.3.1.3/4) or complain (1.3.1.3) mode
 
@@ -503,33 +505,29 @@ deb11cis_ftp_client: {{ deb11cis_ftp_client }}
 deb11cis_time_sync_tool: {{ deb11cis_time_sync_tool }}
 
 ## Controls 2.3.x - Configure time pools & servers for chrony and timesyncd
-# The following variable represents a list of of time server pools used
+# The following variable represents a list of time server pools used
 # for configuring chrony and timesyncd.
 # Each list item contains two settings, `name` (the domain name of the pool) and synchronization `options`.
 # The default setting for the `options` is `iburst maxsources 4` -- please refer to the documentation
 # of the time synchronization mechanism you are using.
-deb11cis_time_pool_name:
+deb11cis_time_pool:
 {% for pool in deb11cis_time_pool %}
   - name: {{ pool.name }}
-    options: {{ pool.options }}
+    pool_options: {{ pool.options }}
 {% endfor %}
 
-# The following variable represents a list of of time servers used
+# The following variable represents a list of time servers used
 # for configuring chrony and timesyncd
 # Each list item contains two settings, `name` (the domain name of the server) and synchronization `options`.
 # The default setting for the `options` is `iburst` -- please refer to the documentation
 # of the time synchronization mechanism you are using.
 deb11cis_time_servers:
 {% for time_server in deb11cis_time_servers %}
-- name: {{ time_server.name }}
-  options: {{ time_server.options }}
+  - name: {{ time_server.name }}
+    server_options: {{ time_server.options }}
 {% endfor %}
 
 # Section 3
-## Control 3.1.1 - Ensure system is checked to determine if IPv6 is enabled
-# This variable governs the mechanism of how the disabling of IPV6 is carried out.
-# Its possible values are `grub` and `sysctl`.
-deb11cis_ipv6_disable: grub
 
 ## Control 3.1.3 - Ensure bluetooth Services are not in use
 # This control managed how the bluetooth service is managaed
@@ -559,70 +557,22 @@ deb11cis_firewall_package: {{ deb11cis_firewall_package }}
 
 # Section 5
 
-deb11cis_ssh_strong_ciphers:
-  - aes256-gcm@openssh.com
-  - aes128-gcm@openssh.com
-  - aes256-ctr
-  - aes192-ctr
-  - aes128-ctr
-deb11cis_ssh_weak_ciphers:
-  - 3des-cbc
-  - aes128-cbc
-  - aes192-cbc
-  - aes256-cbc
-  - arcfour
-  - chacha20-poly1305@openssh.com
-  - arcfour128
-  - arcfour256
-  - blowfish-cbc
-  - cast128-cbc
-  - rijndael-cbc@lysator.liu.se
+deb11cis_sshd_weak_ciphers: {{ deb11cis_sshd_weak_ciphers }}
 
-deb11cis_ssh_strong_macs:
-  - hmac-sha1
-  - hmac-sha2-256
-  #  - hmac-sha2-384  # hashed out seen as bad ssh2 MAC
-  - hmac-sha2-512
-deb11cis_ssh_weak_macs:
-  - hmac-md5
-  - hmac-md5-96
-  - hmac-ripemd160
-  - hmac-sha1-96
-  - umac-64@openssh.com
-  - umac-128@openssh.com
-  - hmac-md5-etm@openssh.com
-  - hmac-md5-96-etm@openssh.com
-  - hmac-ripemd160-etm@openssh.com
-  - hmac-sha1-etm@openssh.com
-  - hmac-sha1-96-etm@openssh.com
-  - umac-64-etm@openssh.com
-  - umac-128-etm@openssh.com
-  - hmac-sha2-512-etm@openssh.com
-  - hmac-sha2-256-etm@openssh.com
+deb11cis_sshd_weak_macs: {{ deb11cis_sshd_weak_macs }}
 
-deb11cis_ssh_strong_kex:
-  - ecdh-sha2-nistp256
-  - ecdh-sha2-nistp384
-  - ecdh-sha2-nistp521
-  - diffie-hellman-group-exchange-sha256
-  - diffie-hellman-group14-sha256
-  - diffie-hellman-group16-sha512
-  - diffie-hellman-group18-sha512
-deb11cis_ssh_weak_kex:
-  - diffie-hellman-group1-sha1
-  - diffie-hellman-group14-sha1
-  - diffie-hellman-group-exchange-sha1
+deb11cis_sshd_weak_kex: {{ deb11cis_sshd_weak_kex }}
 
 deb11cis_sshd_config_file: /etc/ssh/sshd_config
 
 ## 5.1.4 Note the following to understand precedence and layout, comma separated
-deb11cis_sshd_allowusers: {{ deb11cis_sshd_allow_users }}
-deb11cis_sshd_allowgroups: {{ deb11cis_sshd_allow_groups }}
-deb11cis_sshd_denyusers: {{ deb11cis_sshd_deny_users }}
-deb11cis_sshd_denygroups: {{ deb11cis_sshd_deny_groups }}
+deb11cis_sshd_allow_users: {{ deb11cis_sshd_allow_users }}
+deb11cis_sshd_allow_groups: {{ deb11cis_sshd_allow_groups }}
+deb11cis_sshd_deny_users: {{ deb11cis_sshd_deny_users }}
+deb11cis_sshd_deny_groups: {{ deb11cis_sshd_deny_groups }}
 
-deb11cis_ssh_clientaliveinterval: {{ deb11cis_sshd_client_alive_interval }}
-deb11cis_ssh_clientalivecountmax: {{ deb11cis_sshd_client_alive_count_max }}
+deb11cis_sshd_client_alive_interval: {{ deb11cis_sshd_client_alive_interval }}
+deb11cis_sshd_client_alive_count_max: {{ deb11cis_sshd_client_alive_count_max }}
 
 ## 5.2.7 set sugroup if differs from wheel
 deb11cis_sugroup: {{ deb11cis_sugroup }}
@@ -650,20 +600,15 @@ deb11cis_aide_scan: {{ deb11cis_aide_scan }}
 ## change to rsyslog/ journald or other
 deb11cis_syslog: {{ deb11cis_syslog }}
 
-# Control 6.2.3. x
+# Control 6.2.1.2.x
 ## Set if host is a logserver
-deb11cis_is_syslog_server: {{ deb11cis_system_is_log_server }}
+deb11cis_system_is_log_server: {{ deb11cis_system_is_log_server }}
 
 # Log server settings
-deb11cis_remote_log_host: {{ deb11cis_remote_log_host }}
-deb11cis_remote_log_port: {{ deb11cis_remote_log_port }}
-deb11cis_remote_log_protocol: {{ deb11cis_remote_log_protocol }}
-deb11cis_remote_log_retrycount: {{ deb11cis_remote_log_retrycount }}
-deb11cis_remote_log_queuesize: {{ deb11cis_remote_log_queuesize }}
-
-# 6.3 If using auditd
-deb11cis_auditd: {{ deb11cis_rule_6_3_1_1 }}
-
+deb11cis_journal_upload_url: {{ deb11cis_journal_upload_url }}
+deb11cis_journal_upload_serverkeyfile: {{ deb11cis_journal_upload_serverkeyfile }}
+deb11cis_journal_servercertificatefile: {{ deb11cis_journal_servercertificatefile }}
+deb11cis_journal_trustedcertificatefile: {{ deb11cis_journal_trustedcertificatefile }}
 
 # Control 7.1.12
 deb11cis_exclude_unowned_search_path: \({{deb11cis_exclude_unowned_search_path}}\)

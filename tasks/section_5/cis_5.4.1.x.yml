@@ -36,7 +36,7 @@
         password_expire_max: "{{ deb11cis_pass_max_days }}"
       loop: "{{ discovered_max_days.stdout_lines }}"
 
-- name: "5.4.1.2 | PATCH | Ensure minimum password days is configured"
+- name: "5.4.1.2 | PATCH | Ensure minimum password age is configured"
   when: deb11cis_rule_5_4_1_2
   tags:
     - level2-server
@@ -46,19 +46,19 @@
     - rule_5.4.1.2
     - NIST800-53R5_NA
   block:
-    - name: "5.4.1.2 | PATCH | Ensure minimum password days is configured | set login.defs"
+    - name: "5.4.1.2 | PATCH | Ensure minimum password age is configured | set login.defs"
       ansible.builtin.lineinfile:
         path: /etc/login.defs
         regexp: '^PASS_MIN_DAYS'
         line: "PASS_MIN_DAYS {{ deb11cis_pass_min_days }}"
 
-    - name: "5.4.1.2 | AUDIT | Ensure minimum password days is configured | Get existing users PASS_MIN_DAYS"
+    - name: "5.4.1.2 | AUDIT | Ensure minimum password age is configured | Get existing users PASS_MIN_DAYS"
       ansible.builtin.shell: "awk -F: '/^[^:]+:[^!*]/ && $4< {{ deb11cis_pass_min_days }} {print $1}' /etc/shadow"
       changed_when: false
       failed_when: false
       register: discovered_min_days
 
-    - name: "5.4.1.2 | PATCH | Ensure minimum password days is configured | Set existing users PASS_MIN_DAYS"
+    - name: "5.4.1.2 | PATCH | Ensure minimum password age is configured | Set existing users PASS_MIN_DAYS"
       when:
         - discovered_min_days.stdout_lines | length > 0
         - item in prelim_interactive_usernames.stdout
@@ -95,7 +95,7 @@
         - discovered_warn_days.stdout_lines | length > 0
         - item in prelim_interactive_usernames.stdout
         - deb11cis_force_user_warnage
-      ansible.builtin.command: "chage --warndays {{ deb11cis_pass['warn_age'] }} {{ item }}"
+      ansible.builtin.command: "chage --warndays {{ deb11cis_pass_warn_age }} {{ item }}"
       changed_when: true
       loop: "{{ discovered_warn_days.stdout_lines }}"
 
@@ -169,26 +169,26 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: discovered_passwd_inactive_user_list
+      register: discovered_passwd_change_future_list
 
     - name: "5.4.1.6 | AUDIT | Ensure all users last password change date is in the past | Alert on accounts with pw change in the future"
       when:
-        - discovered_passwd_inactive_user_list.stdout | length > 0
+        - discovered_passwd_change_future_list.stdout | length > 0
         - not deb11cis_futurepwchgdate_autofix
       ansible.builtin.debug:
-        msg: "Warning!! The following accounts have the last PW change date in the future: {{ discovered_passwd_inactive_user_list.stdout_lines }}"
+        msg: "Warning!! The following accounts have the last PW change date in the future: {{ discovered_passwd_change_future_list.stdout_lines }}"
 
     - name: "5.4.1.6 | AUDIT | Ensure all users last password change date is in the past | warning count"
       when:
-        - discovered_passwd_inactive_user_list.stdout | length > 0
+        - discovered_passwd_change_future_list.stdout | length > 0
         - not deb11cis_futurepwchgdate_autofix
       ansible.builtin.import_tasks:
         file: warning_facts.yml
 
     - name: "5.4.1.6 | PATCH | Ensure all users last password change date is in the past | Fix accounts with pw change in the future"
       when:
-        - discovered_passwd_inactive_user_list.stdout | length > 0
+        - discovered_passwd_change_future_list.stdout | length > 0
         - deb11cis_futurepwchgdate_autofix
       ansible.builtin.command: passwd --expire {{ item }}
       changed_when: true
-      loop: "{{ discovered_passwd_inactive_user_list.stdout_lines }}"
+      loop: "{{ discovered_passwd_change_future_list.stdout_lines }}"

@@ -1,5 +1,5 @@
 ---
-# defaults file for deb11-cis
+# defaults file for DEBIAN11-CIS role
 # WARNING:
 # These values may be overridden by other vars-setting options(e.g. like the below 'container_vars_file'), as explained here:
 # https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable
@@ -53,7 +53,7 @@ benchmark: DEBIAN11-CIS
 # System will reboot if false, can give better audit results
 skip_reboot: true
 
-# default value will change to true but won't reboot if not enabled but will error
+# default value will change to true but will not reboot if not enabled but will error
 change_requires_reboot: false
 
 # Create managed not custom local_facts files
@@ -75,16 +75,10 @@ setup_audit: false
 run_audit: false
 # Run heavy tests - some tests can have more impact on a system enabling these can have greater impact on a system
 audit_run_heavy_tests: true
-# Ability to limit the number of concurrent processes used by goss (default 50)
-audit_max_concurrent: 50
 
 ## Only run Audit do not remediate
 audit_only: false
-### As part of audit_only ###
-# This will enable files to be copied back to control node in audit_only mode
-fetch_audit_files: false
-# Path to copy the files to will create dir structure in audit_only mode
-audit_capture_files_dir: /some/location to copy to on control node
+
 #############################
 
 # How to retrieve audit binary
@@ -97,6 +91,9 @@ get_audit_binary_method: download
 ## e.g copy from ansible control node to remote host
 audit_bin_copy_location: /some/accessible/path
 
+# Ability to limit the number of concurrent processes used by goss (default 50)
+audit_max_concurrent: 50
+
 # how to get audit files onto host options
 # options are git/copy/archive/get_url other e.g. if you wish to run from already downloaded conf
 audit_content: git
@@ -104,7 +101,7 @@ audit_content: git
 # If using either archive, copy, get_url:
 ## Note will work with .tar files - zip will require extra configuration
 ### If using get_url this is expecting github url in tar.gz format e.g.
-### https://github.com/ansible-lockdown/DEBIAN11-CIS-Audit/archive/refs/heads/benchmark-v1.0.0.tar.gz
+### https://github.com/ansible-lockdown/DEBIAN11-CIS-Audit/archive/refs/heads/benchmark-v2.0.0.tar.gz
 audit_conf_source: "some path or url to copy from"
 
 # Destination for the audit content to be placed on managed node
@@ -114,9 +111,11 @@ audit_conf_dest: "/opt"
 # Where the audit logs are stored
 audit_log_dir: '/opt'
 
-# Method of getting,uploading the summary files
-## Enable the collection of audit files
+## Ability to collect and take audit files moving to a centralized location
+# This enables the collection of the files from the host
 fetch_audit_output: false
+
+# Method of getting,uploading the summary files
 ## Ensure access and permissions are available for these to occur.
 ## options are
 # fetch - fetches from server and moves to location on the ansible controller (could be a mount point available to controller)
@@ -128,6 +127,12 @@ audit_output_destination: /opt/audit_summaries/
 
 ### Goss Settings ##
 ####### END ########
+
+## Root user used
+# Root by default is not used unless setup by user
+# The role will only run certain commands if set to true
+# This allows the ability to skip tasks that may cause an issue
+deb11cis_uses_root: false
 
 # tweak role to run in a non-privileged container
 system_is_container: false
@@ -606,13 +611,16 @@ deb11cis_disable_dynamic_motd: true
 ## Control 1.7.x - Settings for GDM
 ## 1.7 GDM graphical interface
 deb11cis_desktop_required: false
+
 # This variable specifies the GNOME configuration database file to which configurations are written.
 # (See "https://help.gnome.org/admin/system-admin-guide/stable/dconf-keyfiles.html.en")
 # The default database is 'local'.
 deb11cis_dconf_db_name: local
+
 # This variable governs the number of seconds of inactivity before the screen goes blank.
 # Set max value for idle-delay in seconds (between 1 and 900)
 deb11cis_screensaver_idle_delay: 900
+
 # This variable governs the number of seconds the screen remains blank before it is locked.
 # Set max value for lock-delay in seconds (between 0 and 5)
 deb11cis_screensaver_lock_delay: 5
@@ -692,7 +700,7 @@ deb11cis_ftp_client: false
 deb11cis_time_sync_tool: "systemd-timesyncd"
 
 ## Controls 2.3.x - Configure time pools & servers for chrony and timesyncd
-# The following variable represents a list of of time server pools used
+# The following variable represents a list of time server pools used
 # for configuring chrony and timesyncd.
 # Each list item contains two settings, `name` (the domain name of the pool) and synchronization `options`.
 # The default setting for the `options` is `iburst maxsources 4` -- please refer to the documentation
@@ -700,7 +708,7 @@ deb11cis_time_sync_tool: "systemd-timesyncd"
 deb11cis_time_pool:
   - name: time.nist.gov
     options: iburst maxsources 4
-# The following variable represents a list of of time servers used
+# The following variable represents a list of time servers used
 # for configuring chrony and timesyncd
 # Each list item contains two settings, `name` (the domain name of the server) and synchronization `options`.
 # The default setting for the `options` is `iburst` -- please refer to the documentation
@@ -780,9 +788,16 @@ deb11cis_ufw_use_sysctl: true
 # If you want to allow outbound traffic on all ports, set the variable to  `all`, e.g.,
 # `deb11cis_ufw_allow_out_ports: "all"`.
 deb11cis_ufw_allow_out_ports:
-  - 53
-  - 80
-  - 443
+  - port: 53
+    proto: tcp
+  - port: 53
+    proto: udp
+  - port: 80
+    proto: tcp
+  - port: 123
+    proto: udp
+  - port: 443
+    proto: tcp
 
 ## Controls 4.2.x - nftables
 # Nftables is not supported in this role. Some tasks have parts of them commented out, this is one example
@@ -801,34 +816,6 @@ deb11cis_ufw_allow_out_ports:
 deb11cis_sshd_config_file: /etc/ssh/sshd_config
 
 ## Controls 5.1.x -- various sshd settings
-deb11cis_sshd_default_log_level: "INFO"
-deb11cis_sshd_default_max_auth_tries: 4
-deb11cis_sshd_default_max_sessions: 8
-deb11cis_sshd_default_login_grace_time: 60
-deb11cis_sshd_default_client_alive_interval: 15
-deb11cis_sshd_default_client_alive_count_max: 3
-# Removed chacha20-poly1305 due to cve2023-48795
-# all Ciphers, KEX and Macs set to FIPS 140
-# This will nee dto be adjusted according to your site requirements
-deb11cis_sshd_default_ciphers:
-  - aes256-gcm@openssh.com
-  - aes128-gcm@openssh.com
-  - aes256-ctr
-  - aes192-ctr
-  - aes128-ctr
-deb11cis_sshd_default_macs:
-  - hmac-sha1
-  - hmac-sha2-256
-  #  - hmac-sha2-384  # hashed out seen as bad ssh2 MAC
-  - hmac-sha2-512
-deb11cis_sshd_default_kex_algorithms:
-  - ecdh-sha2-nistp256
-  - ecdh-sha2-nistp384
-  - ecdh-sha2-nistp521
-  - diffie-hellman-group-exchange-sha256
-  - diffie-hellman-group16-sha512
-  - diffie-hellman-group18-sha512
-  - diffie-hellman-group14-sha256
 
 # SSHD settings
 # This variable is used to control the verbosity of the logging produced by the SSH server.
@@ -839,32 +826,33 @@ deb11cis_sshd_default_kex_algorithms:
 # - `INFO`: logs informational messages in addition to errors;
 # - `VERBOSE`: logs a higher level of detail, including login attempts and key exchanges;
 # - `DEBUG`: generates very detailed debugging information including sensitive information.
-deb11cis_sshd_log_level: "{{ deb11cis_sshd_default_log_level }}"
+deb11cis_sshd_log_level: INFO
 # This variable specifies the maximum number of authentication attempts that are
 # allowed for a single SSH session.
-deb11cis_sshd_max_auth_tries: "{{ deb11cis_sshd_default_max_auth_tries }}"
+deb11cis_sshd_max_auth_tries: 4
 # This variable specifies the encryption algorithms that can be used for securing
 # data transmission.
-deb11cis_sshd_ciphers: "{{ deb11cis_sshd_default_ciphers }}"
+# Removed chacha20-poly1305 due to cve2023-48795
+deb11cis_sshd_weak_ciphers: -3des-cbc,aes128-cbc,aes192-cbc,aes256-cbc,chacha20-poly1305@openssh.com
 # This variable specifies a list of message authentication code algorithms (MACs) that are allowed for verifying
 # the integrity of data exchanged.
-deb11cis_sshd_macs: "{{ deb11cis_sshd_default_macs }}"
+deb11cis_sshd_weak_macs: -hmac-md5,hmac-md5-96,hmac-ripemd160,hmac-sha1-96,umac-64@openssh.com,hmac-md5-etm@openssh.com,hmac-md5-96-etm@openssh.com,hmac-ripemd160-etm@openssh.com,hmac-sha1-96-etm@openssh.com,umac-64-etm@openssh.com,umac-128-etm@openssh.com
 # This variable is used to state the key exchange algorithms used to establish secure encryption
 # keys during the initial connection setup.
-deb11cis_sshd_kex_algorithms: "{{ deb11cis_sshd_default_kex_algorithms }}"
+deb11cis_sshd_weak_kex: -diffie-hellman-group1-sha1,diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha1
 # This variable sets the time interval in seconds between sending "keep-alive"
 # messages from the server to the client. These types of messages are intended to
 # keep the connection alive and prevent it being terminated due to inactivity.
-deb11cis_sshd_client_alive_interval: "{{ deb11cis_sshd_default_client_alive_interval }}"
+deb11cis_sshd_client_alive_interval: 15
 # This variable sets the maximum number of unresponsive "keep-alive" messages
 # that can be sent from the server to the client before the connection is considered
 # inactive and thus, closed.
-deb11cis_sshd_client_alive_count_max: "{{ deb11cis_sshd_default_client_alive_count_max }}"
+deb11cis_sshd_client_alive_count_max: 3
 # This variable specifies the amount of seconds allowed for successful authentication to
 # the SSH server.
-deb11cis_sshd_login_grace_time: "{{ deb11cis_sshd_default_login_grace_time }}"
-# This variables is used to set the maximum number of open sessions per connection.
-deb11cis_sshd_max_sessions: "{{ deb11cis_sshd_default_max_sessions }}"
+deb11cis_sshd_login_grace_time: 60
+# This variable is used to set the maximum number of open sessions per connection.
+deb11cis_sshd_max_sessions: 8
 # This variable, if specified, configures a list of USER name patterns, separated by spaces, to allow SSH
 # access for users whose user name matches one of the patterns. This is done
 # by setting the value of `AllowUsers` option in `/etc/ssh/sshd_config` file.
@@ -900,6 +888,13 @@ deb11cis_sudo_package: "sudo"
 ## Control 5.2.3
 # This variable defines the path and file name of the sudo log file.
 deb11cis_sudolog_location: "/var/log/sudo.log"
+
+## Control 5.2.4 - Ensure users must provide password for escalation
+# The following variable specifies a list of users that should not be required to provide a password
+# for escalation. Feel free to edit it according to your needs.
+deb11cis_sudoers_exclude_nopasswd_list:
+  - vagrant
+
 ##  Control 5.2.6
 # This variable sets the duration (in minutes) during which a user's authentication credentials
 # are cached after successfully authenticating using "sudo". This allows the user to execute
@@ -942,8 +937,6 @@ deb11cis_pam_create_faillock_files: true
 deb11cis_pam_pwquality_file: 'pwquality'
 # Allow new file to be created or overwrite existing with same name
 deb11cis_pam_create_pwquality_files: true
-# Allow pam-auth-update --enable deb11cis_pam_pwquality_file
-deb11cis_pam_auth_pwquality: true
 
 # 5.3.2.4 - pam_pwhistory
 # Name of file
@@ -951,8 +944,6 @@ deb11cis_pam_pwhistory_file: 'pwhistory'
 # Allow new file to be created or overwrite existing with same name
 # filepath also affects controls 5.3.3.3.1, 5.3.3.3.2, 5.3.3.3.3
 deb11cis_pam_create_pwhistory_files: true
-# Allow pam-auth-update --enable deb11cis_pam_pwhistory_file
-deb11cis_pam_auth_pwhistory: true
 
 # 5.3.3.1.1 - faillock_deny
 deb11cis_faillock_deny: 3
@@ -1009,7 +1000,7 @@ deb11cis_passwd_quality_enforce_root_value: enforce_for_root  # pragma: allowlis
 # Uses value for deb11cis_pam_pwhistory_file in 5.3.2.4
 # Control 5.3.3.3.1
 # This variable represents the number of password change cycles, after which
-# a user can reuse a password. # CIS requires a value of 24 or more.
+# a user can re-use a password. # CIS requires a value of 24 or more.
 deb11cis_pamd_pwhistory_remember: 24
 
 ## Controls 5.4.1.x - Password settings
@@ -1033,7 +1024,7 @@ deb11cis_force_user_mindays: false
 # This variable governs, how many days before a password expires, the user will be warned.
 # CIS requires a value of at least 7.
 deb11cis_pass_warn_age: 7
-## 5Allow the forcing of of number of days before warning users of password expiry
+## Allow the forcing of number of days before warning users of password expiry
 # This can break current connecting user access
 deb11cis_force_user_warnage: false
 
@@ -1052,8 +1043,6 @@ deb11cis_root_umask: '0027'  # 0027 or more restrictive
 ## Control 5.4.4
 # deb11cis_passwd_hash_algo is the hashing algorithm used
 deb11cis_passwd_hash_algo: yescrypt  # pragma: allowlist secret
-# Set pam as well as login defs if PAM is required
-deb11cis_passwd_setpam_hash_algo: false
 
 ## Control 5.4.3 - Default user mask
 # The following variable specifies the "umask" to set in the `/etc/bash.bashrc` and `/etc/profile`.
@@ -1168,53 +1157,12 @@ deb11cis_aide_cron_weekday: '*'
 # practices are written wholly independent of each other.
 deb11cis_syslog: journald
 
-## Control 6.2.2.x & 6.2.3.x - Ensure rsyslog is not configured to receive logs from a remote client
+## Control 6.2.1.x - Ensure systemis not configured to receive logs from a remote client
 # This variable expresses whether the system is used as a log server or not. If set to:
 #  - 'false', current system will act as a log CLIENT, thus it should NOT receive data from other hosts.
 #  - 'true', current system will act as a log SERVER, enabling centralized log management(by protecting log integrity
 # from local attacks on remote clients)
 deb11cis_system_is_log_server: false
-
-## Control 6.2.3.5 | PATCH | Ensure logging is configured
-# This variable governs if current Ansible role should manage syslog settings
-# in /etc/rsyslog.conf file, namely mail, news and misc(warn, messages)
-deb11cis_rsyslog_ansiblemanaged: true
-
-## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
-# This variable governs if 'rsyslog' service should be automatically configured to forward messages to a
-# remote log server. If set to 'false', the configuration of the 'omfwd' plugin, used to provide forwarding
-# over UDP or TCP, will not be performed.
-deb11cis_remote_log_server: false
-## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
-# This variable configures the value of the 'target' parameter to be configured when enabling
-# forwarding syslog messages to a remote log server, thus configuring the actual FQDN/IP address of the
-# destination server. For this value to be reflected in the configuration, the variable which enables the
-# automatic configuration of rsyslog forwarding must be enabled('deb11cis_remote_log_server: true').
-deb11cis_remote_log_host: logagg.example.com
-## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
-# This variable configures the value of the 'port' parameter to be configured when enabling
-# forwarding syslog messages to a remote log server. The default value for this destination port is 514.
-# For this value to be reflected in the configuration, the variable which enables the
-# automatic configuration of rsyslog forwarding must be enabled('deb11cis_remote_log_server: true').
-deb11cis_remote_log_port: 514
-## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
-# This variable configures the value("TCP"/"UDP") of the 'protocol' parameter to be configured when enabling
-# forwarding syslog messages to a remote log server. The default value for the 'omfwd' plug-in is UDP.
-# For this value to be reflected in the configuration, the variable which enables the
-# automatic configuration of rsyslog forwarding must be enabled('deb11cis_remote_log_server: true').
-deb11cis_remote_log_protocol: tcp
-## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
-# This variable governs how often an action is retried(value is passed to 'action.resumeRetryCount' parameter) before
-# it is considered to have failed(that roughly translates to discarded messages). The default value is 0, but
-# when set to "-1"(eternal), this setting would prevent rsyslog from dropping messages when retrying to connect
-# if server is not responding. For this value to be reflected in the configuration, the variable which enables the
-# automatic configuration of rsyslog forwarding must be enabled('deb11cis_remote_log_server: true').
-deb11cis_remote_log_retrycount: 100
-## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
-# This variable configures the maximum number of messages that can be hold(value is passed to 'queue.size' parameter).
-# For this value to be reflected in the configuration, the variable which enables the automatic configuration
-# of rsyslog forwarding must be enabled('deb11cis_remote_log_server: true').
-deb11cis_remote_log_queuesize: 1000
 
 ## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
 # 'deb11cis_journal_upload_url' is the ip address to upload the journal entries to
@@ -1239,7 +1187,7 @@ deb11cis_journal_servercertificatefile: "/etc/ssl/certs/journal-upload.pem"
 deb11cis_journal_trustedcertificatefile: "/etc/ssl/ca/trusted.pem"
 # ATTENTION: Uncomment the keyword below when values are set!
 
-## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
+## Control 6.2.1.1.x - Ensure journald log rotation is configured per site policy
 # Current variable configures the max amount of disk space the logs will use(thus, journal files
 # will not grow without bounds)
 # The variables below related to journald, please set these to your site specific values
@@ -1247,22 +1195,22 @@ deb11cis_journal_trustedcertificatefile: "/etc/ssl/ca/trusted.pem"
 # Specify values in bytes or use K, M, G, T, P, E as units for the specified sizes.
 # See https://www.freedesktop.org/software/systemd/man/journald.conf.html for more information.
 deb11cis_journald_systemmaxuse: 10M
-## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
+## Control 6.2.1.1.x - Ensure journald log rotation is configured per site policy
 # Current variable configures the amount of disk space to keep free for other uses.
 deb11cis_journald_systemkeepfree: 100G
-## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
+## Control 6.2.1.1.x - Ensure journald log rotation is configured per site policy
 # This variable configures how much disk space the journal may use up at most.
 # Similar with 'deb11cis_journald_systemmaxuse', but related to runtime space.
 deb11cis_journald_runtimemaxuse: 10M
-## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
+## Control 6.2.1.1.x - Ensure journald log rotation is configured per site policy
 # This variable configures the actual amount of disk space to keep free
 # Similar with 'deb11cis_journald_systemkeepfree', but related to runtime space.
 deb11cis_journald_runtimekeepfree: 100G
-## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
+## Control 6.2.1.1.x - Ensure journald log rotation is configured per site policy
 # Current variable governs the settings for log retention(how long the log files will be kept).
 # Thus, it specifies the maximum time to store entries in a single journal
 # file before rotating to the next one. Set to 0 to turn off this feature.
-# The given values is interpreted as seconds, unless suffixed with the units
+# The given value is interpreted as seconds, unless suffixed with the units
 # `year`, `month`, `week`, `day`, `h` or `m` to override the default time unit of seconds.
 # Values are Xm, Xh, Xday, Xweek, Xmonth, Xyear, for example 2week is two weeks
 # ATTENTION: Uncomment the keyword below when values are set!
@@ -1292,7 +1240,7 @@ deb11cis_auditd_max_log_file_size: 10
 ## Control 6.4.2.2
 # This variable determines what action the audit system should take when the maximum
 # size of a log file is reached.
-# The options for setting this variable are as follows:
+# The options for setting this variable is as follows:
 # - `ignore`: the system does nothing when the size of a log file is full;
 # - `syslog`: a message is sent to the system log indicating the problem;
 # - `suspend`: the system suspends recording audit events until the log file is cleared or rotated;

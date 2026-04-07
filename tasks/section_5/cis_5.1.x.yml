@@ -16,7 +16,7 @@
     group: root
     mode: 'u-x,go-rwx'
 
-- name: "5.1.2 | PATCH | Ensure permissions on sshd private host key files are configured"
+- name: "5.1.2 | PATCH | Ensure permissions on SSH private host key files are configured"
   when: deb11cis_rule_5_1_2
   tags:
     - level1-server
@@ -27,13 +27,13 @@
     - NIST800-53R5_AC-3
     - NIST800-53R5_MP-2
   block:
-    - name: "5.1.2 | AUDIT | Ensure permissions on sshd private host key files are configured | Find ssh_host private keys"
+    - name: "5.1.2 | AUDIT | Ensure permissions on SSH private host key files are configured | Find ssh_host private keys"
       ansible.builtin.find:
         paths: /etc/ssh
         patterns: 'ssh_host_*_key'
       register: discovered_ssh_host_priv_keys
 
-    - name: "5.1.2 | PATCH | Ensure permissions on sshd private host key files are configured | Set permissions"
+    - name: "5.1.2 | PATCH | Ensure permissions on SSH private host key files are configured | Set permissions"
       ansible.builtin.file:
         path: "{{ item.path }}"
         owner: root
@@ -43,7 +43,7 @@
       loop_control:
         label: "{{ item.path }}"
 
-- name: "5.1.3 | PATCH | Ensure permissions on sshd public host key files are configured"
+- name: "5.1.3 | PATCH | Ensure permissions on SSH public host key files are configured"
   when: deb11cis_rule_5_1_3
   tags:
     - level1-server
@@ -54,13 +54,13 @@
     - NIST800-53R5_AC-3
     - NIST800-53R5_MP-2
   block:
-    - name: "5.1.3 | AUDIT | Ensure permissions on sshd public host key files are configured | Find ssh_host public keys"
+    - name: "5.1.3 | AUDIT | Ensure permissions on SSH public host key files are configured | Find ssh_host public keys"
       ansible.builtin.find:
         paths: /etc/ssh
         patterns: 'ssh_host_*_key.pub'
       register: discovered_ssh_host_pub_keys
 
-    - name: "5.1.3 | PATCH | Ensure permissions on sshd public host key files are configured | Set permissions"
+    - name: "5.1.3 | PATCH | Ensure permissions on SSH public host key files are configured | Set permissions"
       ansible.builtin.file:
         path: "{{ item.path }}"
         owner: root
@@ -82,7 +82,7 @@
     - NIST800-53R5_MP-2
   block:
     - name: "5.1.4 | PATCH | Ensure sshd access is configured | Add allowed users"
-      when: "deb11cis_sshd['allow_users']| default('') | length > 0 "
+      when: "deb11cis_sshd_allow_users | default('') | length > 0 "
       ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         regexp: '(?i)^(#|)\s*AllowUsers'
@@ -138,7 +138,7 @@
     validate: 'sshd -t -f %s'
   notify: Restart sshd
 
-- name: "5.1.6 | PATCH | Ensure only strong Ciphers are used"
+- name: "5.1.6 | PATCH | Ensure sshd Ciphers are configured"
   when: deb11cis_rule_5_1_6
   tags:
     - level1-server
@@ -150,7 +150,7 @@
   ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
     regexp: (?i)^(#|)\s*Ciphers
-    line: "Ciphers {{ deb11cis_sshd_ciphers | default(deb11cis_sshd_default_ciphers) | join(',') }}"
+    line: "Ciphers {{ deb11cis_sshd_weak_ciphers }}"
     insertafter: '^# Ciphers and keying'
     validate: 'sshd -t -f %s'
   notify: Restart sshd
@@ -174,8 +174,8 @@
     line: "{{ item.line }}"
     validate: 'sshd -t -f %s'
   loop:
-    - { regexp: '(?i)^(#|)\s*ClientAliveInterval', line: 'ClientAliveInterval {{ deb11cis_sshd_client_alive_interval | default(deb11cis_sshd_default_client_alive_interval) }}' }
-    - { regexp: '(?i)^(#|)\s*ClientAliveCountMax', line: 'ClientAliveCountMax {{ deb11cis_sshd_client_alive_count_max | default(deb11cis_sshd_default_client_alive_count_max) }}' }
+    - { regexp: '(?i)^(#|)\s*ClientAliveInterval', line: 'ClientAliveInterval {{ deb11cis_sshd_client_alive_interval }}' }
+    - { regexp: '(?i)^(#|)\s*ClientAliveCountMax', line: 'ClientAliveCountMax {{ deb11cis_sshd_client_alive_count_max }}' }
   notify: Restart sshd
 
 - name: "5.1.8 | PATCH | Ensure sshd DisableForwarding is enabled"
@@ -194,7 +194,7 @@
     validate: 'sshd -t -f %s'
   notify: Restart sshd
 
-- name: "5.1.9 | PATCH | Ensure sshd GSSAPIAuthentication is  is disabled"
+- name: "5.1.9 | PATCH | Ensure sshd GSSAPIAuthentication is disabled"
   when: deb11cis_rule_5_1_9
   tags:
     - level2-server
@@ -254,7 +254,7 @@
     validate: 'sshd -t -f %s'
   notify: Restart sshd
 
-- name: "5.1.12 | PATCH | Ensure sshd Kexslgorithms is configured"
+- name: "5.1.12 | PATCH | Ensure sshd KexAlgorithms is configured"
   when: deb11cis_rule_5_1_12
   tags:
     - level1-server
@@ -266,7 +266,7 @@
   ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '(?i)^(#|)\s*KexAlgorithms'
-    line: "KexAlgorithms {{ deb11cis_sshd_kex_algorithms | default(deb11cis_sshd_default_kex_algorithms) | join(',') }}"
+    line: "KexAlgorithms {{ deb11cis_sshd_weak_kex }}"
     insertafter: '^# Ciphers and keying'
     validate: 'sshd -t -f %s'
   notify: Restart sshd
@@ -283,7 +283,7 @@
   ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '(?i)^(#|)\s*LoginGraceTime'
-    line: 'LoginGraceTime {{ deb11cis_sshd_login_grace_time | default(deb11cis_sshd_default_login_grace_time) }}'
+    line: 'LoginGraceTime {{ deb11cis_sshd_login_grace_time }}'
     insertafter: '^# Authentication'
     validate: 'sshd -t -f %s'
   notify: Restart sshd
@@ -302,7 +302,7 @@
   ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '(?i)^(#|)\s*LogLevel'
-    line: 'LogLevel {{ deb11cis_sshd_log_level | default(deb11cis_sshd_default_log_level) }}'
+    line: 'LogLevel {{ deb11cis_sshd_log_level }}'
     insertafter: '^# Logging'
     validate: 'sshd -t -f %s'
   notify: Restart sshd
@@ -323,12 +323,12 @@
   ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '(?i)^(#|)\s*MACs'
-    line: "MACs {{ deb11cis_sshd_macs | default(deb11cis_sshd_default_macs) | join(',') }}"
+    line: "MACs {{ deb11cis_sshd_weak_macs }}"
     insertafter: '^# Ciphers and keying'
     validate: 'sshd -t -f %s'
   notify: Restart sshd
 
-- name: "5.1.16 | PATCH | Ensure sshd MaxAuthTries is set to 4 or less"
+- name: "5.1.16 | PATCH | Ensure sshd MaxAuthTries is configured"
   when: deb11cis_rule_5_1_16
   tags:
     - level1-server
@@ -340,7 +340,7 @@
   ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '(?i)^(#|)\s*MaxAuthTries'
-    line: 'MaxAuthTries {{ deb11cis_sshd_max_auth_tries | default(deb11cis_sshd_default_max_auth_tries) }}'
+    line: 'MaxAuthTries {{ deb11cis_sshd_max_auth_tries }}'
     insertafter: '^# Authentication'
     validate: 'sshd -t -f %s'
   notify: Restart sshd
@@ -361,7 +361,7 @@
   ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '(?i)^(#|)\s*MaxSessions'
-    line: 'MaxSessions {{ deb11cis_sshd_max_sessions | default(deb11cis_sshd_default_max_sessions) }}'
+    line: 'MaxSessions {{ deb11cis_sshd_max_sessions }}'
     insertafter: '^# Authentication'
     validate: 'sshd -t -f %s'
   notify: Restart sshd
