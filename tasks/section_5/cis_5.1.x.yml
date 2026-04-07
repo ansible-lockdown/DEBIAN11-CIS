@@ -174,8 +174,8 @@
     line: "{{ item.line }}"
     validate: 'sshd -t -f %s'
   loop:
-    - { regexp: '(?i)^(#|)\s*ClientAliveInterval', line: 'ClientAliveInterval {{ deb11cis_sshd_client_alive_interval | default(deb11cis_sshd_default_client_alive_interval) }}' }
-    - { regexp: '(?i)^(#|)\s*ClientAliveCountMax', line: 'ClientAliveCountMax {{ deb11cis_sshd_client_alive_count_max | default(deb11cis_sshd_default_client_alive_count_max) }}' }
+    - { regexp: '(?i)^(#|)\s*ClientAliveInterval', line: 'ClientAliveInterval {{ deb11cis_sshd_client_alive_interval }}' }
+    - { regexp: '(?i)^(#|)\s*ClientAliveCountMax', line: 'ClientAliveCountMax {{ deb11cis_sshd_client_alive_count_max }}' }
   notify: Restart sshd
 
 - name: "5.1.8 | PATCH | Ensure sshd DisableForwarding is enabled"
@@ -283,7 +283,7 @@
   ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '(?i)^(#|)\s*LoginGraceTime'
-    line: 'LoginGraceTime {{ deb11cis_sshd_login_grace_time | default(deb11cis_sshd_default_login_grace_time) }}'
+    line: 'LoginGraceTime {{ deb11cis_sshd_login_grace_time }}'
     insertafter: '^# Authentication'
     validate: 'sshd -t -f %s'
   notify: Restart sshd
@@ -302,7 +302,7 @@
   ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '(?i)^(#|)\s*LogLevel'
-    line: 'LogLevel {{ deb11cis_sshd_log_level | default(deb11cis_sshd_default_log_level) }}'
+    line: 'LogLevel {{ deb11cis_sshd_log_level }}'
     insertafter: '^# Logging'
     validate: 'sshd -t -f %s'
   notify: Restart sshd
@@ -340,7 +340,7 @@
   ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '(?i)^(#|)\s*MaxAuthTries'
-    line: 'MaxAuthTries {{ deb11cis_sshd_max_auth_tries | default(deb11cis_sshd_default_max_auth_tries) }}'
+    line: 'MaxAuthTries {{ deb11cis_sshd_max_auth_tries }}'
     insertafter: '^# Authentication'
     validate: 'sshd -t -f %s'
   notify: Restart sshd
@@ -361,7 +361,7 @@
   ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '(?i)^(#|)\s*MaxSessions'
-    line: 'MaxSessions {{ deb11cis_sshd_max_sessions | default(deb11cis_sshd_default_max_sessions) }}'
+    line: 'MaxSessions {{ deb11cis_sshd_max_sessions }}'
     insertafter: '^# Authentication'
     validate: 'sshd -t -f %s'
   notify: Restart sshd

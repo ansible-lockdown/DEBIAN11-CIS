@@ -816,18 +816,6 @@ deb11cis_ufw_allow_out_ports:
 deb11cis_sshd_config_file: /etc/ssh/sshd_config
 
 ## Controls 5.1.x -- various sshd settings
-deb11cis_sshd_default_log_level: "INFO"
-deb11cis_sshd_default_max_auth_tries: 4
-deb11cis_sshd_default_max_sessions: 8
-deb11cis_sshd_default_login_grace_time: 60
-deb11cis_sshd_default_client_alive_interval: 15
-deb11cis_sshd_default_client_alive_count_max: 3
-# Removed chacha20-poly1305 due to cve2023-48795
-# all Ciphers, KEX and Macs set to FIPS 140
-# This will need to be adjusted according to your site requirements
-deb11cis_sshd_weak_ciphers_list: -3des-cbc,aes128-cbc,aes192-cbc,aes256-cbc,chacha20-poly1305@openssh.com
-deb11cis_sshd_weak_macs_list: -hmac-md5,hmac-md5-96,hmac-ripemd160,hmac-sha1-96,umac-64@openssh.com,hmac-md5-etm@openssh.com,hmac-md5-96-etm@openssh.com,hmac-ripemd160-etm@openssh.com,hmac-sha1-96-etm@openssh.com,umac-64-etm@openssh.com,umac-128-etm@openssh.com
-deb11cis_sshd_weak_kex_list: -diffie-hellman-group1-sha1,diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha1
 
 # SSHD settings
 # This variable is used to control the verbosity of the logging produced by the SSH server.
@@ -838,32 +826,33 @@ deb11cis_sshd_weak_kex_list: -diffie-hellman-group1-sha1,diffie-hellman-group14-
 # - `INFO`: logs informational messages in addition to errors;
 # - `VERBOSE`: logs a higher level of detail, including login attempts and key exchanges;
 # - `DEBUG`: generates very detailed debugging information including sensitive information.
-deb11cis_sshd_log_level: "{{ deb11cis_sshd_default_log_level }}"
+deb11cis_sshd_log_level: INFO
 # This variable specifies the maximum number of authentication attempts that are
 # allowed for a single SSH session.
-deb11cis_sshd_max_auth_tries: "{{ deb11cis_sshd_default_max_auth_tries }}"
+deb11cis_sshd_max_auth_tries: 4
 # This variable specifies the encryption algorithms that can be used for securing
 # data transmission.
-deb11cis_sshd_weak_ciphers: "{{ deb11cis_sshd_weak_ciphers_list }}"
+# Removed chacha20-poly1305 due to cve2023-48795
+deb11cis_sshd_weak_ciphers: -3des-cbc,aes128-cbc,aes192-cbc,aes256-cbc,chacha20-poly1305@openssh.com
 # This variable specifies a list of message authentication code algorithms (MACs) that are allowed for verifying
 # the integrity of data exchanged.
-deb11cis_sshd_weak_macs: "{{ deb11cis_sshd_weak_macs_list }}"
+deb11cis_sshd_weak_macs: -hmac-md5,hmac-md5-96,hmac-ripemd160,hmac-sha1-96,umac-64@openssh.com,hmac-md5-etm@openssh.com,hmac-md5-96-etm@openssh.com,hmac-ripemd160-etm@openssh.com,hmac-sha1-96-etm@openssh.com,umac-64-etm@openssh.com,umac-128-etm@openssh.com
 # This variable is used to state the key exchange algorithms used to establish secure encryption
 # keys during the initial connection setup.
-deb11cis_sshd_weak_kex: "{{ deb11cis_sshd_weak_kex_list }}"
+deb11cis_sshd_weak_kex: -diffie-hellman-group1-sha1,diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha1
 # This variable sets the time interval in seconds between sending "keep-alive"
 # messages from the server to the client. These types of messages are intended to
 # keep the connection alive and prevent it being terminated due to inactivity.
-deb11cis_sshd_client_alive_interval: "{{ deb11cis_sshd_default_client_alive_interval }}"
+deb11cis_sshd_client_alive_interval: 15
 # This variable sets the maximum number of unresponsive "keep-alive" messages
 # that can be sent from the server to the client before the connection is considered
 # inactive and thus, closed.
-deb11cis_sshd_client_alive_count_max: "{{ deb11cis_sshd_default_client_alive_count_max }}"
+deb11cis_sshd_client_alive_count_max: 3
 # This variable specifies the amount of seconds allowed for successful authentication to
 # the SSH server.
-deb11cis_sshd_login_grace_time: "{{ deb11cis_sshd_default_login_grace_time }}"
+deb11cis_sshd_login_grace_time: 60
 # This variable is used to set the maximum number of open sessions per connection.
-deb11cis_sshd_max_sessions: "{{ deb11cis_sshd_default_max_sessions }}"
+deb11cis_sshd_max_sessions: 8
 # This variable, if specified, configures a list of USER name patterns, separated by spaces, to allow SSH
 # access for users whose user name matches one of the patterns. This is done
 # by setting the value of `AllowUsers` option in `/etc/ssh/sshd_config` file.
