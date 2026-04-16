@@ -1,7 +1,5 @@
-## Ansible controlled file
-# Added as part of ansible-lockdown CIS baseline
-# provided by Mindpoint Group - A Tyto Athene Company
+{{ file_managed_by_ansible }}
 
-{% for pool in debian11cis_time_pool %}
+{% for pool in deb11cis_time_pool %}
 pool {{ pool.name }} {{ pool.options }}
 {% endfor %}

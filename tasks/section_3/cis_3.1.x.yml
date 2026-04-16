@@ -1,163 +1,86 @@
 ---
 
-- name: "3.1.1 | PATCH | Ensure system is checked to determine if IPv6 is enabled"
-  block:
-      - name: "3.1.1 | PATCH | Ensure system is checked to determine if IPv6 is enabled | Replace ipv6.disable if it exists"
-        ansible.builtin.replace:
-            path: /etc/default/grub
-            regexp: '^(GRUB_CMDLINE_LINUX=.*)\bipv6\.disable=\d\b(.*$)'
-            replace: '\1ipv6.disable=1\2'
-        when: debian11cis_ipv6_disable == 'grub'
-        register: discovered_ipv6disable_replaced
-        notify: Grub update
-
-      - name: "3.1.1 | PATCH | Ensure system is checked to determine if IPv6 is enabled | Check grub cmdline linux"
-        ansible.builtin.shell: grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | cut -f2 -d'"'
-        changed_when: false
-        failed_when: false
-        check_mode: false
-        register: discovered_grub_cmdline_settings
-        when: debian11cis_ipv6_disable == 'grub'
-
-      - name: "3.1.1 | PATCH | Ensure system is checked to determine if IPv6 is enabled | Insert ipv6.disable if it doesn't exist"
-        ansible.builtin.lineinfile:
-            path: /etc/default/grub
-            regexp: '^(GRUB_CMDLINE_LINUX=".*)"$'
-            line: '\1 ipv6.disable=1"'
-            backrefs: true
-        when:
-            - debian11cis_ipv6_disable == 'grub'
-            - discovered_ipv6disable_replaced is not changed
-            - "'ipv6.disable' not in discovered_grub_cmdline_settings.stdout"
-        notify: Grub update
-
-      - name: "3.1.1 | PATCH | Ensure system is checked to determine if IPv6 is enabled | Remove net.ipv6.conf.all.disable_ipv6"
-        ansible.builtin.template:
-            src: "{{ item }}.j2"
-            dest: "/{{ item }}"
-            owner: root
-            group: root
-            mode: 'u-x,g-wx,o-rwx'
-        notify: Flush ipv6 route table
-        loop:
-            - etc/sysctl.d/60-disable_ipv6.conf
-        when: debian11cis_ipv6_disable == 'sysctl'
+# The CIS Control wants IPv6 disabled if not in use.
+# We are using the deb11cis_ipv6_required to specify if you have IPv6 in use
+- name: "3.1.1 | PATCH | Ensure IPv6 status is identified"
   when:
-      - debian11cis_rule_3_1_1
-      - not debian11cis_ipv6_required
+    - not deb11cis_ipv6_required
+    - deb11cis_rule_3_1_1
   tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - rule_3.1.1
-      - ipv6
+    - level1-server
+    - level1-workstation
+    - manual
+    - patch
+    - ipv6
+    - networking
+    - rule_3.1.1
+    - NIST800-53R5_CM-7
+  block:
+    - name: "3.1.1 | PATCH | Ensure IPv6 status is identified | refresh"
+      ansible.builtin.set_fact:
+        deb11cis_sysctl_update: true
+        deb11cis_flush_ipv6_route: true
+
+    - name: "3.1.1 | PATCH | Ensure IPv6 status is identified | disable"
+      ansible.builtin.debug:
+        msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-disable_ipv6.conf"
 
 - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled"
-  block:
-      - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Check for network-manager tool"
-        ansible.builtin.shell: nmcli radio wifi
-        changed_when: false
-        failed_when: false
-        check_mode: false
-        register: discovered_wifi_status
-        when: "'network-manager' in ansible_facts.packages"
-
-      - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Disable wireless if network-manager installed"
-        ansible.builtin.shell: nmcli radio all off
-        changed_when: discovered_nmcli_radio_off.rc == 0
-        register: discovered_nmcli_radio_off
-        when:
-            - "'network-manager' in ansible_facts.packages"
-            - "'enabled' in discovered_wifi_status.stdout"
-
-      - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Warn about wireless if network-manager not installed"
-        ansible.builtin.debug:
-            msg: "Warning!! You need to disable wireless interfaces manually since network-manager is not installed"
-        when: "'network-manager' not in ansible_facts.packages"
-
-      - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Set warning count"
-        ansible.builtin.import_tasks:
-            file: warning_facts.yml
-        when: "'network-manager' not in ansible_facts.packages"
+  when:
+    - deb11cis_rule_3_1_2
+    - prelim_wireless_modules is defined
+  tags:
+    - level1-server
+    - patch
+    - rule_3.1.2
+    - wireless
+    - NIST800-53R5_CM-7
   vars:
-      warn_control_id: '3.1.2'
-  when: debian11cis_rule_3_1_2
-  tags:
-      - level1-server
-      - level2-workstation
-      - automated
-      - patch
-      - rule_3.1.2
-      - wireless
+    warn_control_id: '3.1.2'
+  block:
+    - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Create modprobe.d file"
+      ansible.builtin.lineinfile:
+        path: /etc/modprobe.d/{{ item }}.conf
+        regexp: '^(#)?install true(\\s|$)'
+        line: install {{ item }} true
+        mode: 'u-x,go-wx'
+        create: true
+      loop: "{{ prelim_wireless_modules.stdout_lines }}"
 
-- name: "3.1.3 | PATCH | Ensure DCCP is disabled"
-  ansible.builtin.lineinfile:
-      path: /etc/modprobe.d/dccp.conf
-      regexp: '^(#)?install dccp(\\s|$)'
-      line: "{{ item }}"
-      create: true
-  loop:
-      - install dccp /bin/true
-      - blacklist dccp
-  when: debian11cis_rule_3_1_3
-  tags:
-      - level2-server
-      - level2-workstation
-      - automated
-      - patch
-      - rule_3.1.3
-      - dccp
+    - name: "3.2.1 | PATCH | Ensure dccp kernel module is not available | blacklist"
+      ansible.builtin.lineinfile:
+        path: /etc/modprobe.d/blacklist.conf
+        regexp: "^(#)?blacklist {{ item }}(\\s|$)"
+        line: "blacklist {{ item }}"
+        create: true
+        mode: 'u-x,go-rwx'
+      loop: "{{ prelim_wireless_modules.stdout_lines }}"
 
-- name: "3.1.4 | PATCH | Ensure SCTP is disabled"
-  ansible.builtin.lineinfile:
-      path: /etc/modprobe.d/sctp.conf
-      regexp: '^(#)?install sctp(\\s|$)'
-      line: "{{ item }}"
-      create: true
-  loop:
-      - install sctp /bin/true
-      - blacklist sctp
-  when: debian11cis_rule_3_1_4
+- name: "3.1.3 | PATCH | Ensure bluetooth services are not in use"
+  when: deb11cis_rule_3_1_3
   tags:
-      - level2-server
-      - level2-workstation
-      - automated
-      - patch
-      - rule_3.1.4
-      - sctp
+    - level1-server
+    - level2-workstation
+    - patch
+    - bluetooth
+    - rule_3.1.3
+    - NIST800-53R5_CM-7
+  block:
+    - name: "3.1.3 | PATCH | Ensure bluetooth services are not in use | pkg"
+      when:
+        - not deb11cis_bluetooth_service
+        - not deb11cis_bluetooth_mask
+      ansible.builtin.package:
+        name: bluez
+        state: absent
 
-- name: "3.1.5 | PATCH | Ensure RDS is disabled"
-  ansible.builtin.lineinfile:
-      path: /etc/modprobe.d/rds.conf
-      regexp: '^(#)?install rds(\\s|$)'
-      line: "{{ item }}"
-      create: true
-  loop:
-      - install rds /bin/true
-      - blacklist rds
-  when: debian11cis_rule_3_1_5
-  tags:
-      - level2-server
-      - level2-workstation
-      - automated
-      - patch
-      - rule_3.1.5
-      - rds
-
-- name: "3.1.6 | PATCH | Ensure TIPC is disabled"
-  ansible.builtin.lineinfile:
-      path: /etc/modprobe.d/tipc.conf
-      regexp: '^(#)?install tipc(\\s|$)'
-      line: "{{ item }}"
-      create: true
-  loop:
-      - install tipc /bin/true
-      - blacklist tipc
-  when: debian11cis_rule_3_1_6
-  tags:
-      - level2-server
-      - level2-workstation
-      - automated
-      - patch
-      - rule_3.1.6
-      - tipc
+    - name: "3.1.3 | PATCH | Ensure bluetooth services are not in use | mask"
+      when:
+        - not deb11cis_bluetooth_service
+        - deb11cis_bluetooth_mask
+      notify: Systemd_daemon_reload
+      ansible.builtin.systemd:
+        name: bluetooth.service
+        enabled: false
+        state: stopped
+        masked: true

@@ -1,124 +1,153 @@
 ---
 
-- name: "1.5.1 | PATCH | Ensure address space layout randomization (ASLR) is enabled | Set active kernel parameter"
-  ansible.posix.sysctl:
-      name: kernel.randomize_va_space
-      value: '2'
-      state: present
-      reload: true
-      sysctl_set: true
-      sysctl_file: "{{ debian11cis_sysctl_kernel_file }}"
-      ignoreerrors: true
-  when: debian11cis_rule_1_5_1
+- name: "1.5.1 | PATCH | Ensure address space layout randomization is enabled"
+  when: deb11cis_rule_1_5_1
   tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_1.5.1
-      - aslr
-
-- name: "1.5.2 | PATCH | Ensure prelink is not installed"
+    - level1-server
+    - level1-workstation
+    - patch
+    - sysctl
+    - rule_1.5.1
+    - NIST800-53R5_CM-6
   block:
-      - name: "1.5.2 | PATCH | Ensure prelink is not installed | Restore binaries to normal"
-        ansible.builtin.shell: prelink -ua
-        changed_when: false
-        failed_when: false
+    - name: "1.5.1 | PATCH | Ensure address space layout randomization is enabled"
+      ansible.builtin.set_fact:
+        deb11cis_sysctl_update: true
 
-      - name: "1.5.2 | PATCH | Ensure prelink is not installed| Remove prelink package"
-        ansible.builtin.package:
-            name: prelink
-            state: absent
-            purge: "{{ debian11cis_purge_apt }}"
+    - name: "1.5.1 | PATCH | Ensure address space layout randomization is enabled"
+      ansible.builtin.debug:
+        msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-kernel_sysctl.conf"
+
+- name: "1.5.2 | PATCH | Ensure ptrace_scope is restricted"
+  when: deb11cis_rule_1_5_2
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - sysctl
+    - rule_1.5.2
+    - NIST800-53R5_CM-6
+  block:
+    - name: "1.5.2 | PATCH | Ensure ptrace_scope is restricted"
+      ansible.builtin.set_fact:
+        deb11cis_sysctl_update: true
+
+    - name: "1.5.2 | PATCH | Ensure ptrace_scope is restricted"
+      ansible.builtin.debug:
+        msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-kernel_sysctl.conf"
+
+- name: "1.5.3 | PATCH | Ensure core dumps are restricted"
+  when: deb11cis_rule_1_5_3
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_1.5.3
+    - coredump
+    - NIST800-53R5_CM-6
+  block:
+    - name: "1.5.3 | PATCH | Ensure core dumps are restricted | kernel sysctl"
+      ansible.posix.sysctl:
+        name: fs.suid_dumpable
+        value: '0'
+        state: present
+        sysctl_file: "{{ deb11cis_sysctl_kernel_conf }}"
+        reload: true
+        sysctl_set: true
+        ignoreerrors: true
+
+    - name: "1.5.3 | PATCH | Ensure core dumps are restricted | security limits"
+      ansible.builtin.lineinfile:
+        path: /etc/security/limits.d/99_zero_core.conf
+        regexp: '^\* hard core'
+        line: '* hard core 0'
+        create: true
+        owner: root
+        group: root
+        mode: 'u-x,go-wx'
+
+    - name: "1.5.3 | PATCH | Ensure core dumps are restricted | sysctl.conf"
+      ansible.builtin.lineinfile:
+        path: /etc/sysctl.conf
+        regexp: '^fs.suid_dumpable'
+        line: fs.suid_dumpable=0
+        owner: root
+        group: root
+        mode: 'u-x,go-wx'
+      notify: Reload sysctl
+
+    - name: "1.5.3 | PATCH | Ensure core dumps are restricted | coredump.conf"
+      ansible.builtin.lineinfile:
+        path: /etc/systemd/coredump.conf
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        create: true
+        owner: root
+        group: root
+        mode: 'u-x,go-wx'
+      loop:
+        - { regexp: '^Storage', line: 'Storage=none' }
+        - { regexp: '^ProcessSizeMax', line: 'ProcessSizeMax=0' }
+
+- name: "1.5.4 | PATCH | Ensure prelink is not installed"
   when:
-      - debian11cis_rule_1_5_2
-      - "'prelink' in ansible_facts.packages"
+    - deb11cis_rule_1_5_4
+    - "'prelink' in ansible_facts.packages"
   tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_1.5.2
-      - prelink
-
-- name: "1.5.3 | PATCH | Ensure Automatic Error Reporting is not enabled"
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_1.5.4
+    - prelink
+    - NIST800-53R5_CM-1
+    - NIST800-53R5_CM-3
+    - NIST800-53R5_CM-6
   block:
-      - name: "1.5.3 | PATCH | Ensure Automatic Error Reporting is not enabled | disable"
-        ansible.builtin.lineinfile:
+    - name: "1.5.4 | PATCH | Ensure prelink is not installed | Restore binaries to normal"
+      ansible.builtin.command: prelink -ua
+      changed_when: false
+      failed_when: false
+
+    - name: "1.5.4 | PATCH | Ensure prelink is not installed| Remove prelink package"
+      ansible.builtin.package:
+        name: prelink
+        state: absent
+        purge: "{{ deb11cis_purge_apt }}"
+
+- name: "1.5.5 | PATCH | Ensure Automatic Error Reporting is not enabled"
+  when: deb11cis_rule_1_5_5
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_1.5.5
+    - prelink
+    - NIST800-53R5_CM-1
+    - NIST800-53R5_CM-3
+    - NIST800-53R5_CM-6
+  block:
+    - name: "1.5.5 | PATCH | Ensure Automatic Error Reporting is not enabled | Remove package"
+      when:
+        - not deb11cis_apport_services
+        - not deb11cis_apport_mask
+      ansible.builtin.package:
+        name: apport
+        state: absent
+    - name: "1.5.5 | PATCH | Ensure Automatic Error Reporting is not enabled | Ensure default disabled"
+      when:
+        - not deb11cis_apport_services
+        - deb11cis_apport_mask
+      block:
+        - name: "1.5.5 | PATCH | Ensure Automatic Error Reporting is not enabled | Ensure default disabled"
+          ansible.builtin.lineinfile:
             path: /etc/default/apport
-            regexp: ^enabled
+            regexp: ^(?#)enabled.*
             line: enabled=0
             create: true
-            owner: root
-            group: root
             mode: 'u-x,go-wx'
 
-      - name: "1.5.3 | PATCH | Ensure Automatic Error Reporting is not enabled | remove package"
-        ansible.builtin.package:
+        - name: "1.5.5 | PATCH | Ensure Automatic Error Reporting is not enabled | stop and mask service"
+          ansible.builtin.systemd_service:
             name: apport
-            state: absent
-        notify: Purge_packages
-        when:
-            - "'apport' in ansible_facts.packages"
-  when: debian11cis_rule_1_5_3
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_1.5.3
-      - apport
-
-- name: "1.5.4 | PATCH | Ensure core dumps are restricted"
-  block:
-      - name: "1.5.4 | PATCH | Ensure core dumps are restricted | kernel sysctl"
-        ansible.posix.sysctl:
-            name: fs.suid_dumpable
-            value: '0'
-            state: present
-            reload: true
-            sysctl_set: true
-            sysctl_file: "{{ debian11cis_sysctl_kernel_file }}"
-            ignoreerrors: true
-
-      - name: "1.5.4 | PATCH | Ensure core dumps are restricted | security limits"
-        ansible.builtin.lineinfile:
-            path: /etc/security/limits.d/99_zero_core.conf
-            regexp: '^\* hard core'
-            line: '* hard core 0'
-            create: true
-            owner: root
-            group: root
-            mode: 'u-x,go-wx'
-
-      - name: "1.5.4 | PATCH | Ensure core dumps are restricted | sysctl.conf"
-        ansible.builtin.lineinfile:
-            path: /etc/sysctl.conf
-            regexp: '^fs.suid_dumpable'
-            line: fs.suid_dumpable=0
-            owner: root
-            group: root
-            mode: 'u-x,go-wx'
-        notify: Reload systemctl
-
-      - name: "1.5.4 | PATCH | Ensure core dumps are restricted | coredump.conf"
-        ansible.builtin.lineinfile:
-            path: /etc/systemd/coredump.conf
-            regexp: "{{ item.regexp }}"
-            line: "{{ item.line }}"
-            create: true
-            owner: root
-            group: root
-            mode: 'u-x,go-wx'
-        loop:
-            - { regexp: '^Storage', line: 'Storage=none' }
-            - { regexp: '^ProcessSizeMax', line: 'ProcessSizeMax=0' }
-        when: "'systemd-coredump' in ansible_facts.packages"
-  when: debian11cis_rule_1_5_4
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_1.5.4
-      - coredump
+            masked: true
+            state: stopped
