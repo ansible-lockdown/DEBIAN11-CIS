@@ -3,7 +3,7 @@
 # Set default value for reboot value
 change_requires_reboot: false
 
-min_ansible_version: 2.12.1
+min_ansible_version: 2.16.1
 
 # Used to control warning summary
 warn_control_list: ""
@@ -26,7 +26,7 @@ update_audit_template: false
 system_is_container: false
 # The filename of the existing yml file in role's  'vars/' sub-directory
 # to be used for managing the role-behavior when a container was detected:
-# (de)activating rules or for other tasks(e.g. disabling Selinux or a specific
+# (de)activating rules or for other tasks(e.g. disabling AppArmor enforcement or a specific
 # firewall-type).
 container_vars_file: is_container.yml
 # deb11cis is left off the front of this var for consistency in testing pipeline
