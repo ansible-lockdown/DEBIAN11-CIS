@@ -436,6 +436,7 @@ deb11cis_rule_5_4_3_3: true
 ## 6.1 Configure Integrity Checking
 deb11cis_rule_6_1_1: true
 deb11cis_rule_6_1_2: true
+deb11cis_rule_6_1_3: true
 ## 6.2.1.1.x Configure systemd-journald service
 deb11cis_rule_6_2_1_1_1: true
 deb11cis_rule_6_2_1_1_2: true

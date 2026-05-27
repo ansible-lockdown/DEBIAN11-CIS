@@ -2,103 +2,167 @@
 
 # File to skip controls if container
 # Based on standard image no changes
-# it expected all pkgs required for the container are already installed
+# It is expected all pkgs required for the container are already installed
 
-## controls
+## Kernel modules (no kernel access in containers)
+deb11cis_rule_1_1_1_1: false
+deb11cis_rule_1_1_1_2: false
+deb11cis_rule_1_1_1_3: false
+deb11cis_rule_1_1_1_4: false
+deb11cis_rule_1_1_1_5: false
+deb11cis_rule_1_1_1_6: false
+deb11cis_rule_1_1_1_7: false
+deb11cis_rule_1_1_1_8: false
 
-# Firewall
-deb11cis_firewall_package: None
+## AppArmor enforcement (no kernel/GRUB in container)
+deb11cis_rule_1_3_1_2: false
+deb11cis_rule_1_3_1_3: false
+deb11cis_rule_1_3_1_4: false
 
-# Filesystems
-
-## Related individual rules
-# Aide
+## GRUB / Bootloader
 deb11cis_rule_1_4_1: false
 deb11cis_rule_1_4_2: false
 
-# AppArmor
-deb11cis_rule_1_6_1: false
-deb11cis_rule_1_6_2: false
-deb11cis_rule_1_6_3: false
-deb11cis_rule_1_6_4: false
+## Additional Process Hardening (kernel params)
+deb11cis_rule_1_5_1: false
+deb11cis_rule_1_5_2: false
+deb11cis_rule_1_5_3: false
+deb11cis_rule_1_5_4: false
+deb11cis_rule_1_5_5: false
 
-# time sync
-deb11cis_rule_2_1_1_1: false
-deb11cis_rule_2_2_1_2: false
+## Filesystem mounts (no separate partitions in containers)
+# /tmp
+deb11cis_rule_1_1_2_1_1: false
+deb11cis_rule_1_1_2_1_2: false
+deb11cis_rule_1_1_2_1_3: false
+deb11cis_rule_1_1_2_1_4: false
+# /dev/shm
+deb11cis_rule_1_1_2_2_1: false
+deb11cis_rule_1_1_2_2_2: false
+deb11cis_rule_1_1_2_2_3: false
+deb11cis_rule_1_1_2_2_4: false
+# /home
+deb11cis_rule_1_1_2_3_1: false
+deb11cis_rule_1_1_2_3_2: false
+deb11cis_rule_1_1_2_3_3: false
+# /var
+deb11cis_rule_1_1_2_4_1: false
+deb11cis_rule_1_1_2_4_2: false
+deb11cis_rule_1_1_2_4_3: false
+# /var/tmp
+deb11cis_rule_1_1_2_5_1: false
+deb11cis_rule_1_1_2_5_2: false
+deb11cis_rule_1_1_2_5_3: false
+deb11cis_rule_1_1_2_5_4: false
+# /var/log
+deb11cis_rule_1_1_2_6_1: false
+deb11cis_rule_1_1_2_6_2: false
+deb11cis_rule_1_1_2_6_3: false
+deb11cis_rule_1_1_2_6_4: false
+# /var/log/audit
+deb11cis_rule_1_1_2_7_1: false
+deb11cis_rule_1_1_2_7_2: false
+deb11cis_rule_1_1_2_7_3: false
+deb11cis_rule_1_1_2_7_4: false
 
-# Auditd
-deb11cis_rule_4_1_1_1: true
-deb11cis_rule_4_1_1_2: true
-deb11cis_rule_4_1_1_3: true
-deb11cis_rule_4_1_1_4: true
-deb11cis_rule_4_1_2_1: true
-deb11cis_rule_4_1_2_2: true
-deb11cis_rule_4_1_2_3: true
-# Auditd rules
-deb11cis_rule_4_1_3_1: true
-deb11cis_rule_4_1_3_2: true
-deb11cis_rule_4_1_3_3: true
-deb11cis_rule_4_1_3_4: true
-deb11cis_rule_4_1_3_5: true
-deb11cis_rule_4_1_3_6: true
-deb11cis_rule_4_1_3_7: true
-deb11cis_rule_4_1_3_8: true
-deb11cis_rule_4_1_3_9: true
-deb11cis_rule_4_1_3_10: true
-deb11cis_rule_4_1_3_11: true
-deb11cis_rule_4_1_3_12: true
-deb11cis_rule_4_1_3_13: true
-deb11cis_rule_4_1_3_14: true
-deb11cis_rule_4_1_3_15: true
-deb11cis_rule_4_1_3_16: true
-deb11cis_rule_4_1_3_17: true
-deb11cis_rule_4_1_3_18: true
-deb11cis_rule_4_1_3_19: true
-deb11cis_rule_4_1_3_20: true
-deb11cis_rule_4_1_3_21: true
-# Auditd file access
-deb11cis_rule_4_1_4_1: true
-deb11cis_rule_4_1_4_2: true
-deb11cis_rule_4_1_4_3: true
-deb11cis_rule_4_1_4_4: true
-deb11cis_rule_4_1_4_5: true
-deb11cis_rule_4_1_4_6: true
-deb11cis_rule_4_1_4_7: true
-deb11cis_rule_4_1_4_8: true
-deb11cis_rule_4_1_4_9: true
-deb11cis_rule_4_1_4_10: true
-deb11cis_rule_4_1_4_11: true
+## Time synchronization (no systemd in most containers)
+deb11cis_rule_2_3_1_1: false
+deb11cis_rule_2_3_2_1: false
+deb11cis_rule_2_3_2_2: false
+deb11cis_rule_2_3_3_1: false
+deb11cis_rule_2_3_3_2: false
+deb11cis_rule_2_3_3_3: false
 
-# cron
-deb11cis_rule_5_1_1: false
-deb11cis_rule_5_1_2: false
-deb11cis_rule_5_1_3: false
-deb11cis_rule_5_1_4: false
-deb11cis_rule_5_1_5: false
-deb11cis_rule_5_1_6: false
-deb11cis_rule_5_1_7: false
-deb11cis_rule_5_1_8: false
+## Sysctl / Network kernel parameters (no kernel access)
+## Wireless/network kernel modules (no kernel in container)
+deb11cis_rule_3_1_1: false
+deb11cis_rule_3_1_2: false
+deb11cis_rule_3_1_3: false
 
-# ssh
-deb11cis_rule_5_2_1: false
-deb11cis_rule_5_2_2: false
-deb11cis_rule_5_2_3: false
-deb11cis_rule_5_2_4: false
-deb11cis_rule_5_2_5: false
-deb11cis_rule_5_2_6: false
-deb11cis_rule_5_2_7: false
-deb11cis_rule_5_2_8: false
-deb11cis_rule_5_2_9: false
-deb11cis_rule_5_2_10: false
-deb11cis_rule_5_2_11: false
-deb11cis_rule_5_2_12: false
-deb11cis_rule_5_2_13: false
-deb11cis_rule_5_2_14: false
-deb11cis_rule_5_2_15: false
-deb11cis_rule_5_2_16: false
-deb11cis_rule_5_2_17: false
-deb11cis_rule_5_2_18: false
-deb11cis_rule_5_2_19: false
-deb11cis_rule_5_2_20: false
-deb11cis_rule_5_2_21: false
-deb11cis_rule_5_2_22: false
+deb11cis_rule_3_3_1: false
+deb11cis_rule_3_3_2: false
+deb11cis_rule_3_3_3: false
+deb11cis_rule_3_3_4: false
+deb11cis_rule_3_3_5: false
+deb11cis_rule_3_3_6: false
+deb11cis_rule_3_3_7: false
+deb11cis_rule_3_3_8: false
+deb11cis_rule_3_3_9: false
+deb11cis_rule_3_3_10: false
+deb11cis_rule_3_3_11: false
+
+## Firewall (no iptables/nftables/ufw in containers)
+deb11cis_rule_4_1_1: false
+deb11cis_rule_4_1_2: false
+deb11cis_rule_4_1_3: false
+deb11cis_rule_4_1_4: false
+deb11cis_rule_4_1_5: false
+deb11cis_rule_4_1_6: false
+deb11cis_rule_4_1_7: false
+deb11cis_rule_4_2_1: false
+deb11cis_rule_4_2_2: false
+deb11cis_rule_4_2_3: false
+deb11cis_rule_4_2_4: false
+deb11cis_rule_4_2_5: false
+deb11cis_rule_4_2_6: false
+deb11cis_rule_4_2_7: false
+deb11cis_rule_4_2_8: false
+deb11cis_rule_4_2_9: false
+deb11cis_rule_4_2_10: false
+deb11cis_rule_4_3_1_1: false
+deb11cis_rule_4_3_1_2: false
+deb11cis_rule_4_3_1_3: false
+deb11cis_rule_4_3_2_1: false
+deb11cis_rule_4_3_2_2: false
+deb11cis_rule_4_3_2_3: false
+deb11cis_rule_4_3_2_4: false
+deb11cis_rule_4_3_3_1: false
+deb11cis_rule_4_3_3_2: false
+deb11cis_rule_4_3_3_3: false
+deb11cis_rule_4_3_3_4: false
+
+## Auditd (no auditd in containers)
+deb11cis_rule_6_3_1_1: false
+deb11cis_rule_6_3_1_2: false
+deb11cis_rule_6_3_1_3: false
+deb11cis_rule_6_3_1_4: false
+deb11cis_rule_6_3_2_1: false
+deb11cis_rule_6_3_2_2: false
+deb11cis_rule_6_3_2_3: false
+deb11cis_rule_6_3_2_4: false
+deb11cis_rule_6_3_3_1: false
+deb11cis_rule_6_3_3_2: false
+deb11cis_rule_6_3_3_3: false
+deb11cis_rule_6_3_3_4: false
+deb11cis_rule_6_3_3_5: false
+deb11cis_rule_6_3_3_6: false
+deb11cis_rule_6_3_3_7: false
+deb11cis_rule_6_3_3_8: false
+deb11cis_rule_6_3_3_9: false
+deb11cis_rule_6_3_3_10: false
+deb11cis_rule_6_3_3_11: false
+deb11cis_rule_6_3_3_12: false
+deb11cis_rule_6_3_3_13: false
+deb11cis_rule_6_3_3_14: false
+deb11cis_rule_6_3_3_15: false
+deb11cis_rule_6_3_3_16: false
+deb11cis_rule_6_3_3_17: false
+deb11cis_rule_6_3_3_18: false
+deb11cis_rule_6_3_3_19: false
+deb11cis_rule_6_3_3_20: false
+deb11cis_rule_6_3_3_21: false
+deb11cis_rule_6_3_4_1: false
+deb11cis_rule_6_3_4_2: false
+deb11cis_rule_6_3_4_3: false
+deb11cis_rule_6_3_4_4: false
+deb11cis_rule_6_3_4_5: false
+deb11cis_rule_6_3_4_6: false
+deb11cis_rule_6_3_4_7: false
+deb11cis_rule_6_3_4_8: false
+deb11cis_rule_6_3_4_9: false
+deb11cis_rule_6_3_4_10: false
+
+## AIDE (filesystem integrity not reliable in containers)
+deb11cis_rule_6_1_1: false
+deb11cis_rule_6_1_2: false
+deb11cis_rule_6_1_3: false
