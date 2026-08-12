@@ -48,7 +48,7 @@
         dest: /etc/issue
         mode: 'u-x,go-wx'
 
-    - name: "1.6.2 | PATCH | Ensure local login warning banner is kept on package upgrade | issue"
+    - name: "1.6.2 | PATCH | Ensure local login warning banner is configured properly | Divert issue on package upgrade"
       community.general.dpkg_divert:
         path: /etc/issue
 
@@ -70,7 +70,7 @@
         dest: /etc/issue.net
         mode: 'u-x,go-wx'
 
-    - name: "1.6.3 | PATCH | Ensure remote login warning banner is kept on package upgrade | issue.net"
+    - name: "1.6.3 | PATCH | Ensure remote login warning banner is configured properly | Divert issue.net on package upgrade"
       community.general.dpkg_divert:
         path: /etc/issue.net
 

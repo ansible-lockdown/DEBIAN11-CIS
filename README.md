@@ -6,7 +6,7 @@
 
 ---
 
-## Public Repository 📣
+## Public Repository
 
 ![Org Stars](https://img.shields.io/github/stars/ansible-lockdown?label=Org%20Stars&style=social)
 ![Stars](https://img.shields.io/github/stars/ansible-lockdown/DEBIAN11-CIS?label=Repo%20Stars&style=social)
@@ -17,13 +17,13 @@
 
 ![License](https://img.shields.io/github/license/ansible-lockdown/DEBIAN11-CIS?label=License)
 
-## Lint & Pre-Commit Tools 🔧
+## Lint & Pre-Commit Tools
 
 [![Pre-Commit.ci](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/DEBIAN11-CIS/pre-commit-ci.json)](https://results.pre-commit.ci/latest/github/ansible-lockdown/DEBIAN11-CIS/devel)
 ![YamlLint](https://img.shields.io/badge/yamllint-Present-brightgreen?style=flat&logo=yaml&logoColor=white)
 ![Ansible-Lint](https://img.shields.io/badge/ansible--lint-Present-brightgreen?style=flat&logo=ansible&logoColor=white)
 
-## Community Release Information 📂
+## Community Release Information
 
 ![Release Branch](https://img.shields.io/badge/Release%20Branch-Main-brightgreen)
 ![Release Tag](https://img.shields.io/github/v/tag/ansible-lockdown/DEBIAN11-CIS?label=Release%20Tag&&color=success)
@@ -43,38 +43,37 @@
 
 ---
 
-## Subscriber Release Information 🔐
+## Subscriber Release Information
 
 ![Private Release Branch](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/Private-DEBIAN11-CIS/release-branch.json)
 ![Private Benchmark Version](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/Private-DEBIAN11-CIS/benchmark-version.json)
 
 [![Private Remediate Pipeline](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/Private-DEBIAN11-CIS/remediate.json)](https://github.com/ansible-lockdown/Private-DEBIAN11-CIS/actions/workflows/main_pipeline_validation.yml)
-[![Private GPO Pipeline](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/Private-DEBIAN11-CIS/gpo.json)](https://github.com/ansible-lockdown/Private-DEBIAN11-CIS/actions/workflows/main_pipeline_validation_gpo.yml)
 
 ![Private Pull Requests](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/Private-DEBIAN11-CIS/prs.json)
 ![Private Closed Issues](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/Private-DEBIAN11-CIS/issues-closed.json)
 
 ---
 
-## Looking for support? 🤝
+## Looking for support?
 
 [Lockdown Enterprise](https://www.lockdownenterprise.com#GH_AL_DEBIAN11_CIS)
 
 [Ansible support](https://www.mindpointgroup.com/cybersecurity-products/ansible-counselor#GH_AL_DEBIAN11_CIS)
 
-### Community 💬
+### Community
 
 On our [Discord Server](https://www.lockdownenterprise.com/discord) to ask questions, discuss features, or just chat with other Ansible-Lockdown users
 
 ---
 
-## 🚨 Caution(s) 🚨
+## Caution(s)
 
 This role **will make changes to the system** which may have unintended consequences. This is not an auditing tool but rather a remediation tool to be used after an audit has been conducted.
 
 - Testing is the most important thing you can do.
 
-- Check Mode is not guaranteed! 🚫 The role will complete in check mode without errors, but it is not supported and should be used with caution.
+- Check Mode is not guaranteed! The role will complete in check mode without errors, but it is not supported and should be used with caution.
 
 - This role was developed against a clean install of the Operating System. If you are implementing to an existing system please review this role for any site specific changes that are needed.
 
@@ -84,9 +83,9 @@ This role **will make changes to the system** which may have unintended conseque
 
 ---
 
-## Coming From A Previous Release ⏪
+## Coming From A Previous Release
 
-CIS release always contains changes, it is highly recommended to review the new references and available variables. This have changed significantly since ansible-lockdown initial release.
+CIS release always contains changes, it is highly recommended to review the new references and available variables. This has changed significantly since the ansible-lockdown initial release.
 This is now compatible with python3 if it is found to be the default interpreter. This does come with pre-requisites which it configures the system accordingly.
 
 Further details can be seen in the [Changelog](./ChangeLog.md)
@@ -103,10 +102,10 @@ This is managed using tags:
 - level2-server
 - level2-workstation
 
-The control found in defaults main also need to reflect this as this control the testing that takes place if you are using the audit component.
+The control found in defaults main also needs to reflect this, as this controls the testing that takes place if you are using the audit component.
 
 ---
-## Requirements ✅
+## Requirements
 
 **General:**
 
@@ -137,7 +136,7 @@ This can be turned on or off within the defaults/main.yml file with the variable
 
 This is a much quicker, very lightweight, checking (where possible) config compliance and live/running settings.
 
-A new form of auditing has been developed, by using a small (12MB) go binary called [goss](https://github.com/goss-org/goss) along with the relevant configurations to check. Without the need for infrastructure or other tooling.
+A new form of auditing has been developed, by using a small (12MB) go binary called [goss](https://github.com/krameff/goss) along with the relevant configurations to check. Without the need for infrastructure or other tooling.
 This audit will not only check the config has the correct setting but aims to capture if it is running with that configuration also trying to remove [false positives](https://www.mindpointgroup.com/blog/is-compliance-scanning-still-relevant/) in the process.
 
 Refer to [DEBIAN11-CIS-Audit](https://github.com/ansible-lockdown/DEBIAN11-CIS-Audit).
@@ -163,7 +162,7 @@ PLAY RECAP *********************************************************************
 default                    : ok=270  changed=23   unreachable=0    failed=0    skipped=140  rescued=0    ignored=0
 ```
 
-## Documentation 📖
+## Documentation
 
 - [Read The Docs](https://ansible-lockdown.readthedocs.io/en/latest/)
 - [Getting Started](https://www.lockdownenterprise.com/docs/getting-started-with-lockdown#GH_AL_DEBIAN11_cis)
@@ -176,7 +175,7 @@ default                    : ok=270  changed=23   unreachable=0    failed=0    s
 
 This role is designed that the end user should not have to edit the tasks themselves. All customizing should be done via the defaults/main.yml file or with extra vars within the project, job, workflow, etc.
 
-## Tags 🏷️
+## Tags
 
 There are many tags available for added control precision. Each control has its own set of tags noting what level, what OS element it relates to, whether it's a patch or audit, and the rule number. Additionally, NIST references follow a specific conversion format for consistency and clarity.
 
@@ -202,16 +201,16 @@ Below is an example of the tag section from a control within this role. Using th
 ```sh
       tags:
       - level1-server
-      - level1-workstation
-      - scored
+      - level2-workstation
+      - automated
       - avahi
       - services
       - patch
-      - rule_2.2.4
+      - rule_2.1.2
 ```
 
 
-## Community Contribution 🧑‍🤝‍🧑
+## Community Contribution
 
 We encourage you (the community) to contribute to this role. Please read the rules below.
 
@@ -220,7 +219,7 @@ We encourage you (the community) to contribute to this role. Please read the rul
 - Pull Requests into devel will confirm your commits have a GPG signature, Signed-off-by, and a functional test before being approved
 - Once your changes are merged and a more detailed review is complete, an authorized member will merge your changes into the main branch for a new release
 
-## Pipeline Testing 🔄
+## Pipeline Testing
 
 uses:
 
@@ -233,7 +232,7 @@ uses:
 ## Known Issues
 
 
-## Local Testing 💻
+## Local Testing
 
 ### example
 
@@ -253,7 +252,7 @@ local testing uses:
 - molecule-azure 0.5.0
 
 
-## Credits and Thanks 🙏
+## Credits and Thanks
 
 Massive thanks to the fantastic community and all its members.
 

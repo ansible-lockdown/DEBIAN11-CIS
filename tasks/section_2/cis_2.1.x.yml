@@ -3,7 +3,7 @@
 - name: "2.1.1 | PATCH | Ensure autofs services are not in use"
   when:
     - deb11cis_rule_2_1_1
-    - "'autofs' in ansible_facts.packages"
+    - "'autofs' in ansible_facts['packages']"
   tags:
     - level1-server
     - level2-workstation
@@ -180,7 +180,7 @@
         name: vsftpd
         state: absent
 
-    - name: "2.1.6 | PATCH | Ensure samba file server services are not in use | Mask service"
+    - name: "2.1.6 | PATCH | Ensure ftp server services are not in use | Mask service"
       when:
         - not deb11cis_ftp_server
         - deb11cis_ftp_mask
@@ -325,6 +325,7 @@
   when: deb11cis_rule_2_1_11
   tags:
     - level1-server
+    - level2-workstation
     - automated
     - patch
     - cups
@@ -625,8 +626,7 @@
     - not deb11cis_xwindow_server
     - deb11cis_rule_2_1_20
   tags:
-    - level1-server
-    - level1-workstation
+    - level2-server
     - automated
     - patch
     - xwindow
@@ -639,7 +639,7 @@
 - name: "2.1.21 | PATCH | Ensure mail transfer agent is configured for local-only mode"
   when:
     - not deb11cis_is_mail_server
-    - "'postfix' in ansible_facts.packages"
+    - "'postfix' in ansible_facts['packages']"
     - deb11cis_rule_2_1_21
   tags:
     - level1-server
@@ -649,7 +649,7 @@
     - postfix
     - NIST800-53R5_CM-7
     - rule_2.1.21
-  notify: Restart_postfix
+  notify: Restart postfix
   ansible.builtin.lineinfile:
     path: /etc/postfix/main.cf
     regexp: "^(#)?inet_interfaces"

@@ -17,18 +17,18 @@
   ansible.builtin.import_tasks:
     file: cis_6.2.2.x.yml
 
-- name: "SECTION | 6.3.1 | Configure auditd Service"
+- name: "SECTION | 6.4.1 | Configure auditd Service"
   ansible.builtin.import_tasks:
-    file: cis_6.3.1.x.yml
+    file: cis_6.4.1.x.yml
 
-- name: "SECTION | 6.3.2 | Configure Data Retention"
+- name: "SECTION | 6.4.2 | Configure Data Retention"
   ansible.builtin.import_tasks:
-    file: cis_6.3.2.x.yml
+    file: cis_6.4.2.x.yml
 
-- name: "SECTION | 6.3.3 | Configure auditd Rules"
+- name: "SECTION | 6.4.3 | Configure auditd Rules"
   ansible.builtin.import_tasks:
-    file: cis_6.3.3.x.yml
+    file: cis_6.4.3.x.yml
 
-- name: "SECTION | 6.3.4 | Configure auditd File Access"
+- name: "SECTION | 6.4.4 | Configure auditd File Access"
   ansible.builtin.import_tasks:
-    file: cis_6.3.4.x.yml
+    file: cis_6.4.4.x.yml

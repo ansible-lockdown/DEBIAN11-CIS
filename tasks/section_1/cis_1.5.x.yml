@@ -92,7 +92,7 @@
 - name: "1.5.4 | PATCH | Ensure prelink is not installed"
   when:
     - deb11cis_rule_1_5_4
-    - "'prelink' in ansible_facts.packages"
+    - "'prelink' in ansible_facts['packages']"
   tags:
     - level1-server
     - level1-workstation
@@ -108,7 +108,7 @@
       changed_when: false
       failed_when: false
 
-    - name: "1.5.4 | PATCH | Ensure prelink is not installed| Remove prelink package"
+    - name: "1.5.4 | PATCH | Ensure prelink is not installed | Remove prelink package"
       ansible.builtin.package:
         name: prelink
         state: absent
