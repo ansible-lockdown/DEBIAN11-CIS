@@ -21,6 +21,9 @@
   gate on them
 - Corrected stale v1.0.0 control numbers in defaults/main.yml comments and the README tag example
 - ansible_vars_goss.yml.j2 renamed lockdown_audit.yml.j2
+- pre-commit update
+- removed files not required
+- audit variables and defaults now structured to override easily default/main/{filename}.yml
 
 ### QA pass
 
