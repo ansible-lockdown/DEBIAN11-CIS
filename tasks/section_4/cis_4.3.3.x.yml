@@ -4,6 +4,7 @@
   when: deb11cis_rule_4_3_3_1
   tags:
     - level1-server
+    - level1-workstation
     - level1-workstationå
     - patch
     - rule_4.3.3.1

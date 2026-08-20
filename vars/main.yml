@@ -12,7 +12,7 @@ warn_count: 0
 # list of dicts of interactive users, filled in during prelim.yml
 prelim_interactive_users: []
 
-## Control 6.3.3.x - Audit template
+## Control 6.4.3.x - Audit template
 # This variable governs if the auditd logic should be executed(if value is true).
 # NOTE: The current default value is likely to be overridden(via 'set_fact') by other further tasks(in sub-section 'Auditd rules').
 update_audit_template: false

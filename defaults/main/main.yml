@@ -5,7 +5,7 @@
 # https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable
 
 # Run the OS validation check
-# Supported OSs will not need for this to be changed - see README e.g. CentOS
+# Supported OSs will not need this to be changed - see README e.g. CentOS
 os_check: true
 
 # Disruption is high
@@ -33,9 +33,9 @@ deb11cis_section7: true
 deb11cis_level_1: true
 deb11cis_level_2: true
 
-## Section 1.6 - Mandatory Access Control
+## Section 1.3 - Mandatory Access Control
 # This variable governs whether SELinux is disabled or not. If SELinux is NOT DISABLED by setting
-# 'deb11cis_selinux_disable' to 'true', the 1.6 subsection will be executed.
+# 'deb11cis_selinux_disable' to 'true', the 1.3 subsection will be executed.
 deb11cis_selinux_disable: false
 
 # This variable is used in a preliminary task, handling grub2 paths either in case of
@@ -66,64 +66,8 @@ ansible_facts_path: /etc/ansible/facts.d
 
 ###########################################
 ### Goss is required on the remote host ###
-### vars/auditd.yml for other settings  ###
 
-# Allow audit to setup the requirements including installing git (if option chosen and downloading and adding goss binary to system)
-setup_audit: false
-
-# enable audits to run - this runs the audit and get the latest content
-run_audit: false
-# Run heavy tests - some tests can have more impact on a system enabling these can have greater impact on a system
-audit_run_heavy_tests: true
-
-## Only run Audit do not remediate
-audit_only: false
-
-#############################
-
-# How to retrieve audit binary
-# Options are copy or download - detailed settings at the bottom of this file
-# you will need to access to either github or the file already downloaded
-get_audit_binary_method: download
-
-## if get_audit_binary_method - copy the following needs to be updated for your environment
-## it is expected that it will be copied from somewhere accessible to the control node
-## e.g copy from ansible control node to remote host
-audit_bin_copy_location: /some/accessible/path
-
-# Ability to limit the number of concurrent processes used by goss (default 50)
-audit_max_concurrent: 50
-
-# how to get audit files onto host options
-# options are git/copy/archive/get_url other e.g. if you wish to run from already downloaded conf
-audit_content: git
-
-# If using either archive, copy, get_url:
-## Note will work with .tar files - zip will require extra configuration
-### If using get_url this is expecting github url in tar.gz format e.g.
-### https://github.com/ansible-lockdown/DEBIAN11-CIS-Audit/archive/refs/heads/benchmark-v2.0.0.tar.gz
-audit_conf_source: "some path or url to copy from"
-
-# Destination for the audit content to be placed on managed node
-# note may not need full path e.g. /opt with the directory being the {{ benchmark }}-Audit directory
-audit_conf_dest: "/opt"
-
-# Where the audit logs are stored
-audit_log_dir: '/opt'
-
-## Ability to collect and take audit files moving to a centralized location
-# This enables the collection of the files from the host
-fetch_audit_output: false
-
-# Method of getting,uploading the summary files
-## Ensure access and permissions are available for these to occur.
-## options are
-# fetch - fetches from server and moves to location on the ansible controller (could be a mount point available to controller)
-# copy - copies file to a location available to the managed node
-audit_output_collection_method: fetch
-
-# Location to put the audit files
-audit_output_destination: /opt/audit_summaries/
+# moved the defaults/main/audit.yml
 
 ### Goss Settings ##
 ####### END ########
@@ -340,7 +284,7 @@ deb11cis_rule_4_3_2_1: true
 deb11cis_rule_4_3_2_2: true
 deb11cis_rule_4_3_2_3: true
 deb11cis_rule_4_3_2_4: true
-# Configure IPv5 iptables
+# Configure IPv6 iptables
 deb11cis_rule_4_3_3_1: true
 deb11cis_rule_4_3_3_2: true
 deb11cis_rule_4_3_3_3: true
@@ -400,8 +344,8 @@ deb11cis_rule_5_3_3_2_5: true
 deb11cis_rule_5_3_3_2_6: true
 deb11cis_rule_5_3_3_2_7: true
 deb11cis_rule_5_3_3_2_8: true
-# 5.3.3.3 Configure pam_history module
-# This are added as part of 5.3.2.4 using jinja2 template
+# 5.3.3.3 Configure pam_pwhistory module
+# These are added as part of 5.3.2.4 using jinja2 template
 deb11cis_rule_5_3_3_3_1: true
 deb11cis_rule_5_3_3_3_2: true
 deb11cis_rule_5_3_3_3_3: true
@@ -444,7 +388,7 @@ deb11cis_rule_6_2_1_1_3: true
 deb11cis_rule_6_2_1_1_4: true
 deb11cis_rule_6_2_1_1_5: true
 deb11cis_rule_6_2_1_1_6: true
-## 6.2.1.2.x Configure journald
+## 6.2.1.2.x Configure systemd-journal-remote
 deb11cis_rule_6_2_1_2_1: true
 deb11cis_rule_6_2_1_2_2: true
 deb11cis_rule_6_2_1_2_3: true
@@ -453,48 +397,48 @@ deb11cis_rule_6_2_1_2_4: true
 deb11cis_rule_6_2_2_1: true
 ## 6.4 Configure Auditing
 ## 6.4.1 Configure auditd Service
-deb11cis_rule_6_3_1_1: true
-deb11cis_rule_6_3_1_2: true
-deb11cis_rule_6_3_1_3: true
-deb11cis_rule_6_3_1_4: true
+deb11cis_rule_6_4_1_1: true
+deb11cis_rule_6_4_1_2: true
+deb11cis_rule_6_4_1_3: true
+deb11cis_rule_6_4_1_4: true
 ## 6.4.2 Configure Data Retention
-deb11cis_rule_6_3_2_1: true
-deb11cis_rule_6_3_2_2: true
-deb11cis_rule_6_3_2_3: true
-deb11cis_rule_6_3_2_4: true
-## 6.3.3 Configure auditd Rules
-deb11cis_rule_6_3_3_1: true
-deb11cis_rule_6_3_3_2: true
-deb11cis_rule_6_3_3_3: true
-deb11cis_rule_6_3_3_4: true
-deb11cis_rule_6_3_3_5: true
-deb11cis_rule_6_3_3_6: true
-deb11cis_rule_6_3_3_7: true
-deb11cis_rule_6_3_3_8: true
-deb11cis_rule_6_3_3_9: true
-deb11cis_rule_6_3_3_10: true
-deb11cis_rule_6_3_3_11: true
-deb11cis_rule_6_3_3_12: true
-deb11cis_rule_6_3_3_13: true
-deb11cis_rule_6_3_3_14: true
-deb11cis_rule_6_3_3_15: true
-deb11cis_rule_6_3_3_16: true
-deb11cis_rule_6_3_3_17: true
-deb11cis_rule_6_3_3_18: true
-deb11cis_rule_6_3_3_19: true
-deb11cis_rule_6_3_3_20: true
-deb11cis_rule_6_3_3_21: true
-## 6.3.4 Configure auditd File Access
-deb11cis_rule_6_3_4_1: true
-deb11cis_rule_6_3_4_2: true
-deb11cis_rule_6_3_4_3: true
-deb11cis_rule_6_3_4_4: true
-deb11cis_rule_6_3_4_5: true
-deb11cis_rule_6_3_4_6: true
-deb11cis_rule_6_3_4_7: true
-deb11cis_rule_6_3_4_8: true
-deb11cis_rule_6_3_4_9: true
-deb11cis_rule_6_3_4_10: true
+deb11cis_rule_6_4_2_1: true
+deb11cis_rule_6_4_2_2: true
+deb11cis_rule_6_4_2_3: true
+deb11cis_rule_6_4_2_4: true
+## 6.4.3 Configure auditd Rules
+deb11cis_rule_6_4_3_1: true
+deb11cis_rule_6_4_3_2: true
+deb11cis_rule_6_4_3_3: true
+deb11cis_rule_6_4_3_4: true
+deb11cis_rule_6_4_3_5: true
+deb11cis_rule_6_4_3_6: true
+deb11cis_rule_6_4_3_7: true
+deb11cis_rule_6_4_3_8: true
+deb11cis_rule_6_4_3_9: true
+deb11cis_rule_6_4_3_10: true
+deb11cis_rule_6_4_3_11: true
+deb11cis_rule_6_4_3_12: true
+deb11cis_rule_6_4_3_13: true
+deb11cis_rule_6_4_3_14: true
+deb11cis_rule_6_4_3_15: true
+deb11cis_rule_6_4_3_16: true
+deb11cis_rule_6_4_3_17: true
+deb11cis_rule_6_4_3_18: true
+deb11cis_rule_6_4_3_19: true
+deb11cis_rule_6_4_3_20: true
+deb11cis_rule_6_4_3_21: true
+## 6.4.4 Configure auditd File Access
+deb11cis_rule_6_4_4_1: true
+deb11cis_rule_6_4_4_2: true
+deb11cis_rule_6_4_4_3: true
+deb11cis_rule_6_4_4_4: true
+deb11cis_rule_6_4_4_5: true
+deb11cis_rule_6_4_4_6: true
+deb11cis_rule_6_4_4_7: true
+deb11cis_rule_6_4_4_8: true
+deb11cis_rule_6_4_4_9: true
+deb11cis_rule_6_4_4_10: true
 
 # Section 7 System Maintenance
 ## 7.1 System File Permissions
@@ -550,7 +494,7 @@ deb11cis_tmp_svc: false
 ## Controls 1.3.1.x - apparmor
 # AppArmor security policies define what system resources applications can access and their privileges.
 # This automatically limits the damage that the software can do to files accessible by the calling user.
-# The following variables are related to the set of rules from section 1.6.1.x
+# The following variables are related to the set of rules from section 1.3.1.x
 
 ## Controls 1.3.1.3 and 1.3.1.4 Ensure all AppArmor Profiles are in enforce (1.3.1.3/4) or complain (1.3.1.3) mode
 
@@ -600,13 +544,13 @@ deb11cis_apport_services: false
 deb11cis_apport_mask: false
 
 ## Controls:
-# - 1.7.1 - Ensure message of the day is configured properly
-# - 1.7.2 - Ensure local login warning banner is configured properly
-# - 1.7.3 - Ensure remote login warning banner is configured properly
+# - 1.6.1 - Ensure message of the day is configured properly
+# - 1.6.2 - Ensure local login warning banner is configured properly
+# - 1.6.3 - Ensure remote login warning banner is configured properly
 # This variable  stores the content for the Warning Banner(relevant for issue, issue.net, motd).
 deb11cis_warning_banner: Authorized users only. All activity may be monitored and reported.
 # End Banner
-# This variable governs, whether dynamic motd is disabled (as required by control 1.7.1)
+# This variable governs, whether dynamic motd is disabled (as required by control 1.6.1)
 deb11cis_disable_dynamic_motd: true
 
 ## Control 1.7.x - Settings for GDM
@@ -696,7 +640,7 @@ deb11cis_ftp_client: false
 ## Section 2.3 Time Synchronization
 
 ## Control 2.3.1.1
-# This variable choses the tool used for time synchronization
+# This variable chooses the tool used for time synchronization
 # The two options are `chrony`and `systemd-timesyncd`.
 deb11cis_time_sync_tool: "systemd-timesyncd"
 
@@ -904,7 +848,6 @@ deb11cis_sudoers_exclude_nopasswd_list:
 deb11cis_sudo_timestamp_timeout: 15
 ## Control 5.2.7
 # This variable determines the group of users that are allowed to use the su command.
-# one to specify a user group that is allowed to use the "su" command.
 # CIS requires that such a group be created (named according to site policy) and be kept empty.
 deb11cis_sugroup: nosugroup
 
@@ -1041,7 +984,7 @@ deb11cis_futurepwchgdate_autofix: true
 
 # 5.4.2.6 root umask
 deb11cis_root_umask: '0027'  # 0027 or more restrictive
-## Control 5.4.4
+## Control 5.4.1.4
 # deb11cis_passwd_hash_algo is the hashing algorithm used
 deb11cis_passwd_hash_algo: yescrypt  # pragma: allowlist secret
 
@@ -1151,37 +1094,36 @@ deb11cis_aide_cron_weekday: '*'
 #
 ## Preferred method of logging
 ## Whether rsyslog or journald preferred method for local logging
-## Control 6.2.3 | Configure rsyslog
 ## Control 6.2.1 | Configure journald
 # This variable governs which logging service should be used, choosing between 'rsyslog'(CIS recommendation)
 # or 'journald'(only one is implemented) will trigger the execution of the associated subsection, as the-best
 # practices are written wholly independent of each other.
 deb11cis_syslog: journald
 
-## Control 6.2.1.x - Ensure systemis not configured to receive logs from a remote client
+## Control 6.2.1.x - Ensure system is not configured to receive logs from a remote client
 # This variable expresses whether the system is used as a log server or not. If set to:
 #  - 'false', current system will act as a log CLIENT, thus it should NOT receive data from other hosts.
 #  - 'true', current system will act as a log SERVER, enabling centralized log management(by protecting log integrity
 # from local attacks on remote clients)
 deb11cis_system_is_log_server: false
 
-## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
+## Control 6.2.1.2.2 - Ensure systemd-journal-remote authentication is configured
 # 'deb11cis_journal_upload_url' is the ip address to upload the journal entries to
 #  URL value may specify either just the hostname or both the protocol and hostname. 'https' is the default. The port
 #  number may be specified after a colon (":"), otherwise 19532 will be used by default.
 deb11cis_journal_upload_url: 192.168.50.42
 ## The paths below have the default paths/files, but allow user to create custom paths/filenames
 
-## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
+## Control 6.2.1.2.2 - Ensure systemd-journal-remote authentication is configured
 # This variable specifies the path to the private key file used by the remote journal
 # server to authenticate itself to the client. This key is used alongside the server's
 # public certificate to establish secure communication.
 deb11cis_journal_upload_serverkeyfile: "/etc/ssl/private/journal-upload.pem"
-## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
+## Control 6.2.1.2.2 - Ensure systemd-journal-remote authentication is configured
 # This variable specifies the path to the public certificate file of the remote journal
 # server. This certificate is used to verify the authenticity of the remote server.
 deb11cis_journal_servercertificatefile: "/etc/ssl/certs/journal-upload.pem"
-## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
+## Control 6.2.1.2.2 - Ensure systemd-journal-remote authentication is configured
 # This variable specifies the path to a file containing one or more public certificates
 # of certificate authorities (CAs) that the client trusts. These trusted certificates are used
 # to validate the authenticity of the remote server's certificate.
@@ -1217,7 +1159,7 @@ deb11cis_journald_runtimekeepfree: 100G
 # ATTENTION: Uncomment the keyword below when values are set!
 deb11cis_journald_maxfilesec: 1month
 
-### 6.3.x audit template
+### 6.4.3.x audit template
 update_audit_template: false
 
 ## Advanced option found in auditd post
@@ -1271,7 +1213,7 @@ deb11cis_auditd_disk_full_action: halt
 deb11cis_auditd_disk_error_action: syslog
 
 # Control 6.4.2.4
-# Wait to do when space left is low.
+# What to do when space left is low.
 # The space_left_action parameter tells the system what action to take when the system has detected that it is starting to get low on disk space.
 # Valid values are ignore, syslog, rotate, email, exec, suspend, single, and halt.
 # The admin_space_left_action parameter tells the system what action to take when the system has detected that it is low on disk space.
@@ -1282,7 +1224,7 @@ deb11cis_auditd_admin_space_left_action: halt
 # This value governs if the below extra-vars for auditd should be used by the role
 deb11cis_auditd_extra_conf_usage: false
 
-# 6.3.3.x allow exceptions for UID in auditd config
+# 6.4.3.x allow exceptions for UID in auditd config
 ## Advanced option found in auditd post
 # This variable governs if defining user exceptions for auditd logging is acceptable.
 deb11cis_allow_auditd_uid_user_exclusions: false
@@ -1321,7 +1263,7 @@ deb11cis_suid_sgid_adjust: false
 deb11cis_no_world_write_adjust: true
 
 ## Control 7.2.10 - Ensure local interactive user dot files access is configured
-# This variable is a toggle foe enabling/disabling the automated modification of
+# This variable is a toggle for enabling/disabling the automated modification of
 # permissions on dot files.
 # Possible values are `true` and `false`.
 deb11cis_dotperm_ansiblemanaged: false

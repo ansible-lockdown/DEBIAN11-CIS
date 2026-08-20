@@ -10,7 +10,7 @@
   when:
     - deb11cis_sysctl_update
     - not system_is_container
-    - "'procps' in ansible_facts.packages"
+    - "'procps' in ansible_facts['packages']"
   tags: always
   ansible.builtin.template:
     src: "etc/sysctl.d/{{ item }}.j2"
@@ -18,7 +18,10 @@
     owner: root
     group: root
     mode: 'u-x,go-rwx'
-  notify: Reload sysctl
+  notify:
+    - Reload sysctl
+    - Sysctl flush ipv4 route table
+    - Sysctl flush ipv6 route table
   loop:
     - 60-kernel_sysctl.conf
     - 60-disable_ipv6.conf

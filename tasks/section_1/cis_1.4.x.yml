@@ -30,7 +30,7 @@
         backrefs: true
       notify: Update-grub
 
-- name: "1.4.2 | PATCH | Ensure access to bootloader config is configured "
+- name: "1.4.2 | PATCH | Ensure access to bootloader config is configured"
   when: deb11cis_rule_1_4_2
   tags:
     - level1-server
@@ -40,7 +40,7 @@
     - rule_1.4.2
     - NIST800-53R5_AC-3
   block:
-    - name: "1.4.2 | PATCH | Ensure access to bootloader config is configured "
+    - name: "1.4.2 | PATCH | Ensure access to bootloader config is configured"
       ansible.builtin.file:
         path: /boot/grub/grub.cfg
         owner: root
