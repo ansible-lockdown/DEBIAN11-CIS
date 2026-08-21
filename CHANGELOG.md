@@ -4,6 +4,7 @@
 
 - Readme updated and aligned
 - workflows actions bumped version
+- README updates and updated contributing and contributors
 
 ### Benchmark alignment to v2.0.0
 
