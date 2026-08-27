@@ -278,8 +278,8 @@
     - deb11cis_ipv6_required
     - deb11cis_rule_3_3_11
   tags:
-    - level2-server
-    - level2-workstation
+    - level1-server
+    - level1-workstation
     - sysctl
     - patch
     - rule_3.3.11
