@@ -5,6 +5,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - level1-workstationå
     - patch
     - rule_4.3.3.1
@@ -48,6 +49,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_4.3.3.2
     - ip6tables
@@ -88,6 +90,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - manual
     - patch
     - rule_4.3.3.3
     - ip6tables
@@ -117,6 +120,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - audit
     - rule_4.3.3.4
     - ip6tables

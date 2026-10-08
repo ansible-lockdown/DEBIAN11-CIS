@@ -57,9 +57,9 @@
 
 ## Looking for support?
 
-[Lockdown Enterprise](https://www.lockdownenterprise.com#GH_AL_DEBIAN11_CIS)
+[Lockdown Enterprise](https://www.lockdownenterprise.com#GH_AL_DEBIAN11_cis)
 
-[Ansible support](https://www.mindpointgroup.com/cybersecurity-products/ansible-counselor#GH_AL_DEBIAN11_CIS)
+[Ansible support](https://www.mindpointgroup.com/cybersecurity-products/ansible-counselor#GH_AL_DEBIAN11_cis)
 
 ### Community
 
@@ -117,10 +117,10 @@ The control found in defaults main also needs to reflect this, as this controls 
 
 - Basic knowledge of Ansible, below are some links to the Ansible documentation to help get started if you are unfamiliar with Ansible
 
- - [Main Ansible documentation page](https://docs.ansible.com)
- - [Ansible Getting Started](https://docs.ansible.com/ansible/latest/user_guide/intro_getting_started.html)
- - [Tower User Guide](https://docs.ansible.com/ansible-tower/latest/html/userguide/index.html)
- - [Ansible Community Info](https://docs.ansible.com/ansible/latest/community/index.html)
+  - [Main Ansible documentation page](https://docs.ansible.com)
+  - [Ansible Getting Started](https://docs.ansible.com/ansible/latest/user_guide/intro_getting_started.html)
+  - [Tower User Guide](https://docs.ansible.com/ansible-tower/latest/html/userguide/index.html)
+  - [Ansible Community Info](https://docs.ansible.com/ansible/latest/community/index.html)
 - Functioning Ansible and/or Tower Installed, configured, and running. This includes all of the base Ansible/Tower configurations, needed packages installed, and infrastructure setup.
 - Please read through the tasks in this role to gain an understanding of what each control is doing. Some of the tasks are disruptive and can have unintended consequences in a live production system. Also familiarize yourself with the variables in the defaults/main.yml file.
 
@@ -155,17 +155,17 @@ Note: More tests are run during audit as we check config and running state.
 ```txt
 
 ok: [default] => {
- "msg": [
- "msg": [
- "The pre remediation audit results are: Count: 763, Failed: 234, Skipped: 4, Duration: 9.741s",
- "The post remediation audit results are: Count: 763, Failed: 19, Skipped: 4, Duration: 12.725s",
- "Full breakdown can be found in /opt",
- ""
- ]
+    "msg": [
+        "msg": [
+        "The pre remediation audit results are: Count: 763, Failed: 234, Skipped: 4, Duration: 9.741s",
+        "The post remediation audit results are: Count: 763, Failed: 19, Skipped: 4, Duration: 12.725s",
+        "Full breakdown can be found in /opt",
+        ""
+    ]
 }
 
 PLAY RECAP *******************************************************************************************************************************************
-default : ok=270 changed=23 unreachable=0 failed=0 skipped=140 rescued=0 ignored=0
+default                    : ok=270  changed=23   unreachable=0    failed=0    skipped=140  rescued=0    ignored=0
 ```
 
 ## Documentation
@@ -187,32 +187,32 @@ There are many tags available for added control precision. Each control has its 
 
 ### Conversion Format for NIST References:
 
- 1. Standard Prefix:
+  1. Standard Prefix:
 
- - All references are prefixed with "NIST".
+    - All references are prefixed with "NIST".
 
- 2. Standard Types:
+  2. Standard Types:
 
- - "800-53" references are formatted as NIST800-53.
- - "800-53r5" references are formatted as NIST800-53R5 (with 'R' capitalized).
- - "800-171" references are formatted as NIST800-171.
+    - "800-53" references are formatted as NIST800-53.
+    - "800-53r5" references are formatted as NIST800-53R5 (with 'R' capitalized).
+    - "800-171" references are formatted as NIST800-171.
 
- 3. Details:
+  3. Details:
 
- - Section and subsection numbers use periods (.) for numeric separators.
- - Parenthetical elements are separated by underscores (_), e.g., IA-5(1)(d) becomes IA-5_1_d.
- - Subsection letters (e.g., "b") are appended with an underscore.
+    - Section and subsection numbers use periods (.) for numeric separators.
+    - Parenthetical elements are separated by underscores (_), e.g., IA-5(1)(d) becomes IA-5_1_d.
+    - Subsection letters (e.g., "b") are appended with an underscore.
 Below is an example of the tag section from a control within this role. Using this example if you set your run to skip all controls with the tag services, this task will be skipped. The opposite can also happen where you run only controls tagged with services.
 
 ```sh
- tags:
- - level1-server
- - level2-workstation
- - automated
- - avahi
- - services
- - patch
- - rule_2.1.2
+      tags:
+      - level1-server
+      - level2-workstation
+      - automated
+      - avahi
+      - services
+      - patch
+      - rule_2.1.2
 ```
 
 

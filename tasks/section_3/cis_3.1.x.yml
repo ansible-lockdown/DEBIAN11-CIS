@@ -31,6 +31,7 @@
     - prelim_wireless_modules is defined
   tags:
     - level1-server
+    - automated
     - patch
     - rule_3.1.2
     - wireless
@@ -41,8 +42,8 @@
     - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Create modprobe.d file"
       ansible.builtin.lineinfile:
         path: /etc/modprobe.d/{{ item }}.conf
-        regexp: '^(#)?install true(\\s|$)'
-        line: install {{ item }} true
+        regexp: "^(#)?install {{ item }}(\\s|$)"
+        line: "install {{ item }} /bin/true"
         mode: 'u-x,go-wx'
         create: true
       loop: "{{ prelim_wireless_modules.stdout_lines }}"
@@ -61,6 +62,7 @@
   tags:
     - level1-server
     - level2-workstation
+    - automated
     - patch
     - bluetooth
     - rule_3.1.3

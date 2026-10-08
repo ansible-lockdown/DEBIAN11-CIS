@@ -7,6 +7,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_5.3.3.4.1
     - pam
@@ -17,6 +18,7 @@
       args:
         executable: /bin/bash
       changed_when: false
+      check_mode: false
       failed_when: discovered_pam_unix_nullok.rc not in [ 0, 1 ]
       register: discovered_pam_unix_nullok
 
@@ -34,16 +36,18 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - pam
     - rule_5.3.3.4.2
     - NIST800-53R5_NA
   block:
     - name: "5.3.3.4.2 | AUDIT | Ensure pam_unix does not include remember | capture state"
-      ansible.builtin.shell: grep -E "pam_unix.so.*remember=" /etc/pam.d/common-{password,auth,account,session,session-noninteractive} /usr/share/pam-configs/pam_unix 2>/dev/null | cut -d ':' -f1 | uniq
+      ansible.builtin.shell: grep -E "pam_unix.so.*remember=" /etc/pam.d/common-{password,auth,account,session,session-noninteractive} /usr/share/pam-configs/{{ deb11cis_pam_pwunix_file }} 2>/dev/null | cut -d ':' -f1 | uniq
       args:
         executable: /bin/bash
       changed_when: false
+      check_mode: false
       failed_when: discovered_pam_unix_remember.rc not in [ 0, 1 ]
       register: discovered_pam_unix_remember
 
@@ -61,16 +65,18 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - pam
     - rule_5.3.3.4.3
     - NIST800-53R5_IA-5
   block:
     - name: "5.3.3.4.3 | AUDIT | Ensure pam_unix includes a strong password hashing algorithm | capture state"
-      ansible.builtin.shell: grep -E "pam_unix.so.*(md5|bigcrypt|sha256|blowfish|gost_yescrypt|sha512|yescrypt)" /etc/pam.d/common-password /usr/share/pam-configs/pam_unix 2>/dev/null | cut -d ':' -f1 | uniq
+      ansible.builtin.shell: grep -E "pam_unix.so.*(md5|bigcrypt|sha256|blowfish|gost_yescrypt|sha512|yescrypt)" /etc/pam.d/common-password /usr/share/pam-configs/{{ deb11cis_pam_pwunix_file }} 2>/dev/null | cut -d ':' -f1 | uniq
       args:
         executable: /bin/bash
       changed_when: false
+      check_mode: false
       failed_when: discovered_pam_unix_pwhash.rc not in [ 0, 1 ]
       register: discovered_pam_unix_pwhash
 
@@ -88,6 +94,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - pam
     - rule_5.3.3.4.4
@@ -96,6 +103,7 @@
     - name: "5.3.3.4.4 | PATCH | Ensure pam_unix includes use_authtok | capture state"
       ansible.builtin.shell: grep -PH -- '^\h*password\h+([^#\n\r]+)\h+pam_unix\.so\h+([^#\n\r]+\h+)?use_authtok\b' /etc/pam.d/common-password
       changed_when: false
+      check_mode: false
       failed_when: discovered_pam_unix_authtok.rc not in [ 0, 1 ]
       register: discovered_pam_unix_authtok
 
