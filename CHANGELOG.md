@@ -1,5 +1,45 @@
 # Changes to DEB11CIS
 
+## Based on CIS V2.0.0 - October 2026 Updates
+
+- OS now EOL - deb11cis_apt_archive variable to enable archice repo for pkgs
+- 3.2.1 to 3.2.4 modprobe loops converted to per-item regexp and line pairs
+- 3.1.2 wireless modprobe regexp and install line corrected
+- 7.1.13 SUID/SGID find expression corrected
+- pam-configs templates: managed-by-ansible header removed
+- unix.j2 Password line ends {% endif +%}
+- pwquality.j2 Password-Initial module line added
+- pwhistory.j2 hardcoded enforce_for_root removed
+- pam_unix profile renamed to unix, deb11cis_pam_pwunix_file default unix
+- 5.3.3.4.2 and 5.3.3.4.3 read the configured pam_unix profile
+- 2.2.1, 2.3.2.2, 2.3.3.3 and 6.2.1.1.1 given the patch tag
+- uas removal moved out of tags: always, tagged rule_1.1.1.8
+- uas blacklist given a regexp, create and mode
+- UFW sysctl option task tagged
+- 2.3.1.1 mask task uses ansible.builtin.systemd
+- 6.4.3.6 privileged commands registered as discovered_privilege_processes
+- 7.2.7 duplicate user warning register name corrected
+- auditd uid exclusion gate: deb11ciscis_ typo fixed
+- auditd uid exclusion gated on deb11cis_allow_auditd_uid_user_exclusions, unprefixed default removed
+- deb11cis_force_user_maxdays, mindays and warnage passed to the audit
+- 1.3.1.3 and 1.3.1.4 report changed only when the profile count changes
+- 6.4.4.1 to 6.4.4.3 per-control attributes, adm group accepted, mode typo fixed
+- /tmp handlers exclusive on deb11cis_tmp_svc, tmp.mount enabled
+- 1.1.2.1.1 missing /tmp warning now fires
+- Container discovery guarded when virtualization_type is undefined
+- ansible_env and ansible_local replaced with ansible_facts
+- Boot type detection moved before the pre-remediation audit
+- parse_etc_password register renamed to prelim_capture_passwd_file
+- check_mode false added to read-only discovery tasks
+- automated and manual tags added from the benchmark
+- permissionss tag typo fixed on 7.1.4
+- Company name updated to MindPoint Group - A Quantum Sky Company
+- README indentation restored, tracking tags aligned
+- ansible-lint pre-commit hook v26.9.0
+- 1.7.2 and 1.7.3 write the gdm profile and the gdm dconf database
+- 1.7.4 to 1.7.9 use the user profile with system-db deb11cis_dconf_db_name
+- 1.7.2 banner keyfile mode typo fixed
+
 ## Based on CIS V2.0.0 - Aug26 Updates
 
 - Readme updated and aligned

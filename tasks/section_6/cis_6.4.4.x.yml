@@ -11,23 +11,33 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.4.1
     - rule_6.4.4.2
     - rule_6.4.4.3
     - NIST800-53R5_AU-3
-  ansible.builtin.file:
-    path: "{{ prelim_auditd_logfile.stdout }}"
-    mode: 'o-x,g-wx,o-rwx'
-    owner: root
-    group: root
+  block:
+    - name: "6.4.4.1 | AUDIT | Ensure audit log files mode is configured | stat logfile"
+      ansible.builtin.stat:
+        path: "{{ prelim_auditd_logfile.stdout }}"
+      register: discovered_auditd_logfile_stat
+
+    - name: "6.4.4.1 | PATCH | Ensure audit log files mode, owner and group owner are configured"
+      when: discovered_auditd_logfile_stat.stat.exists
+      ansible.builtin.file:
+        path: "{{ prelim_auditd_logfile.stdout }}"
+        mode: "{{ 'u-x,g-wx,o-rwx' if deb11cis_rule_6_4_4_1 else omit }}"
+        owner: "{{ 'root' if deb11cis_rule_6_4_4_2 else omit }}"
+        group: "{{ 'root' if (deb11cis_rule_6_4_4_3 and discovered_auditd_logfile_stat.stat.gr_name not in ['root', 'adm']) else omit }}"
 
 - name: "6.4.4.4 | PATCH | Ensure the audit log file directory mode is configured"
   when: deb11cis_rule_6_4_4_4
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.4.4
@@ -42,6 +52,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.4.5
@@ -60,6 +71,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.4.6
@@ -76,6 +88,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.4.7
@@ -92,6 +105,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.4.8
@@ -106,6 +120,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.4.9
@@ -120,6 +135,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.4.10

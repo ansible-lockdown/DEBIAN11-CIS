@@ -12,6 +12,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - audit
     - rule_4.2.1
     - nftables
@@ -33,6 +34,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - audit
     - rule_4.2.2
     - nftables
@@ -57,6 +59,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - manual
     - audit
     - rule_4.2.3
     - nftables
@@ -80,6 +83,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_4.2.4
     - nftables
@@ -106,6 +110,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - audit
     - rule_4.2.5
     - nftables
@@ -127,6 +132,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - audit
     - rule_4.2.6
     - nftables
@@ -148,6 +154,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - manual
     - audit
     - rule_4.2.7
     - nftables
@@ -169,6 +176,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - audit
     - rule_4.2.8
     - nftables
@@ -190,6 +198,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - audit
     - rule_4.2.9
     - nftables
@@ -215,6 +224,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - audit
     - rule_4.2.10
     - nftables
