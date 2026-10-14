@@ -1,0 +1,42 @@
+---
+
+- name: Debian 11 EOL apt sources
+  when:
+    - ansible_facts['distribution'] == 'Debian'
+    - ansible_facts['distribution_major_version'] == '11'
+  block:
+    - name: Debian 11 EOL apt sources | Write archive sources
+      ansible.builtin.copy:
+        dest: /etc/apt/sources.list
+        owner: root
+        group: root
+        mode: 'u-x,go-wx'
+        content: |
+          deb http://archive.debian.org/debian bullseye main contrib non-free
+          deb http://archive.debian.org/debian bullseye-updates main contrib non-free
+          deb [check-valid-until=no] http://snapshot.debian.org/archive/debian-security/20260801T000000Z bullseye-security main contrib non-free
+
+    - name: Debian 11 EOL apt sources | Find other source lists
+      ansible.builtin.find:
+        paths: /etc/apt/sources.list.d
+        patterns: '*.list,*.sources'
+      register: discovered_apt_source_lists
+
+    - name: Debian 11 EOL apt sources | Remove other source lists
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        state: absent
+      loop: "{{ discovered_apt_source_lists.files }}"
+
+    - name: Debian 11 EOL apt sources | Do not reject expired Release files
+      ansible.builtin.copy:
+        dest: /etc/apt/apt.conf.d/99-eol-archive
+        owner: root
+        group: root
+        mode: 'u-x,go-wx'
+        content: |
+          Acquire::Check-Valid-Until "false";
+
+    - name: Debian 11 EOL apt sources | Refresh the package cache
+      ansible.builtin.apt:
+        update_cache: true

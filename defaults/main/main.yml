@@ -8,6 +8,10 @@
 # Supported OSs will not need this to be changed - see README e.g. CentOS
 os_check: true
 
+# Deb 11 as now EOl need to adjust to archive repo
+# Set this to change the apt config to get from archve location
+deb11cis_apt_archive: false
+
 # Disruption is high
 ## Run tests that are considered higher risk and could have a system impact if not properly tested
 ## Default false
@@ -557,7 +561,9 @@ deb11cis_disable_dynamic_motd: true
 ## 1.7 GDM graphical interface
 deb11cis_desktop_required: false
 
-# This variable specifies the GNOME configuration database file to which configurations are written.
+# This variable specifies the GNOME configuration database used by the user profile
+# (/etc/dconf/profile/user) for the session settings in 1.7.4 to 1.7.9.
+# Login screen settings (1.7.2, 1.7.3) always use the gdm profile and the gdm database.
 # (See "https://help.gnome.org/admin/system-admin-guide/stable/dconf-keyfiles.html.en")
 # The default database is 'local'.
 deb11cis_dconf_db_name: local
@@ -859,7 +865,7 @@ deb11cis_pam_confd_dir: 'usr/share/pam-configs/'
 
 # Controls 5.3.2.1 - pam_unix
 # Name of file
-deb11cis_pam_pwunix_file: 'pam_unix'
+deb11cis_pam_pwunix_file: 'unix'
 # Should NOT be enabled if allowing custom config that enabled pam_faillock
 deb11cis_pam_create_pamunix_file: false
 # Allow pam-auth-update --enable deb11cis_pam_pwunix_file to run
@@ -1161,9 +1167,6 @@ deb11cis_journald_maxfilesec: 1month
 
 ### 6.4.3.x audit template
 update_audit_template: false
-
-## Advanced option found in auditd post
-allow_auditd_uid_user_exclusions: false
 
 ##  Control 6.4.2.1 - Ensure audit_backlog_limit is sufficient
 # This variable represents the audit backlog limit, i.e., the maximum number of audit records that the

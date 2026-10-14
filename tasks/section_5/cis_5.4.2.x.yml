@@ -8,6 +8,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - accounts
     - users
@@ -29,6 +30,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_5.4.2.2
     - user
@@ -44,6 +46,7 @@
       args:
         executable: /bin/bash
       changed_when: false
+      check_mode: false
       failed_when: discovered_gid0_members.rc not in [ 0, 1 ]
       register: discovered_gid0_members
 
@@ -62,6 +65,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_5.4.2.3
     - user
@@ -77,6 +81,7 @@
       args:
         executable: /bin/bash
       changed_when: false
+      check_mode: false
       failed_when: discovered_gid0_groups.rc not in [ 0, 1 ]
       register: discovered_gid0_groups
 
@@ -103,6 +108,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - shadow_suite
     - rule_5.4.2.4
@@ -115,6 +121,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - paths
     - rule_5.4.2.5
@@ -129,6 +136,7 @@
       args:
         executable: /bin/bash
       changed_when: false
+      check_mode: false
       register: discovered_root_paths
 
     - name: "5.4.2.5 | AUDIT | Ensure root path integrity | Get root paths"
@@ -150,6 +158,7 @@
       args:
         executable: /bin/bash
       changed_when: false
+      check_mode: false
       failed_when: discovered_root_path_empty_dir.rc not in [ 0, 1 ]
       register: discovered_root_path_empty_dir
 
@@ -159,6 +168,7 @@
       args:
         executable: /bin/bash
       changed_when: false
+      check_mode: false
       failed_when: discovered_root_path_trailing_colon.rc not in [ 0, 1 ]
       register: discovered_root_path_trailing_colon
 
@@ -193,6 +203,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - shadow_suite
     - rule_5.4.2.6
@@ -214,6 +225,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - shadow_suite
     - rule_5.4.2.7
@@ -237,6 +249,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - shadow_suite
     - rule_5.4.2.8

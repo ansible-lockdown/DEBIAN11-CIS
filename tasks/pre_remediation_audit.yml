@@ -87,6 +87,7 @@
       args:
         executable: /bin/bash
       changed_when: false
+      check_mode: false
       register: pre_audit_summary_json
 
     - name: Pre Audit | Set Fact for audit summary
@@ -101,6 +102,7 @@
       args:
         executable: /bin/bash
       changed_when: false
+      check_mode: false
       register: pre_audit_summary_documentation
 
     - name: Pre Audit | Set Fact for audit summary

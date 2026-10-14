@@ -6,6 +6,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.3.1
@@ -19,6 +20,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.3.2
@@ -32,6 +34,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.3.3
@@ -44,6 +47,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.3.4
@@ -58,6 +62,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.3.5
@@ -72,6 +77,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.3.6
@@ -84,7 +90,7 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: discovered_privileged_commands
+      register: discovered_privilege_processes
 
     - name: "6.4.3.6 | PATCH | Ensure use of privileged commands are collected"
       ansible.builtin.set_fact:
@@ -96,6 +102,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.3.7
@@ -109,6 +116,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.3.8
@@ -122,6 +130,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.3.9
@@ -136,6 +145,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.3.10
@@ -149,6 +159,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.3.11
@@ -162,6 +173,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.3.12
@@ -175,6 +187,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.3.13
@@ -189,6 +202,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.3.14
@@ -203,6 +217,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - level2- workstation
     - patch
     - auditd
@@ -219,6 +234,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.3.16
@@ -234,6 +250,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.3.17
@@ -249,6 +266,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.3.18
@@ -264,6 +282,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.3.19
@@ -278,6 +297,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.4.3.20

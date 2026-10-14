@@ -5,6 +5,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - audit
     - rule_7.2.1
     - user_accounts
@@ -15,6 +16,7 @@
     - name: "7.2.1 | AUDIT | Ensure accounts in /etc/passwd use shadowed passwords | Get users not using shadowed passwords"
       ansible.builtin.shell: awk -F':' '($2 != "x" ) { print $1}' /etc/passwd
       changed_when: false
+      check_mode: false
       failed_when: false
       register: discovered_nonshadowed_users
 
@@ -35,6 +37,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_7.2.2
     - user
@@ -63,6 +66,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - audit
     - rule_7.2.3
     - groups
@@ -98,6 +102,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_7.2.4
     - user
@@ -126,6 +131,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - audit
     - rule_7.2.5
     - user
@@ -161,6 +167,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - audit
     - rule_7.2.6
     - groups
@@ -198,6 +205,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - audit
     - rule_7.2.7
     - user
@@ -219,7 +227,7 @@
     - name: "7.2.7 | WARNING | Ensure no duplicate user names exist | Print warning about users with duplicate User Names"
       when: discovered_username_check.stdout | length > 0
       ansible.builtin.debug:
-        msg: "Warning!! The following user names are duplicates: {{ discovered_user_username_check.stdout_lines }}"
+        msg: "Warning!! The following user names are duplicates: {{ discovered_username_check.stdout_lines }}"
 
     - name: "7.2.7 | WARNING | Ensure no duplicate user names exist | Set warning count"
       when: discovered_username_check.stdout | length > 0
@@ -231,6 +239,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - audit
     - rule_7.2.8
     - groups
@@ -266,6 +275,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - users
     - rule_7.2.9
@@ -315,6 +325,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_7.2.10
     - user

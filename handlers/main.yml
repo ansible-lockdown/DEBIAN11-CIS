@@ -14,6 +14,7 @@
   listen: "Remount /tmp"
 
 - name: "Remounting /tmp"
+  when: not deb11cis_tmp_svc
   vars:
     mount_point: '/tmp'
   ansible.posix.mount:
@@ -22,11 +23,12 @@
   listen: "Remount /tmp"
 
 - name: "Remounting /tmp systemd"
-  vars:
-    mount_point: '/tmp'
+  when: deb11cis_tmp_svc
   ansible.builtin.systemd:
     name: tmp.mount
-    state: restarted
+    state: reloaded
+    enabled: true
+    masked: false
     daemon_reload: true
   listen: "Remount /tmp"
 

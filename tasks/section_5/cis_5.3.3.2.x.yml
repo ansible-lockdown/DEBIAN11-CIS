@@ -5,6 +5,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_5.3.3.2.1
     - pam
@@ -34,6 +35,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_5.3.3.2.2
     - pam
@@ -63,6 +65,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - manual
     - patch
     - rule_5.3.3.2.3
     - pam
@@ -92,6 +95,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_5.3.3.2.4
     - pam
@@ -121,6 +125,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_5.3.3.2.5
     - pam
@@ -150,6 +155,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_5.3.3.2.6
     - pam
@@ -179,6 +185,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_5.3.3.2.7
     - pam
@@ -208,6 +215,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_5.3.3.2.8
     - pam
